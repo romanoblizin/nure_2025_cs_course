@@ -1,27 +1,30 @@
-﻿using System.CodeDom;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 
 // todo
 /*
- * тип карты (кредитная и тд)
- * счет карты и номер раздельно
+ * тип карты (кредитная, дебетовая, для выплат, детская, долларовая, )
  * 
  * открытие кредита, депозита
  * перевод средств
  * файловая система
- * изменение профильных данных
- * продление карты (если вышел срок)
+ * изменение личных данных (профильных)
+ * продление карты (если вышел срок) => смена номера, даты, cvv
  * 
  * $$
  * => курсы валют
  * кешбек
+ * премиум карты
  * поиски по критериям
+ * причина блокировки счета?
+ * 
+ * iban
 */
 
 namespace Course.Classes
 {
     class Bank
     {
+        private const string bankCode = "111111";
         public List<User> Users { get; set; }
 
         public Bank(List<User> users)

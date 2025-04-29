@@ -13,7 +13,7 @@ namespace Course.Classes
         Deposit,
         Withdraw,
         Payment
-    }
+    } // открытие кредита, депозита и тд
 
     class Transaction
     {
