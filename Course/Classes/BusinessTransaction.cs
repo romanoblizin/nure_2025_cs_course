@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace Course.Classes
 {
-    class ServicePayment
+    class BusinessTransaction : Transaction
     {
-        public string Name { get; set; }
-
+        public string CardNumber { get; set; }
     }
 }

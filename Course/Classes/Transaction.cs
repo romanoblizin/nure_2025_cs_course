@@ -12,18 +12,21 @@ namespace Course.Classes
         Transfer,
         Deposit,
         Withdraw,
-        Payment
-    } // открытие кредита, депозита и тд
+        Payment,
+        Interest,
+        CreditPayment,
+        DepositPayment
+    }
 
-    class Transaction
+    class Transaction // -> + подкласс, который имеет таргет
     {
         public int Id { get; set; }
         public DateTime Date { get; set; }
-        public float Amount { get; set; }
+        public double Amount { get; set; }
         public string Description { get; set; }
         public TransactionType Type { get; set; }
 
-        public Transaction(int id, DateTime date, float amount, string description, TransactionType type)
+        public Transaction(int id, DateTime date, double amount, string description, TransactionType type)
         {
             Id = id;
             Date = date;
@@ -31,7 +34,7 @@ namespace Course.Classes
             Description = description;
             Type = type;
         }
-        public Transaction(int id, float amount, string description, TransactionType type)
+        public Transaction(int id, double amount, string description, TransactionType type)
         {
             Id = id;
             Date = DateTime.Now;
