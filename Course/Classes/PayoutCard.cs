@@ -8,8 +8,8 @@ namespace Course.Classes
 {
     class PayoutCard : BankCard // на нее нельзя перечислять средства и пополнять из банкомата !!
     {
-        public PayoutCard(string number, double balance, DateTime expirationDate, string cvv, CardType type) : base(number, balance, expirationDate, cvv, type) { }
-        public PayoutCard(string number, CardType type) : base(number, type) { }
+        public PayoutCard(string number, DateTime expirationDate, string cvv, PaymentSystem paymentSystem, string accountNumber) : base(number, expirationDate, cvv, paymentSystem, accountNumber) { }
+        public PayoutCard(string number, PaymentSystem paymentSystem, string accountNumber) : base(number, paymentSystem, accountNumber) { }
 
         public override void Deposit(double amount)
         {

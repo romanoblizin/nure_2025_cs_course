@@ -10,20 +10,20 @@ namespace Course.Classes
     {
         public double InterestRate { get; set; }
 
-        public DebitCard(string number, double balance, DateTime expirationDate, string cvv, CardType type, double interestRate): base(number, balance, expirationDate, cvv, type)
+        public DebitCard(string number, DateTime expirationDate, string cvv, PaymentSystem paymentSystem, string accountNumber, double interestRate): base(number, expirationDate, cvv, paymentSystem, accountNumber)
         {
             InterestRate = interestRate;
         }
 
-        public DebitCard(string number, CardType type, double interestRate) : base(number, type)
+        public DebitCard(string number, PaymentSystem paymentSystem, string accountNumber, double interestRate) : base(number, paymentSystem, accountNumber)
         {
             InterestRate = interestRate;
         }
 
         public double ApplyMonthlyInterest()
         {
-            double interest = Balance * InterestRate - Balance;
-            Balance += interest;
+            double interest = Account.Balance * InterestRate - Account.Balance;
+            Account.Balance += interest;
             return interest; // check later if == 0
 
             // new Transaction(null, interest, "Відсотки за місяць", TransactionType.Interest);
@@ -31,12 +31,12 @@ namespace Course.Classes
 
         public void OpenDeposit(double amount, double rate, int months)
         {
-            if (amount > Balance)
+            if (amount > Account.Balance)
             {
                 return;
             }
 
-            Balance -= amount;
+            Account.Balance -= amount;
 
             // это надо куда-т сохраянть чтобы при перезапуске клиент не стал бомжиком =)
             // new Transaction(null, -amount, "Відкриття депозиту", TransactionType.DepositPayment);

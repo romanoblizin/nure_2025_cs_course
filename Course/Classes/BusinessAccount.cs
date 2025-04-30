@@ -13,7 +13,7 @@ namespace Course.Classes
         public string CompanyNumber { get; set; }
         public List<BusinessCard> Cards { get; set; }
 
-        public BusinessAccount(string number, string? blocked, List<Transaction> transactions, string companyName, string companyNumber, List<BusinessCard> cards) : base(number, blocked, transactions)
+        public BusinessAccount(string number, double balance, string? blocked, List<Transaction> transactions, string companyName, string companyNumber, List<BusinessCard> cards) : base(number, balance, blocked, transactions)
         {
             CompanyName = companyName;
             CompanyNumber = companyNumber;

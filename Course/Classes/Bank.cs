@@ -12,6 +12,7 @@
  * премиум карты
  * 
  * кешбек
+ * квитанции
 */
 
 namespace Course.Classes
@@ -19,15 +20,17 @@ namespace Course.Classes
     class Bank
     {
         private const string bankCode = "111111";
+        private HashSet<string> accountNumbers;
+        private HashSet<string> cardNumbers;
+        private HashSet<string> transactionNumbers;
         public List<User> Users { get; set; }
 
-        public Bank(List<User> users)
-        {
-            Users = users;
-        }
         public Bank()
         {
             Users = new List<User>();
+            accountNumbers = new HashSet<string>();
+            cardNumbers = new HashSet<string>();
+            transactionNumbers = new HashSet<string>();
         }
 
         public User? Register(string name, string surname, string phone, string password, string? email)
@@ -64,9 +67,36 @@ namespace Course.Classes
             }
         }
 
-        public Account? OpenAccount(User user, AccountType type)
+        public PersonalAccount? OpenDebitCard(User user, CardType type, PaymentSystem paymentSystem, double interestRate)
         {
-            Account account = new Account();
+            BankCard card = new DebitCard(GenerateCardNumber(paymentSystem), paymentSystem, GenerateAccountNumber(), interestRate);
+
+            user.Accounts.Add(card.Account);
+
+            return (PersonalAccount)card.Account;
+        }
+
+        public PersonalAccount? OpenCreditCard(User user, CardType type, PaymentSystem paymentSystem, double creditLimit)
+        {
+            BankCard card = new CreditCard(GenerateCardNumber(paymentSystem), paymentSystem, GenerateAccountNumber(), creditLimit);
+
+            user.Accounts.Add(card.Account);
+
+            return (PersonalAccount)card.Account;
+        }
+
+        public PersonalAccount? OpenPayoutCard(User user, CardType type, PaymentSystem paymentSystem)
+        {
+            BankCard card = new PayoutCard(GenerateCardNumber(paymentSystem), paymentSystem, GenerateAccountNumber());
+
+            user.Accounts.Add(card.Account);
+
+            return (PersonalAccount)card.Account;
+        }
+
+        public BusinessAccount? OpenBusinessAccount(User user, string companyName, string companyNumber)
+        {
+            BusinessAccount account = new BusinessAccount(GenerateAccountNumber(), companyName, companyNumber);
 
             user.Accounts.Add(account);
 
@@ -75,9 +105,36 @@ namespace Course.Classes
 
         public string GetIBAN(Account account)
         {
-            return $"UA00{bankCode}{account.AccountNumber}";
+            return $"UA00{bankCode}{account.Number}";
         }
 
+        private string GenerateAccountNumber()
+        {
+            string result = "";
+
+
+
+            accountNumbers.Add(result);
+            return result;
+        }
+        private string GenerateCardNumber(PaymentSystem paymentSystem)
+        {
+            string result = "";
+
+
+
+            cardNumbers.Add(result);
+            return result;
+        }
+        private string GenerateTransactionNumber()
+        {
+            string result = "";
+
+
+
+            transactionNumbers.Add(result);
+            return result;
+        }
         private bool ValidatePhone(string phone)
         {
             return Regex.IsMatch(phone, @"^(\+380\d{9}|0\d{9})$");

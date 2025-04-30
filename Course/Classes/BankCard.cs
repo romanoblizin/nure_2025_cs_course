@@ -8,6 +8,14 @@ namespace Course.Classes
 {
     public enum CardType
     {
+        Debit,
+        Credit,
+        Payout,
+        Business
+    }
+
+    public enum PaymentSystem
+    {
         Visa,
         Mastercard
     }
@@ -15,24 +23,48 @@ namespace Course.Classes
     abstract class BankCard
     {
         public string Number { get; set; }
-        public double Balance { get; set; }
         public DateTime ExpirationDate { get; set; }
         public string CVV { get; set; }
-        public CardType Type { get; set; }
+        public PaymentSystem PaymentSystem { get; set; }
+        public Account Account { get; set; }
 
-        public BankCard(string number, double balance, DateTime expirationDate, string cvv, CardType type)
+        public BankCard(string number, DateTime expirationDate, string cvv, PaymentSystem type, BusinessAccount account)
         {
             Number = number;
-            Balance = balance;
             ExpirationDate = expirationDate;
             CVV = cvv;
-            Type = type;
+            PaymentSystem = type;
+            Account = account;
         }
-        public BankCard(string number, CardType type)
+        public BankCard(string number, PaymentSystem type, BusinessAccount account)
         {
             Number = number;
-            Balance = 0;
-            Type = type;
+            PaymentSystem = type;
+            Account = account;
+
+            DateTime today = DateTime.Today;
+            ExpirationDate = new DateTime(today.Year, today.Month, 1).AddMonths(60).AddDays(-1);
+
+            CVV = "";
+            Random rnd = new Random();
+            for (int i = 0; i < 3; i++)
+            {
+                CVV += rnd.Next(10).ToString();
+            }
+        }
+        public BankCard(string number, DateTime expirationDate, string cvv, PaymentSystem type, string accountNumber)
+        {
+            Number = number;
+            ExpirationDate = expirationDate;
+            CVV = cvv;
+            PaymentSystem = type;
+            Account = new PersonalAccount(accountNumber, this);
+        }
+        public BankCard(string number, PaymentSystem type, string accountNumber)
+        {
+            Number = number;
+            PaymentSystem = type;
+            Account = new PersonalAccount(accountNumber, this);
 
             DateTime today = DateTime.Today;
             ExpirationDate = new DateTime(today.Year, today.Month, 1).AddMonths(60).AddDays(-1);
@@ -47,7 +79,7 @@ namespace Course.Classes
 
         public virtual void Deposit(double amount)
         {
-            Balance += amount;
+            Account.Balance += amount;
         }
 
         public bool IsExpired
