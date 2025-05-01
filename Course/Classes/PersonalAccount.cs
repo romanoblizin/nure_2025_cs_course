@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -44,6 +45,11 @@ namespace Course.Classes
         public override bool IsAvailable()
         {
             return base.IsAvailable() && !Card.IsExpired();
+        }
+
+        public override bool IsPaymentAvailable(double amount)
+        {
+            return (Card.IsPaymentAvailable(amount));
         }
     }
 }

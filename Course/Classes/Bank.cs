@@ -7,12 +7,11 @@
  * newDay()
  * депозитная система
  * 
- * снимать проценты за операции
  * премиум карты
+ * снимать проценты за операции
  * 
  * кешбек
  * 
- * квитанции
  * системные часы
 */
 
@@ -20,18 +19,15 @@ namespace Course.Classes
 {
     class Bank
     {
-        private const string bankCode = "111111";
-        private HashSet<string> accountNumbers;
-        private HashSet<string> cardNumbers;
-        private HashSet<string> transactionNumbers;
+        public const string bankCode = "111111";
+        private static HashSet<string> accountNumbers = new HashSet<string>();
+        private static HashSet<string> cardNumbers = new HashSet<string>();
+        private static HashSet<string> transactionNumbers = new HashSet<string>();
         public List<User> Users { get; set; }
 
         public Bank()
         {
             Users = new List<User>();
-            accountNumbers = new HashSet<string>();
-            cardNumbers = new HashSet<string>();
-            transactionNumbers = new HashSet<string>();
         }
 
         public User? Register(string name, string surname, string phone, string password, string? email)
@@ -68,87 +64,6 @@ namespace Course.Classes
             }
         }
 
-        public PersonalAccount? OpenDebitCard(User user, PaymentSystem paymentSystem, double interestRate)
-        {
-            BankCard card = new DebitCard(GenerateCardNumber(paymentSystem), paymentSystem, GenerateAccountNumber(), interestRate);
-
-            user.Accounts.Add(card.Account);
-
-            return (PersonalAccount)card.Account;
-        }
-
-        public PersonalAccount? OpenCreditCard(User user, PaymentSystem paymentSystem, double creditLimit)
-        {
-            BankCard card = new CreditCard(GenerateCardNumber(paymentSystem), paymentSystem, GenerateAccountNumber(), creditLimit);
-
-            user.Accounts.Add(card.Account);
-
-            return (PersonalAccount)card.Account;
-        }
-
-        public PersonalAccount? OpenPayoutCard(User user, PaymentSystem paymentSystem)
-        {
-            BankCard card = new PayoutCard(GenerateCardNumber(paymentSystem), paymentSystem, GenerateAccountNumber());
-
-            user.Accounts.Add(card.Account);
-
-            return (PersonalAccount)card.Account;
-        }
-
-        public BusinessAccount? OpenBusinessAccount(User user, string companyName, string companyNumber)
-        {
-            BusinessAccount account = new BusinessAccount(GenerateAccountNumber(), companyName, companyNumber);
-
-            user.Accounts.Add(account);
-
-            return account;
-        }
-
-        public BusinessCard OpenBusinessCard(BusinessAccount account, PaymentSystem paymentSystem, string ownerFullName)
-        {
-            BusinessCard card = new BusinessCard(GenerateCardNumber(paymentSystem), paymentSystem, account, ownerFullName);
-
-            account.Cards.Add(card);
-
-            return card;
-        }
-
-        public bool Deposit(BankCard bankCard, double amount)
-        {
-            if (!bankCard.IsAvailable())
-                return false;
-
-            if (bankCard.Deposit(amount))
-            {
-                bankCard.AddTransaction(GenerateTransactionNumber(), amount, null, "", TransactionType.Deposit);
-                return true;
-            }
-
-            return false;
-        }
-
-        public bool Pay(BankCard bankCard, double amount, string comment)
-        {
-            if (!IsPaymentAvailable(bankCard.Account, amount))
-                return false;
-
-            bankCard.Account.Balance -= amount;
-            bankCard.AddTransaction(GenerateTransactionNumber(), -amount, null, comment, TransactionType.Transfer);
-
-            return true;
-        }
-
-        public bool PayService(Account account, double amount, Service service, string comment)
-        {
-            if (!IsPaymentAvailable(account, amount))
-                return false;
-
-            account.Balance -= amount;
-            account.AddTransaction(GenerateTransactionNumber(), -amount, service.CompanyName, comment, TransactionType.ServicePayment);
-
-            return true;
-        }
-
         public bool TransferToBusinessAccount(Account accountFrom, BusinessAccount accountTo, double amount, string comment)
         {
             if (accountFrom == accountTo)
@@ -161,7 +76,7 @@ namespace Course.Classes
                 return false;
             }
 
-            if (!IsPaymentAvailable(accountFrom, amount))
+            if (!accountFrom.IsPaymentAvailable(amount))
                 return false;
 
             accountFrom.Balance -= amount;
@@ -186,7 +101,7 @@ namespace Course.Classes
                 return false;
             }
 
-            if (!IsPaymentAvailable(accountFrom, amount))
+            if (!accountFrom.IsPaymentAvailable(amount))
                 return false;
 
             accountFrom.Balance -= amount;
@@ -217,7 +132,7 @@ namespace Course.Classes
                 return TransferToCard(accountFrom, cardTo, amount, comment);
             }
 
-            if (!IsPaymentAvailable(accountFrom, amount))
+            if (!accountFrom.IsPaymentAvailable(amount))
                 return false;
 
             accountFrom.Balance -= amount;
@@ -241,7 +156,7 @@ namespace Course.Classes
                 }
             }
 
-            if (!IsPaymentAvailable(accountFrom, amount))
+            if (!accountFrom.IsPaymentAvailable(amount))
                 return false;
 
             accountFrom.Balance -= amount;
@@ -250,34 +165,7 @@ namespace Course.Classes
             return true;
         }
 
-        public void RenewCard(BankCard card)
-        {
-            if (!card.IsExpired())
-            {
-                return;
-            }
-
-            switch (card)
-            {
-                case DebitCard debitCard:
-                    ((PersonalAccount)debitCard.Account).Card = new DebitCard(GenerateCardNumber(card.PaymentSystem), card.PaymentSystem, card.Account, debitCard.InterestRate);
-                    break;
-                case CreditCard creditCard:
-                    ((PersonalAccount)creditCard.Account).Card = new CreditCard(GenerateCardNumber(card.PaymentSystem), card.PaymentSystem, card.Account, creditCard.CreditLimit, creditCard.CreditLeft);
-                    break;
-                case PayoutCard payoutCard:
-                    ((PersonalAccount)payoutCard.Account).Card = new PayoutCard(GenerateCardNumber(card.PaymentSystem), card.PaymentSystem, card.Account);
-                    break;
-                case BusinessCard businessCard:
-                    ((BusinessAccount)businessCard.Account).Cards.Remove(businessCard);
-                    ((BusinessAccount)businessCard.Account).Cards.Add(new BusinessCard(GenerateCardNumber(card.PaymentSystem), card.PaymentSystem, card.Account, businessCard.OwnerFullName));
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        private string GenerateAccountNumber()
+        public static string GenerateAccountNumber()
         {
             string result;
             Random rnd = new Random();
@@ -292,7 +180,7 @@ namespace Course.Classes
             accountNumbers.Add(result);
             return result;
         }
-        private string GenerateCardNumber(PaymentSystem paymentSystem)
+        public static string GenerateCardNumber(PaymentSystem paymentSystem)
         {
             string result;
             Random rnd = new Random();
@@ -322,7 +210,7 @@ namespace Course.Classes
             cardNumbers.Add(result);
             return result;
         }
-        private string GenerateTransactionNumber()
+        public static string GenerateTransactionNumber()
         {
             string result;
             Random rnd = new Random();
@@ -337,28 +225,6 @@ namespace Course.Classes
 
             transactionNumbers.Add(result);
             return result;
-        }
-
-        public static string GetLuhnDigit(string number)
-        {
-            int sum = 0;
-
-            for (int i = number.Length - 1; i >= 0; i--)
-            {
-                int digit = int.Parse(number[i].ToString());
-
-                if (i % 2 == 0)
-                {
-                    digit *= 2;
-                    if (digit > 9)
-                        digit -= 9;
-                }
-
-                sum += digit;
-            }
-
-            int checkDigit = (10 - (sum % 10)) % 10;
-            return checkDigit.ToString();
         }
 
         public BankCard? GetCardByNumber(string number)
@@ -397,7 +263,7 @@ namespace Course.Classes
             {
                 foreach (Account account in user.Accounts)
                 {
-                    if (GetIBAN(account) == iban)
+                    if (account.IBAN == iban)
                         return account;
                 }
             }
@@ -415,7 +281,6 @@ namespace Course.Classes
 
             return true;
         }
-
         public bool IsEmailAvailable(string email)
         {
             foreach (User user in Users)
@@ -427,40 +292,26 @@ namespace Course.Classes
             return true;
         }
 
-        public static string GetIBAN(Account account)
+        public static string GetLuhnDigit(string number)
         {
-            return $"UA00{bankCode}{account.Number}";
-        }
+            int sum = 0;
 
-        private static bool IsPaymentAvailable(Account account, double amount)
-        {
-            if (amount < 0)
+            for (int i = number.Length - 1; i >= 0; i--)
             {
-                return false;
-            }
+                int digit = int.Parse(number[i].ToString());
 
-            if (!account.IsAvailable())
-            {
-                return false;
-            }
-
-            if (account.Balance < amount)
-            {
-                if (account is PersonalAccount personalAccount)
+                if (i % 2 == 0)
                 {
-                    if (personalAccount.Card is CreditCard creditCard)
-                    {
-                        if (creditCard.CreditLeft + personalAccount.Balance >= amount)
-                        {
-                            return true;
-                        }
-                    }
+                    digit *= 2;
+                    if (digit > 9)
+                        digit -= 9;
                 }
 
-                return false;
+                sum += digit;
             }
 
-            return true;
+            int checkDigit = (10 - (sum % 10)) % 10;
+            return checkDigit.ToString();
         }
     }
 }

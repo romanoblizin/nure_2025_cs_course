@@ -27,6 +27,38 @@ namespace Course.Classes
             CreditLeft = creditLeft;
         }
 
-        // + override all payment funcs
+        public override void RenewCard()
+        {
+            if (!IsExpired())
+            {
+                return;
+            }
+
+            ((PersonalAccount)Account).Card = new CreditCard(Bank.GenerateCardNumber(PaymentSystem), PaymentSystem, Account, CreditLimit, CreditLeft);
+        }
+
+        public override bool IsPaymentAvailable(double amount)
+        {
+            if (amount < 0)
+            {
+                return false;
+            }
+
+            if (!IsAvailable())
+            {
+                return false;
+            }
+
+            if (Account.Balance < amount)
+            {
+                if (CreditLeft + Account.Balance >= amount)
+                {
+                    return true;
+                }
+                return false;
+            }
+
+            return true;
+        }
     }
 }

@@ -44,5 +44,15 @@ namespace Course.Classes
             // это надо куда-т сохраянть чтобы при перезапуске клиент не стал бомжиком =)
             // new Transaction(null, -amount, "Відкриття депозиту", TransactionType.DepositPayment);
         }
+
+        public override void RenewCard()
+        {
+            if (!IsExpired())
+            {
+                return;
+            }
+
+            ((PersonalAccount)Account).Card = new DebitCard(Bank.GenerateCardNumber(PaymentSystem), PaymentSystem, Account, InterestRate);
+        }
     }
 }

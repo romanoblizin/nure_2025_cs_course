@@ -44,6 +44,42 @@ namespace Course.Classes
             Accounts = accounts;
         }
 
+        public PersonalAccount? OpenDebitCard(PaymentSystem paymentSystem, double interestRate)
+        {
+            BankCard card = new DebitCard(Bank.GenerateCardNumber(paymentSystem), paymentSystem, Bank.GenerateAccountNumber(), interestRate);
+
+            Accounts.Add(card.Account);
+
+            return (PersonalAccount)card.Account;
+        }
+
+        public PersonalAccount? OpenCreditCard(PaymentSystem paymentSystem, double creditLimit)
+        {
+            BankCard card = new CreditCard(Bank.GenerateCardNumber(paymentSystem), paymentSystem, Bank.GenerateAccountNumber(), creditLimit);
+
+            Accounts.Add(card.Account);
+
+            return (PersonalAccount)card.Account;
+        }
+
+        public PersonalAccount? OpenPayoutCard(PaymentSystem paymentSystem)
+        {
+            BankCard card = new PayoutCard(Bank.GenerateCardNumber(paymentSystem), paymentSystem, Bank.GenerateAccountNumber());
+
+            Accounts.Add(card.Account);
+
+            return (PersonalAccount)card.Account;
+        }
+
+        public BusinessAccount? OpenBusinessAccount(string companyName, string companyNumber)
+        {
+            BusinessAccount account = new BusinessAccount(Bank.GenerateAccountNumber(), companyName, companyNumber);
+
+            Accounts.Add(account);
+
+            return account;
+        }
+
         public static bool ValidatePhone(string phone)
         {
             return Regex.IsMatch(phone, @"^(\+380\d{9}|0\d{9})$");

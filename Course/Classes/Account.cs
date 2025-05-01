@@ -11,6 +11,10 @@ namespace Course.Classes
         public string Number { get; set; }
         public virtual double Balance { get; set; }
         public string? Blocked { get; set; }
+        public string IBAN
+        {
+            get => $"UA00{Bank.bankCode}{Number}";
+        }
         public List<Transaction> Transactions { get; set; }
 
         public Account(string number, double balance, string? blocked, List<Transaction> transactions)
@@ -40,6 +44,20 @@ namespace Course.Classes
         public virtual bool IsAvailable()
         {
             return !IsBlocked();
+        }
+        public virtual bool IsPaymentAvailable(double amount)
+        {
+            if (IsBlocked())
+            {
+                return false;
+            }
+
+            if (Balance < amount)
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 }

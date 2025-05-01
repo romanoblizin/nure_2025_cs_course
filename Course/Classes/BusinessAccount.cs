@@ -25,6 +25,16 @@ namespace Course.Classes
             CompanyNumber = companyNumber;
             Cards = new List<BusinessCard>();
         }
+
+        public BusinessCard OpenBusinessCard(PaymentSystem paymentSystem, string ownerFullName)
+        {
+            BusinessCard card = new BusinessCard(Bank.GenerateCardNumber(paymentSystem), paymentSystem, this, ownerFullName);
+
+            Cards.Add(card);
+
+            return card;
+        }
+
         public override void AddTransaction(string transactionNumber, double amount, string? target, string comment, TransactionType type)
         {
             Transactions.Add(new BusinessTransaction(transactionNumber, amount, target, comment, type, CompanyName));

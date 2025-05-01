@@ -50,7 +50,12 @@ namespace Course.Classes
         }
         public BankCard(string number, PaymentSystem paymentSystem, Account account) : this(number, GenerateExpirationDate(), GenerateCVV(), paymentSystem, account)
         { }
-        
+
+        public virtual void AddTransaction(string transactionNumber, double amount, string? target, string comment, TransactionType type)
+        {
+            Account.Transactions.Add(new Transaction(transactionNumber, amount, target, comment, type));
+        }
+
         public virtual bool Deposit(double amount)
         {
             if (amount <= 0)
@@ -64,6 +69,7 @@ namespace Course.Classes
             }
 
             Account.Balance += amount;
+            AddTransaction(Bank.GenerateTransactionNumber(), amount, null, "", TransactionType.Deposit);
             return true;
         }
 
@@ -85,13 +91,32 @@ namespace Course.Classes
             }
 
             Account.Balance -= amount;
+            AddTransaction(Bank.GenerateTransactionNumber(), -amount, null, "", TransactionType.Withdraw);
             return true;
         }
 
-        public virtual void AddTransaction(string transactionNumber, double amount, string? target, string comment, TransactionType type)
+        public bool Pay(double amount, string comment)
         {
-            Account.Transactions.Add(new Transaction(transactionNumber, amount, target, comment, type));
+            if (!IsPaymentAvailable(amount))
+                return false;
+
+            Account.Balance -= amount;
+            AddTransaction(Bank.GenerateTransactionNumber(), -amount, null, comment, TransactionType.Transfer);
+
+            return true;
         }
+        public bool PayService(double amount, Service service, string comment)
+        {
+            if (!IsPaymentAvailable(amount))
+                return false;
+
+            Account.Balance -= amount;
+            Account.AddTransaction(Bank.GenerateTransactionNumber(), -amount, service.CompanyName, comment, TransactionType.ServicePayment);
+
+            return true;
+        }
+
+        public abstract void RenewCard();
 
         private static string GenerateCVV()
         {
@@ -119,6 +144,26 @@ namespace Course.Classes
         {
             return !(Account.IsBlocked() || IsExpired());
         }
+        public virtual bool IsPaymentAvailable(double amount)
+        {
+            if (amount < 0)
+            {
+                return false;
+            }
+
+            if (!IsAvailable())
+            {
+                return false;
+            }
+
+            if (Account.Balance < amount)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
         public override bool Equals(object? obj)
         {
             if (obj is BankCard card)

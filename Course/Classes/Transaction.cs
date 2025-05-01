@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+﻿using System.Text;
 
 namespace Course.Classes
 {
@@ -16,8 +11,8 @@ namespace Course.Classes
         ServicePayment,
         Interest,
         Payout,
-        CreditPayment,
-        DepositPayment
+        DepositOpen,
+        DepositClose
     }
 
     class Transaction
@@ -46,6 +41,54 @@ namespace Course.Classes
             Target = target;
             Description = description;
             Type = type;
+        }
+
+        public string GetReceipt(Account account)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            sb.AppendLine($"Квитанція № {Number}");
+            sb.AppendLine();
+            sb.AppendLine($"Відправник: {account.IBAN}");
+            sb.AppendLine($"Отримувач: {Target}");
+            sb.AppendLine();
+            sb.AppendLine($"Сума (грн): {Math.Abs(Amount)}");
+            sb.AppendLine($"Призначення платежу: {GetTranslatedType(Type)}");
+            sb.AppendLine($"Дата і час операції: {Date.ToString("dd.MM.yyyy HH:mm")}");
+            if (Description.Length > 0)
+                sb.AppendLine($"Коментар: {Description}");
+            sb.AppendLine();
+            sb.AppendLine();
+            sb.AppendLine("Операційний директор: Облізін Р. Г.");
+
+            return sb.ToString();
+        }
+
+        public static string GetTranslatedType(TransactionType type)
+        {
+            switch (type)
+            {
+                case TransactionType.Transfer:
+                    return "Переказ коштів";
+                case TransactionType.Deposit:
+                    return "Поповнення балансу";
+                case TransactionType.Withdraw:
+                    return "Зняття готівки";
+                case TransactionType.Payment:
+                    return "Оплата картою";
+                case TransactionType.ServicePayment:
+                    return "Оплата послуги";
+                case TransactionType.Interest:
+                    return "Відсотки за місяць";
+                case TransactionType.Payout:
+                    return "Виплата";
+                case TransactionType.DepositOpen:
+                    return "Відкриття депозиту";
+                case TransactionType.DepositClose:
+                    return "Закриття депозиту";
+                default:
+                    return "Невідома операція";
+            }
         }
     }
 }

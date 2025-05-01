@@ -27,5 +27,16 @@ namespace Course.Classes
         {
             Account.Transactions.Add(new BusinessTransaction(transactionNumber, amount, target, comment, type, OwnerFullName));
         }
+
+        public override void RenewCard()
+        {
+            if (!IsExpired())
+            {
+                return;
+            }
+
+            ((BusinessAccount)Account).Cards.Remove(this);
+            ((BusinessAccount)Account).Cards.Add(new BusinessCard(Bank.GenerateCardNumber(PaymentSystem), PaymentSystem, Account, OwnerFullName));
+        }
     }
 }

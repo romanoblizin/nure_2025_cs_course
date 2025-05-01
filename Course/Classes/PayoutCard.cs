@@ -22,5 +22,15 @@ namespace Course.Classes
             Account.Balance += amount;
             AddTransaction(transactionNumber, amount, null, comment, TransactionType.Payout);
         }
+
+        public override void RenewCard()
+        {
+            if (!IsExpired())
+            {
+                return;
+            }
+
+            ((PersonalAccount)Account).Card = new PayoutCard(Bank.GenerateCardNumber(PaymentSystem), PaymentSystem, Account);
+        }
     }
 }
