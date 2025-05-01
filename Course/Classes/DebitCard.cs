@@ -24,9 +24,9 @@ namespace Course.Classes
         {
             double interest = Account.Balance * InterestRate - Account.Balance;
             Account.Balance += interest;
-            return interest; // check later if == 0
+            return interest;
 
-            // new Transaction(null, interest, "Відсотки за місяць", TransactionType.Interest);
+            // if interest > 0: new Transaction(null, interest, "Відсотки за місяць", TransactionType.Interest);
         }
 
         public void OpenDeposit(double amount, double rate, int months)

@@ -110,36 +110,92 @@ namespace Course.Classes
 
         private string GenerateAccountNumber()
         {
-            string result = "";
+            string result;
+            Random rnd = new Random();
 
-
+            do
+            {
+                result = new string(Enumerable.Range(0, 16)
+                    .Select(_ => rnd.Next(10).ToString()[0])
+                    .ToArray());
+            } while (transactionNumbers.Contains(result));
 
             accountNumbers.Add(result);
             return result;
         }
         private string GenerateCardNumber(PaymentSystem paymentSystem)
         {
-            string result = "";
+            string result;
+            Random rnd = new Random();
 
+            switch (paymentSystem)
+            {
+                case PaymentSystem.Visa:
+                    result = rnd.Next(400000, 500000).ToString();
+                    break;
+                case PaymentSystem.Mastercard:
+                    result = rnd.Next(510000, 560000).ToString();
+                    break;
+                default:
+                    result = "000000";
+                    break;
+            }
 
+            do
+            {
+                result += new string(Enumerable.Range(0, 9)
+                    .Select(_ => rnd.Next(10).ToString()[0])
+                    .ToArray());
+            } while (transactionNumbers.Contains(result));
+
+            result += GetLuhnDigit(result);
 
             cardNumbers.Add(result);
             return result;
         }
         private string GenerateTransactionNumber()
         {
-            string result = "";
+            string result;
+            Random rnd = new Random();
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
-
+            do
+            {
+                result = new string(Enumerable.Repeat(chars, 16)
+                    .Select(s => s[rnd.Next(s.Length)])
+                    .ToArray());
+            } while (transactionNumbers.Contains(result));
 
             transactionNumbers.Add(result);
             return result;
         }
-        private bool ValidatePhone(string phone)
+
+        public static string GetLuhnDigit(string number)
+        {
+            int sum = 0;
+
+            for (int i = number.Length - 1; i >= 0; i--)
+            {
+                int digit = int.Parse(number[i].ToString());
+
+                if (i % 2 == 0)
+                {
+                    digit *= 2;
+                    if (digit > 9)
+                        digit -= 9;
+                }
+
+                sum += digit;
+            }
+
+            int checkDigit = (10 - (sum % 10)) % 10;
+            return checkDigit.ToString();
+        }
+        private static bool ValidatePhone(string phone)
         {
             return Regex.IsMatch(phone, @"^(\+380\d{9}|0\d{9})$");
         }
-        private bool ValidateEmail(string email)
+        private static bool ValidateEmail(string email)
         {
             return Regex.IsMatch(email, @"^[\w\.]+@\w+\.+\w{2,4}$");
         }

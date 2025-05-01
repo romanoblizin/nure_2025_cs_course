@@ -28,64 +28,78 @@ namespace Course.Classes
         public PaymentSystem PaymentSystem { get; set; }
         public Account Account { get; set; }
 
-        public BankCard(string number, DateTime expirationDate, string cvv, PaymentSystem type, BusinessAccount account)
+        private BankCard(string number, DateTime expirationDate, string cvv, PaymentSystem paymentSystem)
         {
             Number = number;
             ExpirationDate = expirationDate;
             CVV = cvv;
-            PaymentSystem = type;
-            Account = account;
+            PaymentSystem = paymentSystem;
         }
-        public BankCard(string number, PaymentSystem type, BusinessAccount account)
-        {
-            Number = number;
-            PaymentSystem = type;
-            Account = account;
 
-            DateTime today = DateTime.Today;
-            ExpirationDate = new DateTime(today.Year, today.Month, 1).AddMonths(60).AddDays(-1);
-
-            CVV = "";
-            Random rnd = new Random();
-            for (int i = 0; i < 3; i++)
-            {
-                CVV += rnd.Next(10).ToString();
-            }
-        }
-        public BankCard(string number, DateTime expirationDate, string cvv, PaymentSystem type, string accountNumber)
+        public BankCard(string number, DateTime expirationDate, string cvv, PaymentSystem paymentSystem, string accountNumber) : this(number, expirationDate, cvv, paymentSystem)
         {
-            Number = number;
-            ExpirationDate = expirationDate;
-            CVV = cvv;
-            PaymentSystem = type;
             Account = new PersonalAccount(accountNumber, this);
         }
-        public BankCard(string number, PaymentSystem type, string accountNumber)
+        public BankCard(string number, PaymentSystem paymentSystem, string accountNumber) : this(number, GenerateExpirationDate(), GenerateCVV(), paymentSystem, accountNumber)
+        { }
+        public BankCard(string number, DateTime expirationDate, string cvv, PaymentSystem paymentSystem, BusinessAccount account) : this (number, expirationDate, cvv, paymentSystem)
         {
-            Number = number;
-            PaymentSystem = type;
-            Account = new PersonalAccount(accountNumber, this);
-
-            DateTime today = DateTime.Today;
-            ExpirationDate = new DateTime(today.Year, today.Month, 1).AddMonths(60).AddDays(-1);
-
-            CVV = "";
-            Random rnd = new Random();
-            for (int i = 0; i < 3; i++)
-            {
-                CVV += rnd.Next(10).ToString();
-            }
+            Account = account;
         }
-
+        public BankCard(string number, PaymentSystem paymentSystem, BusinessAccount account) : this(number, GenerateExpirationDate(), GenerateCVV(), paymentSystem, account)
+        { }
+        
         public virtual void Deposit(double amount)
         {
+            if (!IsAvailable())
+            {
+                return;
+            }
+
             Account.Balance += amount;
         }
 
-        public bool IsExpired
+        public virtual void Withdraw(double amount)
         {
-            get => DateTime.Today > ExpirationDate;
+            if (!IsAvailable())
+            {
+                return;
+            }
+
+            if (Account.Balance < amount)
+            {
+                return;
+            }
+
+            Account.Balance -= amount;
+            // new Transaction(null, -amount, null, "Зняття коштів", TransactionType.Withdraw);
         }
 
+        private static string GenerateCVV()
+        {
+            string cvv = "";
+
+            Random rnd = new Random();
+            for (int i = 0; i < 3; i++)
+            {
+                cvv += rnd.Next(10).ToString();
+            }
+
+            return cvv;
+        }
+        private static DateTime GenerateExpirationDate()
+        {
+            DateTime today = DateTime.Today;
+            return new DateTime(today.Year, today.Month, 1).AddMonths(60).AddDays(-1);
+        }
+
+        public bool IsExpired()
+        {
+            return DateTime.Today > ExpirationDate;
+        }
+        public bool IsAvailable()
+        {
+            return !(Account.IsBlocked || IsExpired());
+        }
     }
 }

@@ -9,6 +9,7 @@ namespace Course.Classes
     class Service
     {
         public string CompanyName { get; set; }
+        public string CompanyNumber { get; set; }
         public string OwnerFullName { get; set; }
         public string IBAN { get; set; }
     }
