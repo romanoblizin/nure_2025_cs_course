@@ -42,11 +42,11 @@ namespace Course.Classes
         }
         public BankCard(string number, PaymentSystem paymentSystem, string accountNumber) : this(number, GenerateExpirationDate(), GenerateCVV(), paymentSystem, accountNumber)
         { }
-        public BankCard(string number, DateTime expirationDate, string cvv, PaymentSystem paymentSystem, BusinessAccount account) : this (number, expirationDate, cvv, paymentSystem)
+        public BankCard(string number, DateTime expirationDate, string cvv, PaymentSystem paymentSystem, Account account) : this (number, expirationDate, cvv, paymentSystem)
         {
             Account = account;
         }
-        public BankCard(string number, PaymentSystem paymentSystem, BusinessAccount account) : this(number, GenerateExpirationDate(), GenerateCVV(), paymentSystem, account)
+        public BankCard(string number, PaymentSystem paymentSystem, Account account) : this(number, GenerateExpirationDate(), GenerateCVV(), paymentSystem, account)
         { }
         
         public virtual void Deposit(double amount)
@@ -100,6 +100,15 @@ namespace Course.Classes
         public bool IsAvailable()
         {
             return !(Account.IsBlocked || IsExpired());
+        }
+        public override bool Equals(object? obj)
+        {
+            if (obj is BankCard card)
+            {
+                return card.Number == this.Number;
+            }
+
+            return false;
         }
     }
 }

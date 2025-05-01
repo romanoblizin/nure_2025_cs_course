@@ -67,7 +67,7 @@ namespace Course.Classes
             }
         }
 
-        public PersonalAccount? OpenDebitCard(User user, CardType type, PaymentSystem paymentSystem, double interestRate)
+        public PersonalAccount? OpenDebitCard(User user, PaymentSystem paymentSystem, double interestRate)
         {
             BankCard card = new DebitCard(GenerateCardNumber(paymentSystem), paymentSystem, GenerateAccountNumber(), interestRate);
 
@@ -76,7 +76,7 @@ namespace Course.Classes
             return (PersonalAccount)card.Account;
         }
 
-        public PersonalAccount? OpenCreditCard(User user, CardType type, PaymentSystem paymentSystem, double creditLimit)
+        public PersonalAccount? OpenCreditCard(User user, PaymentSystem paymentSystem, double creditLimit)
         {
             BankCard card = new CreditCard(GenerateCardNumber(paymentSystem), paymentSystem, GenerateAccountNumber(), creditLimit);
 
@@ -85,7 +85,7 @@ namespace Course.Classes
             return (PersonalAccount)card.Account;
         }
 
-        public PersonalAccount? OpenPayoutCard(User user, CardType type, PaymentSystem paymentSystem)
+        public PersonalAccount? OpenPayoutCard(User user, PaymentSystem paymentSystem)
         {
             BankCard card = new PayoutCard(GenerateCardNumber(paymentSystem), paymentSystem, GenerateAccountNumber());
 
@@ -101,6 +101,33 @@ namespace Course.Classes
             user.Accounts.Add(account);
 
             return account;
+        }
+
+        public void RenewCard(BankCard card)
+        {
+            if (!card.IsExpired())
+            {
+                return;
+            }
+
+            switch (card)
+            {
+                case DebitCard debitCard:
+                    ((PersonalAccount)debitCard.Account).Card = new DebitCard(GenerateCardNumber(card.PaymentSystem), card.PaymentSystem, card.Account, debitCard.InterestRate);
+                    break;
+                case CreditCard creditCard:
+                    ((PersonalAccount)creditCard.Account).Card = new CreditCard(GenerateCardNumber(card.PaymentSystem), card.PaymentSystem, card.Account, creditCard.CreditLimit, creditCard.CreditLeft);
+                    break;
+                case PayoutCard payoutCard:
+                    ((PersonalAccount)payoutCard.Account).Card = new PayoutCard(GenerateCardNumber(card.PaymentSystem), card.PaymentSystem, card.Account);
+                    break;
+                case BusinessCard businessCard:
+                    ((BusinessAccount)businessCard.Account).Cards.Remove(businessCard);
+                    ((BusinessAccount)businessCard.Account).Cards.Add(new BusinessCard(GenerateCardNumber(card.PaymentSystem), card.PaymentSystem, card.Account, businessCard.OwnerFullName));
+                    break;
+                default:
+                    break;
+            }
         }
 
         public string GetIBAN(Account account)

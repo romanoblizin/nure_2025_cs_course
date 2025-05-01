@@ -14,8 +14,11 @@ namespace Course.Classes
         {
             InterestRate = interestRate;
         }
-
         public DebitCard(string number, PaymentSystem paymentSystem, string accountNumber, double interestRate) : base(number, paymentSystem, accountNumber)
+        {
+            InterestRate = interestRate;
+        }
+        public DebitCard(string number, PaymentSystem paymentSystem, Account account, double interestRate) : base(number, paymentSystem, account)
         {
             InterestRate = interestRate;
         }

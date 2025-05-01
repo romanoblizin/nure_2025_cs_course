@@ -10,6 +10,7 @@ namespace Course.Classes
     {
         public PayoutCard(string number, DateTime expirationDate, string cvv, PaymentSystem paymentSystem, string accountNumber) : base(number, expirationDate, cvv, paymentSystem, accountNumber) { }
         public PayoutCard(string number, PaymentSystem paymentSystem, string accountNumber) : base(number, paymentSystem, accountNumber) { }
+        public PayoutCard(string number, PaymentSystem paymentSystem, Account account) : base(number, paymentSystem, account) { }
 
         public override void Deposit(double amount)
         {

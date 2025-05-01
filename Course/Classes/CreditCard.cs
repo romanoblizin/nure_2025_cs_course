@@ -16,11 +16,15 @@ namespace Course.Classes
             CreditLimit = сreditLimit;
             CreditLeft = creditLeft;
         }
-
         public CreditCard(string number, PaymentSystem paymentSystem, string accountNumber, double сreditLimit) : base(number, paymentSystem, accountNumber)
         {
             CreditLimit = сreditLimit;
             CreditLeft = CreditLimit;
+        }
+        public CreditCard(string number, PaymentSystem paymentSystem, Account account, double сreditLimit, double creditLeft) : base(number, paymentSystem, account)
+        {
+            CreditLimit = сreditLimit;
+            CreditLeft = creditLeft;
         }
 
         // + override all payment funcs

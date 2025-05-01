@@ -14,10 +14,14 @@ namespace Course.Classes
         {
             OwnerFullName = ownerFullName;
         }
-
         public BusinessCard(string number, PaymentSystem paymentSystem, string accountNumber, string ownerFullName) : base(number, paymentSystem, accountNumber)
         {
             OwnerFullName = ownerFullName;
         }
+        public BusinessCard(string number, PaymentSystem paymentSystem, Account account, string ownerFullName) : base(number, paymentSystem, account)
+        {
+            OwnerFullName = ownerFullName;
+        }
     }
+}
 }
