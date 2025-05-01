@@ -25,14 +25,18 @@ namespace Course.Classes
             CompanyNumber = companyNumber;
             Cards = new List<BusinessCard>();
         }
-
-        public bool IsIPN
+        public override void AddTransaction(string transactionNumber, double amount, string? target, string comment, TransactionType type)
         {
-            get => CompanyNumber.Length == 8;
+            Transactions.Add(new BusinessTransaction(transactionNumber, amount, target, comment, type, CompanyName));
         }
-        public bool IsEDRPOU
+
+        public bool IsIPN()
         {
-            get => CompanyNumber.Length == 10;
+            return CompanyNumber.Length == 8;
+        }
+        public bool IsEDRPOU()
+        {
+            return CompanyNumber.Length == 10;
         }
     }
 }

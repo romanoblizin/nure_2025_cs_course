@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Course.Classes
@@ -43,6 +44,13 @@ namespace Course.Classes
             Accounts = accounts;
         }
 
-        
+        public static bool ValidatePhone(string phone)
+        {
+            return Regex.IsMatch(phone, @"^(\+380\d{9}|0\d{9})$");
+        }
+        public static bool ValidateEmail(string email)
+        {
+            return Regex.IsMatch(email, @"^[\w\.]+@\w+\.+\w{2,4}$");
+        }
     }
 }

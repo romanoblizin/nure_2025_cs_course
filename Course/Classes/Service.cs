@@ -12,5 +12,13 @@ namespace Course.Classes
         public string CompanyNumber { get; set; }
         public string OwnerFullName { get; set; }
         public string IBAN { get; set; }
+
+        public Service(string companyName, string companyNumber, string ownerFullName, string iban)
+        {
+            CompanyName = companyName;
+            CompanyNumber = companyNumber;
+            OwnerFullName = ownerFullName;
+            IBAN = iban;
+        }
     }
 }

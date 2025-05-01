@@ -9,7 +9,7 @@ namespace Course.Classes
     abstract class Account
     {
         public string Number { get; set; }
-        public double Balance { get; set; }
+        public virtual double Balance { get; set; }
         public string? Blocked { get; set; }
         public List<Transaction> Transactions { get; set; }
 
@@ -27,16 +27,19 @@ namespace Course.Classes
             Blocked = null;
             Transactions = new List<Transaction>();
         }
-        
-        public bool IsBlocked 
-        {
-            get => (Blocked == null);
-            set
-            {
-                if (value == IsBlocked) return;
 
-                Blocked = value ? "Причина не вказана" : null;
-            } 
+        public virtual void AddTransaction(string transactionNumber, double amount, string? target, string comment, TransactionType type)
+        {
+            Transactions.Add(new Transaction(transactionNumber, amount, target, comment, type));
+        }
+
+        public bool IsBlocked()
+        {
+            return Blocked == null;
+        }
+        public virtual bool IsAvailable()
+        {
+            return !IsBlocked();
         }
     }
 }

@@ -1,18 +1,19 @@
-﻿using System.Text.RegularExpressions;
-
-// todo
+﻿// todo
 /*
- * перевод средств
  * файловая система
  * поиски по критериям
  * изменение личных данных (профильных)
- * продление карты (если вышел срок)
+ * 
+ * newDay()
+ * депозитная система
  * 
  * снимать проценты за операции
  * премиум карты
  * 
  * кешбек
+ * 
  * квитанции
+ * системные часы
 */
 
 namespace Course.Classes
@@ -35,12 +36,12 @@ namespace Course.Classes
 
         public User? Register(string name, string surname, string phone, string password, string? email)
         {
-            if (name.Length < 2 || surname.Length < 2 || !ValidatePhone(phone) || email != null && !ValidateEmail(email) || password.Length < 8)
+            if (name.Length < 2 || surname.Length < 2 || !User.ValidatePhone(phone) || email != null && !User.ValidateEmail(email) || password.Length < 8)
             {
                 return null;
             }
 
-            if (Users.FirstOrDefault(u => u.Phone == phone) != null || email != null && Users.FirstOrDefault(u => u.Email == email) != null)
+            if (IsPhoneAvailable(phone) || email != null && IsEmailAvailable(email))
             {
                 return null;
             }
@@ -53,11 +54,11 @@ namespace Course.Classes
 
         public User? LogIn(string login, string password)
         {
-            if (ValidateEmail(login))
+            if (User.ValidateEmail(login))
             {
                 return Users.FirstOrDefault(u => u.Phone == login && u.Password == password);
             }
-            else if (ValidatePhone(login))
+            else if (User.ValidatePhone(login))
             {
                 return Users.FirstOrDefault(u => u.Phone == login && u.Password == password);
             }
@@ -103,6 +104,152 @@ namespace Course.Classes
             return account;
         }
 
+        public BusinessCard OpenBusinessCard(BusinessAccount account, PaymentSystem paymentSystem, string ownerFullName)
+        {
+            BusinessCard card = new BusinessCard(GenerateCardNumber(paymentSystem), paymentSystem, account, ownerFullName);
+
+            account.Cards.Add(card);
+
+            return card;
+        }
+
+        public bool Deposit(BankCard bankCard, double amount)
+        {
+            if (!bankCard.IsAvailable())
+                return false;
+
+            if (bankCard.Deposit(amount))
+            {
+                bankCard.AddTransaction(GenerateTransactionNumber(), amount, null, "", TransactionType.Deposit);
+                return true;
+            }
+
+            return false;
+        }
+
+        public bool Pay(BankCard bankCard, double amount, string comment)
+        {
+            if (!IsPaymentAvailable(bankCard.Account, amount))
+                return false;
+
+            bankCard.Account.Balance -= amount;
+            bankCard.AddTransaction(GenerateTransactionNumber(), -amount, null, comment, TransactionType.Transfer);
+
+            return true;
+        }
+
+        public bool PayService(Account account, double amount, Service service, string comment)
+        {
+            if (!IsPaymentAvailable(account, amount))
+                return false;
+
+            account.Balance -= amount;
+            account.AddTransaction(GenerateTransactionNumber(), -amount, service.CompanyName, comment, TransactionType.ServicePayment);
+
+            return true;
+        }
+
+        public bool TransferToBusinessAccount(Account accountFrom, BusinessAccount accountTo, double amount, string comment)
+        {
+            if (accountFrom == accountTo)
+            {
+                return false;
+            }
+
+            if (!accountTo.IsAvailable())
+            {
+                return false;
+            }
+
+            if (!IsPaymentAvailable(accountFrom, amount))
+                return false;
+
+            accountFrom.Balance -= amount;
+            accountTo.Balance += amount;
+
+            Transaction transaction = new Transaction(GenerateTransactionNumber(), -amount, accountTo.CompanyNumber, comment, TransactionType.Transfer);
+            accountFrom.Transactions.Add(transaction);
+            accountTo.Transactions.Add(new BusinessTransaction(transaction.Number, transaction.Amount, transaction.Target, transaction.Description, transaction.Type, accountTo.CompanyName));
+
+            return true;
+        }
+
+        public bool TransferToCard(Account accountFrom, BankCard cardTo, double amount, string comment)
+        {
+            if (accountFrom == cardTo.Account)
+            {
+                return false;
+            }
+
+            if (!cardTo.IsAvailable() || cardTo is PayoutCard)
+            {
+                return false;
+            }
+
+            if (!IsPaymentAvailable(accountFrom, amount))
+                return false;
+
+            accountFrom.Balance -= amount;
+            cardTo.Account.Balance += amount;
+
+            Transaction transaction = new Transaction(GenerateTransactionNumber(), -amount, cardTo.Number, comment, TransactionType.Transfer);
+            accountFrom.Transactions.Add(transaction);
+
+            if (cardTo is BusinessCard businessCardTo)
+            {
+                cardTo.Account.Transactions.Add(new BusinessTransaction(transaction.Number, transaction.Amount, transaction.Target, transaction.Description, transaction.Type, businessCardTo.OwnerFullName));
+            }
+            else
+            {
+                transaction.Amount *= -1;
+                cardTo.Account.Transactions.Add(transaction);
+            }            
+            
+            return true;
+        }
+
+        public bool TransferToCard(Account accountFrom, string accountToStr, double amount, string comment)
+        {
+            BankCard? cardTo = GetCardByNumber(accountFrom.Number);
+
+            if (cardTo != null)
+            {
+                return TransferToCard(accountFrom, cardTo, amount, comment);
+            }
+
+            if (!IsPaymentAvailable(accountFrom, amount))
+                return false;
+
+            accountFrom.Balance -= amount;
+            accountFrom.AddTransaction(GenerateTransactionNumber(), -amount, accountToStr, comment, TransactionType.Transfer);
+
+            return true;
+        }
+
+        public bool TransferToIBAN(Account accountFrom, string iban, double amount, string comment)
+        {
+            Account? accountTo = GetAccountByIBAN(iban);
+            if (accountTo != null)
+            {
+                if (accountTo is PersonalAccount personalAccountTo)
+                {
+                    return TransferToCard(accountFrom, personalAccountTo.Card, amount, comment);
+                }
+                else if (accountTo is BusinessAccount businessAccountTo)
+                {
+                    return TransferToBusinessAccount(accountFrom, businessAccountTo, amount, comment);
+                }
+            }
+
+            if (!IsPaymentAvailable(accountFrom, amount))
+                return false;
+
+            accountFrom.Balance -= amount;
+            accountFrom.AddTransaction(GenerateTransactionNumber(), -amount, iban, comment, TransactionType.Transfer);
+
+            return true;
+        }
+
         public void RenewCard(BankCard card)
         {
             if (!card.IsExpired())
@@ -128,11 +275,6 @@ namespace Course.Classes
                 default:
                     break;
             }
-        }
-
-        public string GetIBAN(Account account)
-        {
-            return $"UA00{bankCode}{account.Number}";
         }
 
         private string GenerateAccountNumber()
@@ -218,14 +360,107 @@ namespace Course.Classes
             int checkDigit = (10 - (sum % 10)) % 10;
             return checkDigit.ToString();
         }
-        private static bool ValidatePhone(string phone)
+
+        public BankCard? GetCardByNumber(string number)
         {
-            return Regex.IsMatch(phone, @"^(\+380\d{9}|0\d{9})$");
+            foreach (User user in Users)
+            {
+                foreach (Account account in user.Accounts)
+                {
+                    if (account is PersonalAccount personalAccount)
+                    {
+                        if (personalAccount.Card.Number == number)
+                        {
+                            return personalAccount.Card;
+                        }
+                    }
+                    else
+                    {
+                        BusinessAccount businessAccount = (BusinessAccount)account;
+
+                        foreach (BusinessCard card in businessAccount.Cards)
+                        {
+                            if (card.Number == number)
+                            {
+                                return card;
+                            }
+                        }
+                    }
+                }
+            }
+
+            return null;
         }
-        private static bool ValidateEmail(string email)
+        public Account? GetAccountByIBAN(string iban)
         {
-            return Regex.IsMatch(email, @"^[\w\.]+@\w+\.+\w{2,4}$");
+            foreach (User user in Users)
+            {
+                foreach (Account account in user.Accounts)
+                {
+                    if (GetIBAN(account) == iban)
+                        return account;
+                }
+            }
+
+            return null;
+        }
+
+        public bool IsPhoneAvailable(string phone)
+        {
+            foreach (User user in Users)
+            {
+                if (user.Phone == phone)
+                    return false;
+            }
+
+            return true;
+        }
+
+        public bool IsEmailAvailable(string email)
+        {
+            foreach (User user in Users)
+            {
+                if (user.Email == email)
+                    return false;
+            }
+
+            return true;
+        }
+
+        public static string GetIBAN(Account account)
+        {
+            return $"UA00{bankCode}{account.Number}";
+        }
+
+        private static bool IsPaymentAvailable(Account account, double amount)
+        {
+            if (amount < 0)
+            {
+                return false;
+            }
+
+            if (!account.IsAvailable())
+            {
+                return false;
+            }
+
+            if (account.Balance < amount)
+            {
+                if (account is PersonalAccount personalAccount)
+                {
+                    if (personalAccount.Card is CreditCard creditCard)
+                    {
+                        if (creditCard.CreditLeft + personalAccount.Balance >= amount)
+                        {
+                            return true;
+                        }
+                    }
+                }
+
+                return false;
+            }
+
+            return true;
         }
     }
-
 }

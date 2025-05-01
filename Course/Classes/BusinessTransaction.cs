@@ -8,15 +8,15 @@ namespace Course.Classes
 {
     class BusinessTransaction : Transaction
     {
-        public string CardNumber { get; set; }
+        public string OwnerFullName { get; set; }
 
-        public BusinessTransaction(string number, DateTime date, double amount, string? target, string description, TransactionType type, string cardNumber) : base(number, date, amount, target, description, type)
+        public BusinessTransaction(string number, DateTime date, double amount, string? target, string description, TransactionType type, string ownerFullName) : base(number, date, amount, target, description, type)
         {
-            CardNumber = cardNumber;
+            OwnerFullName = ownerFullName;
         }
-        public BusinessTransaction(string number, double amount, string? target, string description, TransactionType type, string cardNumber) : base(number, amount, target, description, type)
+        public BusinessTransaction(string number, double amount, string? target, string description, TransactionType type, string ownerFullName) : base(number, amount, target, description, type)
         {
-            CardNumber = cardNumber;
+            OwnerFullName = ownerFullName;
         }
     }
 }

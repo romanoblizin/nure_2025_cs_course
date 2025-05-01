@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Transactions;
+using System.Xml.Linq;
 
 namespace Course.Classes
 {
@@ -49,30 +51,46 @@ namespace Course.Classes
         public BankCard(string number, PaymentSystem paymentSystem, Account account) : this(number, GenerateExpirationDate(), GenerateCVV(), paymentSystem, account)
         { }
         
-        public virtual void Deposit(double amount)
+        public virtual bool Deposit(double amount)
         {
+            if (amount <= 0)
+            {
+                return false;
+            }
+
             if (!IsAvailable())
             {
-                return;
+                return false;
             }
 
             Account.Balance += amount;
+            return true;
         }
 
-        public virtual void Withdraw(double amount)
+        public virtual bool Withdraw(double amount)
         {
+            if (amount <= 0)
+            {
+                return false;
+            }
+
             if (!IsAvailable())
             {
-                return;
+                return false;
             }
 
             if (Account.Balance < amount)
             {
-                return;
+                return false;
             }
 
             Account.Balance -= amount;
-            // new Transaction(null, -amount, null, "Зняття коштів", TransactionType.Withdraw);
+            return true;
+        }
+
+        public virtual void AddTransaction(string transactionNumber, double amount, string? target, string comment, TransactionType type)
+        {
+            Account.Transactions.Add(new Transaction(transactionNumber, amount, target, comment, type));
         }
 
         private static string GenerateCVV()
@@ -99,7 +117,7 @@ namespace Course.Classes
         }
         public bool IsAvailable()
         {
-            return !(Account.IsBlocked || IsExpired());
+            return !(Account.IsBlocked() || IsExpired());
         }
         public override bool Equals(object? obj)
         {

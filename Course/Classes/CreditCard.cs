@@ -9,7 +9,7 @@ namespace Course.Classes
     class CreditCard : BankCard
     {
         public double CreditLimit { get; set; }
-        public double CreditLeft {  get; set; }
+        public double CreditLeft { get; set; }
 
         public CreditCard(string number, DateTime expirationDate, string cvv, PaymentSystem paymentSystem, string accountNumber, double сreditLimit, double creditLeft) : base(number, expirationDate, cvv, paymentSystem, accountNumber)
         {

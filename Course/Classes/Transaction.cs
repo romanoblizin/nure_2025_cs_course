@@ -13,7 +13,9 @@ namespace Course.Classes
         Deposit,
         Withdraw,
         Payment,
+        ServicePayment,
         Interest,
+        Payout,
         CreditPayment,
         DepositPayment
     }

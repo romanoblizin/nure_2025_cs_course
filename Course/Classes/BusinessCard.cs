@@ -22,6 +22,10 @@ namespace Course.Classes
         {
             OwnerFullName = ownerFullName;
         }
+
+        public override void AddTransaction(string transactionNumber, double amount, string? target, string comment, TransactionType type)
+        {
+            Account.Transactions.Add(new BusinessTransaction(transactionNumber, amount, target, comment, type, OwnerFullName));
+        }
     }
-}
 }

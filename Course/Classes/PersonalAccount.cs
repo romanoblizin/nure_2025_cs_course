@@ -8,6 +8,28 @@ namespace Course.Classes
 {
     class PersonalAccount : Account
     {
+        public override double Balance
+        {
+            get => Balance;
+            set
+            {
+                if (Card is CreditCard creditCard)
+                {
+                    if (creditCard.CreditLimit != creditCard.CreditLeft)
+                    {
+                        creditCard.CreditLeft += value;
+
+                        if (creditCard.CreditLeft > creditCard.CreditLimit)
+                        {
+                            Balance = creditCard.CreditLeft - creditCard.CreditLimit;
+                            creditCard.CreditLeft = creditCard.CreditLimit;
+                        }
+                    }
+                }
+
+                Balance = value;
+            }
+        }
         public BankCard Card { get; set; }
 
         public PersonalAccount(string number, double balance, string? blocked, List<Transaction> transactions, BankCard card) : base(number, balance, blocked, transactions)
@@ -17,6 +39,11 @@ namespace Course.Classes
         public PersonalAccount(string number, BankCard card) : base(number)
         {
             Card = card;
+        }
+
+        public override bool IsAvailable()
+        {
+            return base.IsAvailable() && !Card.IsExpired();
         }
     }
 }
