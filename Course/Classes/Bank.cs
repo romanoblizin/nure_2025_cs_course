@@ -4,9 +4,6 @@
  * поиски по критериям
  * изменение личных данных (профильных)
  * 
- * премиум карты
- * снимать проценты за операции
- * 
  * кешбек
  * 
  * системные часы
@@ -17,6 +14,7 @@ namespace Course.Classes
     class Bank
     {
         public const string bankCode = "111111";
+        private const double premiumCost = 300;
         private static readonly Dictionary<PaymentSystem, (int MinValue, int MaxValue)> paymentSystemRanges = new()
         {
             { PaymentSystem.Visa, (400000, 499999) },
@@ -82,11 +80,11 @@ namespace Course.Classes
                 return false;
 
             accountFrom.Balance -= amount;
-            accountTo.Balance += amount;
+            accountTo.Balance += accountFrom.GetTransferAmount(amount);
 
             Transaction transaction = new Transaction(GenerateTransactionNumber(), -amount, accountTo.CompanyNumber, comment, TransactionType.Transfer);
             accountFrom.Transactions.Add(transaction);
-            accountTo.Transactions.Add(new BusinessTransaction(transaction.Number, transaction.Amount, transaction.Target, transaction.Description, transaction.Type, accountTo.CompanyName));
+            accountTo.Transactions.Add(new BusinessTransaction(transaction.Number, accountFrom.GetTransferAmount(amount), transaction.Target, transaction.Description, transaction.Type, accountTo.CompanyName));
 
             return true;
         }
@@ -107,27 +105,27 @@ namespace Course.Classes
                 return false;
 
             accountFrom.Balance -= amount;
-            cardTo.Account.Balance += amount;
+            cardTo.Account.Balance += accountFrom.GetTransferAmount(amount);
 
             Transaction transaction = new Transaction(GenerateTransactionNumber(), -amount, cardTo.Number, comment, TransactionType.Transfer);
             accountFrom.Transactions.Add(transaction);
 
             if (cardTo is BusinessCard businessCardTo)
             {
-                cardTo.Account.Transactions.Add(new BusinessTransaction(transaction.Number, transaction.Amount, transaction.Target, transaction.Description, transaction.Type, businessCardTo.OwnerFullName));
+                cardTo.Account.Transactions.Add(new BusinessTransaction(transaction.Number, accountFrom.GetTransferAmount(amount), transaction.Target, transaction.Description, transaction.Type, businessCardTo.OwnerFullName));
             }
             else
             {
-                transaction.Amount *= -1;
+                transaction.Amount = accountFrom.GetTransferAmount(amount);
                 cardTo.Account.Transactions.Add(transaction);
             }            
             
             return true;
         }
 
-        public bool TransferToCard(Account accountFrom, string accountToStr, double amount, string comment)
+        public bool TransferToCard(Account accountFrom, string cardNumberToStr, double amount, string comment)
         {
-            BankCard? cardTo = GetCardByNumber(accountFrom.Number);
+            BankCard? cardTo = GetCardByNumber(cardNumberToStr);
 
             if (cardTo != null)
             {
@@ -138,7 +136,7 @@ namespace Course.Classes
                 return false;
 
             accountFrom.Balance -= amount;
-            accountFrom.AddTransaction(GenerateTransactionNumber(), -amount, accountToStr, comment, TransactionType.Transfer);
+            accountFrom.AddTransaction(GenerateTransactionNumber(), -amount, cardNumberToStr, comment, TransactionType.Transfer);
 
             return true;
         }
@@ -183,6 +181,25 @@ namespace Course.Classes
                         if (deposit.IsExpired(now))
                         {
                             card.CloseDeposit(deposit);
+                        }
+                    }
+                }
+
+                foreach (User user in Users)
+                {
+                    foreach (Account account in user.Accounts)
+                    {
+                        if (account.Premium)
+                        {
+                            if (account.Balance >= premiumCost)
+                            {
+                                account.Balance -= premiumCost;
+                                account.Transactions.Add(new Transaction(GenerateTransactionNumber(), -premiumCost, null, "", TransactionType.Premium));
+                            }
+                            else
+                            {
+                                account.Premium = false;
+                            }
                         }
                     }
                 }

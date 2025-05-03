@@ -11,17 +11,19 @@ namespace Course.Classes
         public string Number { get; set; }
         public virtual double Balance { get; set; }
         public string? Blocked { get; set; }
+        public bool Premium { get; set; }
         public string IBAN
         {
             get => $"UA00{Bank.bankCode}{Number}";
         }
         public List<Transaction> Transactions { get; set; }
 
-        public Account(string number, double balance, string? blocked, List<Transaction> transactions)
+        public Account(string number, double balance, string? blocked, bool premium, List<Transaction> transactions)
         {
             Number = number;
             Balance = balance;
             Blocked = blocked;
+            Premium = premium;
             Transactions = transactions;
         }
         public Account(string number)
@@ -29,6 +31,7 @@ namespace Course.Classes
             Number = number;
             Balance = 0;
             Blocked = null;
+            Premium = false;
             Transactions = new List<Transaction>();
         }
 
@@ -37,6 +40,10 @@ namespace Course.Classes
             Transactions.Add(new Transaction(transactionNumber, amount, target, comment, type));
         }
 
+        public double GetTransferAmount(double amount)
+        {
+            return Math.Round(amount * (Premium ? 1 : 0.95), 2);
+        }
         public bool IsBlocked()
         {
             return Blocked == null;

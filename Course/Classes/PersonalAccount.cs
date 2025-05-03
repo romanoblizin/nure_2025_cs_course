@@ -38,7 +38,7 @@ namespace Course.Classes
         }
         public BankCard Card { get; set; }
 
-        public PersonalAccount(string number, double balance, string? blocked, List<Transaction> transactions, BankCard card) : base(number, balance, blocked, transactions)
+        public PersonalAccount(string number, double balance, string? blocked, bool premium, List<Transaction> transactions, BankCard card) : base(number, balance, blocked, premium, transactions)
         {
             Card = card;
         }

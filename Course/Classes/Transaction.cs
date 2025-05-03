@@ -13,7 +13,8 @@ namespace Course.Classes
         Payout,
         CreditInterest,
         DepositOpen,
-        DepositClose
+        DepositClose,
+        Premium
     }
 
     class Transaction
