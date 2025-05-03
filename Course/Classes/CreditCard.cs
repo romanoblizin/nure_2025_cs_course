@@ -10,21 +10,24 @@ namespace Course.Classes
     {
         public double CreditLimit { get; set; }
         public double CreditLeft { get; set; }
+        public DateTime? CreditTriggered { get; set; }
 
-        public CreditCard(string number, DateTime expirationDate, string cvv, PaymentSystem paymentSystem, string accountNumber, double сreditLimit, double creditLeft) : base(number, expirationDate, cvv, paymentSystem, accountNumber)
+        public CreditCard(string number, DateTime expirationDate, string cvv, PaymentSystem paymentSystem, string accountNumber, double сreditLimit, double creditLeft, DateTime? creditTriggered) : base(number, expirationDate, cvv, paymentSystem, accountNumber)
         {
             CreditLimit = сreditLimit;
             CreditLeft = creditLeft;
+            CreditTriggered = creditTriggered;
         }
         public CreditCard(string number, PaymentSystem paymentSystem, string accountNumber, double сreditLimit) : base(number, paymentSystem, accountNumber)
         {
             CreditLimit = сreditLimit;
             CreditLeft = CreditLimit;
         }
-        public CreditCard(string number, PaymentSystem paymentSystem, Account account, double сreditLimit, double creditLeft) : base(number, paymentSystem, account)
+        public CreditCard(string number, PaymentSystem paymentSystem, Account account, double сreditLimit, double creditLeft, DateTime? creditTriggered) : base(number, paymentSystem, account)
         {
             CreditLimit = сreditLimit;
             CreditLeft = creditLeft;
+            CreditTriggered = creditTriggered;
         }
 
         public override void RenewCard()
@@ -34,7 +37,7 @@ namespace Course.Classes
                 return;
             }
 
-            ((PersonalAccount)Account).Card = new CreditCard(Bank.GenerateCardNumber(PaymentSystem), PaymentSystem, Account, CreditLimit, CreditLeft);
+            ((PersonalAccount)Account).Card = new CreditCard(Bank.GenerateCardNumber(PaymentSystem), PaymentSystem, Account, CreditLimit, CreditLeft, CreditTriggered);
         }
 
         public override bool IsPaymentAvailable(double amount)

@@ -4,9 +4,6 @@
  * поиски по критериям
  * изменение личных данных (профильных)
  * 
- * newDay()
- * депозитная система
- * 
  * премиум карты
  * снимать проценты за операции
  * 
@@ -20,6 +17,11 @@ namespace Course.Classes
     class Bank
     {
         public const string bankCode = "111111";
+        private static readonly Dictionary<PaymentSystem, (int MinValue, int MaxValue)> paymentSystemRanges = new()
+        {
+            { PaymentSystem.Visa, (400000, 499999) },
+            { PaymentSystem.Mastercard, (510000, 559999) }
+        };
         private static HashSet<string> accountNumbers = new HashSet<string>();
         private static HashSet<string> cardNumbers = new HashSet<string>();
         private static HashSet<string> transactionNumbers = new HashSet<string>();
@@ -165,6 +167,48 @@ namespace Course.Classes
             return true;
         }
 
+        public void NewDay(DateTime now)
+        {
+            
+            if (now.Day == 1)
+            {
+                List<BankCard> debitCards = GetCardsByType(typeof(DebitCard));
+
+                foreach (DebitCard card in debitCards)
+                {
+                    card.ApplyMonthlyInterest();
+
+                    foreach (Deposit deposit in card.Deposits)
+                    {
+                        if (deposit.IsExpired(now))
+                        {
+                            card.CloseDeposit(deposit);
+                        }
+                    }
+                }
+            }
+
+            List<BankCard> creditCards = GetCardsByType(typeof(DebitCard));
+
+            foreach (CreditCard card in creditCards)
+            {
+                if (card.CreditTriggered != null)
+                {
+                    if (card.CreditTriggered.Value - now >= TimeSpan.FromDays(5))
+                    {
+                        double interest = Math.Round((card.CreditLimit - card.CreditLeft) * 0.36 / 365, 2);
+                        card.CreditLeft -= interest;
+                        card.Account.AddTransaction(GenerateTransactionNumber(), -interest, null, "", TransactionType.CreditInterest);
+                    }
+                }
+            }
+        }
+
+        public void NewDay()
+        {
+            NewDay(DateTime.Today);
+        }
+
         public static string GenerateAccountNumber()
         {
             string result;
@@ -185,18 +229,10 @@ namespace Course.Classes
             string result;
             Random rnd = new Random();
 
-            switch (paymentSystem)
-            {
-                case PaymentSystem.Visa:
-                    result = rnd.Next(400000, 500000).ToString();
-                    break;
-                case PaymentSystem.Mastercard:
-                    result = rnd.Next(510000, 560000).ToString();
-                    break;
-                default:
-                    result = "000000";
-                    break;
-            }
+            if (paymentSystemRanges.TryGetValue(paymentSystem, out var paymentSystemRange))
+                result = rnd.Next(paymentSystemRange.MinValue, paymentSystemRange.MaxValue + 1).ToString();
+            else
+                result = "000000";
 
             do
             {
@@ -229,33 +265,9 @@ namespace Course.Classes
 
         public BankCard? GetCardByNumber(string number)
         {
-            foreach (User user in Users)
-            {
-                foreach (Account account in user.Accounts)
-                {
-                    if (account is PersonalAccount personalAccount)
-                    {
-                        if (personalAccount.Card.Number == number)
-                        {
-                            return personalAccount.Card;
-                        }
-                    }
-                    else
-                    {
-                        BusinessAccount businessAccount = (BusinessAccount)account;
+            List<BankCard> Cards = GetCardsByType(typeof(BankCard));
 
-                        foreach (BusinessCard card in businessAccount.Cards)
-                        {
-                            if (card.Number == number)
-                            {
-                                return card;
-                            }
-                        }
-                    }
-                }
-            }
-
-            return null;
+            return Cards.FirstOrDefault(x => x.Number == number);
         }
         public Account? GetAccountByIBAN(string iban)
         {
@@ -269,6 +281,48 @@ namespace Course.Classes
             }
 
             return null;
+        }
+
+        private List<BankCard> GetCardsByType(Type cardType)
+        {
+            Type accountType;
+            List<BankCard> Cards = new List<BankCard> ();
+
+            if (cardType == typeof(BusinessCard))
+                accountType = typeof(BusinessAccount);
+            else if (cardType == typeof(DebitCard) || cardType == typeof(CreditCard) || cardType == typeof(PayoutCard))
+                accountType = typeof(PersonalAccount);
+            else if (cardType == typeof(BankCard))
+                accountType = typeof(Account);
+            else
+                return Cards;
+
+            foreach (User user in Users)
+            {
+                foreach (Account account in user.Accounts)
+                {
+                    if (accountType.IsAssignableFrom(account.GetType()))
+                    {
+                        if (accountType == typeof(PersonalAccount))
+                        {
+                            PersonalAccount personalAccount = (PersonalAccount)account;
+                            Cards.Add(personalAccount.Card);
+                        }
+                        else
+                        {
+                            BusinessAccount businessAccount = (BusinessAccount)account;
+
+                            foreach (BusinessCard card in businessAccount.Cards)
+                            {
+                                Cards.Add(card);
+                            }
+                        }
+                    }
+                    
+                }
+            }
+
+            return Cards;
         }
 
         public bool IsPhoneAvailable(string phone)

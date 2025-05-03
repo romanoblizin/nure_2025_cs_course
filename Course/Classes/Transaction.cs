@@ -11,6 +11,7 @@ namespace Course.Classes
         ServicePayment,
         Interest,
         Payout,
+        CreditInterest,
         DepositOpen,
         DepositClose
     }

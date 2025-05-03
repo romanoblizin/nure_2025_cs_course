@@ -20,10 +20,15 @@ namespace Course.Classes
                     {
                         creditCard.CreditLeft += value;
 
-                        if (creditCard.CreditLeft > creditCard.CreditLimit)
+                        if (creditCard.CreditLeft >= creditCard.CreditLimit)
                         {
                             Balance = creditCard.CreditLeft - creditCard.CreditLimit;
                             creditCard.CreditLeft = creditCard.CreditLimit;
+                            creditCard.CreditTriggered = null;
+                        }
+                        else if (creditCard.CreditTriggered != null)
+                        {
+                            creditCard.CreditTriggered = DateTime.Today;
                         }
                     }
                 }

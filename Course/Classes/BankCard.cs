@@ -173,5 +173,10 @@ namespace Course.Classes
 
             return false;
         }
+
+        public override int GetHashCode()
+        {
+            return Number.GetHashCode();
+        }
     }
 }
