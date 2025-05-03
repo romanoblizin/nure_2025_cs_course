@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace Course.Classes
 {
     class BusinessCard : BankCard
     {
         public string OwnerFullName { get; set; }
 
-        public BusinessCard(string number, DateTime expirationDate, string cvv, PaymentSystem paymentSystem, string accountNumber, string ownerFullName) : base(number, expirationDate, cvv, paymentSystem, accountNumber)
+        private BusinessCard(string number, DateTime expirationDate, string cvv, PaymentSystem paymentSystem, string ownerFullName) : base(number, expirationDate, cvv, paymentSystem)
         {
             OwnerFullName = ownerFullName;
         }
@@ -26,6 +21,22 @@ namespace Course.Classes
         public override void AddTransaction(string transactionNumber, double amount, string? target, string comment, TransactionType type)
         {
             Account.Transactions.Add(new BusinessTransaction(transactionNumber, amount, target, comment, type, OwnerFullName));
+        }
+
+        public override void SaveToFile(StreamWriter sw)
+        {
+            base.SaveToFile(sw);
+            sw.WriteLine(OwnerFullName);
+        }
+        public static BusinessCard LoadFromFile(StreamReader sr)
+        {
+            return new BusinessCard(
+                sr.ReadLine(),
+                DateTime.Parse(sr.ReadLine()),
+                sr.ReadLine(),
+                (PaymentSystem)Enum.Parse(typeof(PaymentSystem), sr.ReadLine()),
+                sr.ReadLine()
+            );
         }
 
         public override void RenewCard()

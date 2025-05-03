@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Course.Classes
+﻿namespace Course.Classes
 {
     class PayoutCard : BankCard
     {
-        public PayoutCard(string number, DateTime expirationDate, string cvv, PaymentSystem paymentSystem, string accountNumber) : base(number, expirationDate, cvv, paymentSystem, accountNumber) { }
+        private PayoutCard(string number, DateTime expirationDate, string cvv, PaymentSystem paymentSystem) : base(number, expirationDate, cvv, paymentSystem) { }
         public PayoutCard(string number, PaymentSystem paymentSystem, string accountNumber) : base(number, paymentSystem, accountNumber) { }
         public PayoutCard(string number, PaymentSystem paymentSystem, Account account) : base(number, paymentSystem, account) { }
 
@@ -31,6 +25,16 @@ namespace Course.Classes
             }
 
             ((PersonalAccount)Account).Card = new PayoutCard(Bank.GenerateCardNumber(PaymentSystem), PaymentSystem, Account);
+        }
+
+        public static PayoutCard LoadFromFile(StreamReader sr)
+        {
+            return new PayoutCard(
+                sr.ReadLine(),
+                DateTime.Parse(sr.ReadLine()),
+                sr.ReadLine(),
+                (PaymentSystem)Enum.Parse(typeof(PaymentSystem), sr.ReadLine())
+            );
         }
     }
 }

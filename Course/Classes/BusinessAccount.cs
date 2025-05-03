@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.TextBox;
-
-namespace Course.Classes
+﻿namespace Course.Classes
 {
     class BusinessAccount : Account
     {
@@ -13,7 +6,7 @@ namespace Course.Classes
         public string CompanyNumber { get; set; }
         public List<BusinessCard> Cards { get; set; }
 
-        public BusinessAccount(string number, double balance, string? blocked, bool premium, List<Transaction> transactions, string companyName, string companyNumber, List<BusinessCard> cards) : base(number, balance, blocked, premium, transactions)
+        private BusinessAccount(string number, double balance, string? blocked, bool premium, List<Transaction> transactions, string companyName, string companyNumber, List<BusinessCard> cards) : base(number, balance, blocked, premium, transactions)
         {
             CompanyName = companyName;
             CompanyNumber = companyNumber;
@@ -38,6 +31,44 @@ namespace Course.Classes
         public override void AddTransaction(string transactionNumber, double amount, string? target, string comment, TransactionType type)
         {
             Transactions.Add(new BusinessTransaction(transactionNumber, amount, target, comment, type, CompanyName));
+        }
+
+        public override void SaveToFile(StreamWriter sw)
+        {
+            base.SaveToFile(sw);
+            sw.WriteLine(CompanyName);
+            sw.WriteLine(CompanyNumber);
+
+            sw.WriteLine(Cards.Count.ToString());
+            foreach (BusinessCard card in Cards)
+            {
+                sw.WriteLine(card.GetType().ToString());
+                card.SaveToFile(sw);
+            }
+        }
+        private static List<BusinessCard> LoadCards(StreamReader sr)
+        {
+            List<BusinessCard> cards = new List<BusinessCard>();
+
+            for (int i = 0; i < Convert.ToInt32(sr.ReadLine()); i++)
+            {
+                cards.Add((BusinessCard)LoadCard(sr));
+            }
+
+            return cards;
+        }
+        public static BusinessAccount LoadFromFile(StreamReader sr)
+        {
+            return new BusinessAccount(
+                sr.ReadLine(),
+                Convert.ToDouble(sr.ReadLine()),
+                sr.ReadLine(),
+                Convert.ToBoolean(sr.ReadLine()),
+                LoadTransactions(sr),
+                sr.ReadLine(),
+                sr.ReadLine(),
+                LoadCards(sr)
+            );
         }
 
         public bool IsIPN()

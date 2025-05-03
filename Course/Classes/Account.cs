@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Course.Classes
+﻿namespace Course.Classes
 {
     abstract class Account
     {
@@ -12,13 +6,13 @@ namespace Course.Classes
         public virtual double Balance { get; set; }
         public string? Blocked { get; set; }
         public bool Premium { get; set; }
+        public List<Transaction> Transactions { get; set; }
         public string IBAN
         {
             get => $"UA00{Bank.bankCode}{Number}";
         }
-        public List<Transaction> Transactions { get; set; }
 
-        public Account(string number, double balance, string? blocked, bool premium, List<Transaction> transactions)
+        protected Account(string number, double balance, string? blocked, bool premium, List<Transaction> transactions)
         {
             Number = number;
             Balance = balance;
@@ -38,6 +32,53 @@ namespace Course.Classes
         public virtual void AddTransaction(string transactionNumber, double amount, string? target, string comment, TransactionType type)
         {
             Transactions.Add(new Transaction(transactionNumber, amount, target, comment, type));
+        }
+
+        public virtual void SaveToFile(StreamWriter sw)
+        {
+            sw.WriteLine(Number);
+            sw.WriteLine(Balance.ToString());
+            sw.WriteLine(Blocked);
+            sw.WriteLine(Premium.ToString());
+
+            sw.WriteLine(Transactions.Count);
+            foreach (Transaction transaction in Transactions)
+            {
+                sw.WriteLine(transaction.GetType().Name);
+                transaction.SaveToFile(sw);
+            }
+        }
+
+        protected static List<Transaction> LoadTransactions(StreamReader sr)
+        {
+            List<Transaction> transactions = new List<Transaction>();
+
+            for (int i = 0; i < Convert.ToInt32(sr.ReadLine()); i++)
+            {
+                if (sr.ReadLine() == "Transaction")
+                    Transaction.LoadFromFile(sr);
+                else
+                    BusinessTransaction.LoadFromFile(sr);
+            }
+
+            return transactions;
+        }
+        protected static BankCard LoadCard(StreamReader sr)
+        {
+            var line = sr.ReadLine();
+            switch (line)
+            {
+                case "DebitCard":
+                    return DebitCard.LoadFromFile(sr);
+                case "CreditCard":
+                    return CreditCard.LoadFromFile(sr);
+                case "PayoutCard":
+                    return PayoutCard.LoadFromFile(sr);
+                case "BusinessCard":
+                    return BusinessCard.LoadFromFile(sr);
+                default:
+                    throw new Exception();
+            }
         }
 
         public double GetTransferAmount(double amount)

@@ -4,6 +4,8 @@
  * поиски по критериям
  * изменение личных данных (профильных)
  * 
+ * service management
+ * 
  * системные часы
 */
 
@@ -13,7 +15,7 @@ namespace Course.Classes
     {
         public const string bankCode = "111111";
         private const double premiumCost = 300;
-        private static readonly Dictionary<PaymentSystem, (int MinValue, int MaxValue)> paymentSystemRanges = new()
+        private static Dictionary<PaymentSystem, (int MinValue, int MaxValue)> paymentSystemRanges = new()
         {
             { PaymentSystem.Visa, (400000, 499999) },
             { PaymentSystem.Mastercard, (510000, 559999) }
@@ -21,24 +23,32 @@ namespace Course.Classes
         private static HashSet<string> accountNumbers = new HashSet<string>();
         private static HashSet<string> cardNumbers = new HashSet<string>();
         private static HashSet<string> transactionNumbers = new HashSet<string>();
-        private static List<User> Users { get; set; } = new List<User>();
+        public static List<User> users { get; set; } = new List<User>();
+        private static List<Service> services { get; set; } = new List<Service>();
 
-        public Bank() { }
+        public Bank()
+        {
+            accountNumbers.Clear();
+            cardNumbers.Clear();
+            transactionNumbers.Clear();
+            users.Clear();
+            services.Clear();
+        }
 
-        public User? Register(string name, string surname, string phone, string password, string? email)
+        public User? Register(string name, string surname, string? patronymic, string phone, string password, string? email)
         {
             if (name.Length < 2 || surname.Length < 2 || !User.ValidatePhone(phone) || email != null && !User.ValidateEmail(email) || password.Length < 8)
             {
                 return null;
             }
 
-            if (IsPhoneAvailable(phone) || email != null && IsEmailAvailable(email))
+            if (!IsPhoneAvailable(phone) || email != null && !IsEmailAvailable(email))
             {
                 return null;
             }
 
-            User user = new User(name, surname, phone, password, email);
-            Users.Add(user);
+            User user = new User(name, surname, patronymic, phone, password, email);
+            users.Add(user);
 
             return user;
         }
@@ -47,11 +57,11 @@ namespace Course.Classes
         {
             if (User.ValidateEmail(login))
             {
-                return Users.FirstOrDefault(u => u.Phone == login && u.Password == password);
+                return users.FirstOrDefault(u => u.Phone == login && u.Password == password);
             }
             else if (User.ValidatePhone(login))
             {
-                return Users.FirstOrDefault(u => u.Phone == login && u.Password == password);
+                return users.FirstOrDefault(u => u.Phone == login && u.Password == password);
             }
             else
             {
@@ -113,8 +123,8 @@ namespace Course.Classes
             {
                 transaction.Amount = accountFrom.GetTransferAmount(amount);
                 cardTo.Account.Transactions.Add(transaction);
-            }            
-            
+            }
+
             return true;
         }
 
@@ -162,7 +172,7 @@ namespace Course.Classes
 
         public void NewDay(DateTime now)
         {
-            
+
             if (now.Day == 1)
             {
                 List<BankCard> debitCards = GetCardsByType(typeof(DebitCard));
@@ -171,7 +181,7 @@ namespace Course.Classes
                 {
                     card.ApplyMonthlyInterest();
 
-                    foreach (Deposit deposit in card.Deposits)
+                    foreach (DepositClass deposit in card.Deposits)
                     {
                         if (deposit.IsExpired(now))
                         {
@@ -180,7 +190,7 @@ namespace Course.Classes
                     }
                 }
 
-                foreach (User user in Users)
+                foreach (User user in users)
                 {
                     foreach (Account account in user.Accounts)
                     {
@@ -208,7 +218,7 @@ namespace Course.Classes
                 {
                     if (card.CreditTriggered.Value - now >= TimeSpan.FromDays(5))
                     {
-                        double interest = Math.Round((card.CreditLimit - card.CreditLeft) * 0.36 / 365, 2);
+                        double interest = Math.Round((card.CreditLimit - card.CreditLeft) * 0.36 / 365 * (card.Account.Premium ? 0.75 : 1), 2);
                         card.CreditLeft -= interest;
                         card.Account.AddTransaction(GenerateTransactionNumber(), -interest, null, "", TransactionType.CreditInterest);
                     }
@@ -219,6 +229,84 @@ namespace Course.Classes
         public void NewDay()
         {
             NewDay(DateTime.Today);
+        }
+
+        public void SaveToFile(StreamWriter sw)
+        {
+            sw.WriteLine(string.Join(" ", accountNumbers));
+            sw.WriteLine(string.Join(" ", cardNumbers));
+            sw.WriteLine(string.Join(" ", transactionNumbers));
+
+            sw.WriteLine(users.Count);
+            foreach (User user in users)
+            {
+                user.SaveToFile(sw);
+            }
+
+            sw.WriteLine(services.Count);
+            foreach (Service service in services)
+            {
+                service.SaveToFile(sw);
+            }
+        }
+
+        public void SaveToFile(string filepath)
+        {
+            StreamWriter sw = new StreamWriter(filepath);
+            SaveToFile(sw);
+            sw.Close();
+        }
+
+        public static Bank LoadFromFile(StreamReader sr)
+        {
+            Bank bank = new Bank();
+
+            try            
+            {
+                string? line = sr.ReadLine();
+                foreach (string number in line.Split(" "))
+                {
+                    accountNumbers.Add(number);
+                }
+
+                line = sr.ReadLine();
+                foreach (string number in line.Split(" "))
+                {
+                    cardNumbers.Add(number);
+                }
+
+                line = sr.ReadLine();
+                foreach (string number in line.Split(" "))
+                {
+                    transactionNumbers.Add(number);
+                }
+
+                line = sr.ReadLine();
+                for (int i = 0; i < Convert.ToInt32(line); i++)
+                {
+                    users.Add(User.LoadFromFile(sr));
+                }
+
+                line = sr.ReadLine();
+                for (int i = 0; i < Convert.ToInt32(line); i++)
+                {
+                    services.Add(Service.LoadFromFile(sr));
+                }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.ToString(), "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+
+                return bank;
+        }
+
+        public static Bank LoadFromFile(string filepath)
+        {
+            StreamReader sr = new StreamReader(filepath);
+            Bank bank = LoadFromFile(sr);
+            sr.Close();
+            return bank;
         }
 
         public static string GenerateAccountNumber()
@@ -283,7 +371,7 @@ namespace Course.Classes
         }
         public Account? GetAccountByIBAN(string iban)
         {
-            foreach (User user in Users)
+            foreach (User user in users)
             {
                 foreach (Account account in user.Accounts)
                 {
@@ -298,7 +386,7 @@ namespace Course.Classes
         private List<BankCard> GetCardsByType(Type cardType)
         {
             Type accountType;
-            List<BankCard> Cards = new List<BankCard> ();
+            List<BankCard> Cards = new List<BankCard>();
 
             if (cardType == typeof(BusinessCard))
                 accountType = typeof(BusinessAccount);
@@ -309,7 +397,7 @@ namespace Course.Classes
             else
                 return Cards;
 
-            foreach (User user in Users)
+            foreach (User user in users)
             {
                 foreach (Account account in user.Accounts)
                 {
@@ -330,7 +418,7 @@ namespace Course.Classes
                             }
                         }
                     }
-                    
+
                 }
             }
 
@@ -339,7 +427,7 @@ namespace Course.Classes
 
         public static User? GetUserByAccount(Account account)
         {
-            foreach (User user in Users)
+            foreach (User user in users)
             {
                 foreach (Account acc in user.Accounts)
                 {
@@ -355,7 +443,7 @@ namespace Course.Classes
 
         public bool IsPhoneAvailable(string phone)
         {
-            foreach (User user in Users)
+            foreach (User user in users)
             {
                 if (user.Phone == phone)
                     return false;
@@ -365,7 +453,7 @@ namespace Course.Classes
         }
         public bool IsEmailAvailable(string email)
         {
-            foreach (User user in Users)
+            foreach (User user in users)
             {
                 if (user.Email == email)
                     return false;

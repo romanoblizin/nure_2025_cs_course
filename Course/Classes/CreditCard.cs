@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace Course.Classes
 {
     class CreditCard : BankCard
@@ -12,7 +7,7 @@ namespace Course.Classes
         public double CreditLeft { get; set; }
         public DateTime? CreditTriggered { get; set; }
 
-        public CreditCard(string number, DateTime expirationDate, string cvv, PaymentSystem paymentSystem, string accountNumber, double сreditLimit, double creditLeft, DateTime? creditTriggered) : base(number, expirationDate, cvv, paymentSystem, accountNumber)
+        private CreditCard(string number, DateTime expirationDate, string cvv, PaymentSystem paymentSystem, double сreditLimit, double creditLeft, DateTime? creditTriggered) : base(number, expirationDate, cvv, paymentSystem)
         {
             CreditLimit = сreditLimit;
             CreditLeft = creditLeft;
@@ -38,6 +33,31 @@ namespace Course.Classes
             }
 
             ((PersonalAccount)Account).Card = new CreditCard(Bank.GenerateCardNumber(PaymentSystem), PaymentSystem, Account, CreditLimit, CreditLeft, CreditTriggered);
+        }
+
+        public override void SaveToFile(StreamWriter sw)
+        {
+            base.SaveToFile(sw);
+            sw.WriteLine(CreditLimit.ToString());
+            sw.WriteLine(CreditLeft.ToString());
+            sw.WriteLine(CreditTriggered.ToString());
+        }
+        private static DateTime? LoadDateTime(StreamReader sr)
+        {
+            string? line = sr.ReadLine();
+            return String.IsNullOrEmpty(line) ? null : DateTime.Parse(line);
+        }
+        public static CreditCard LoadFromFile(StreamReader sr)
+        {
+            return new CreditCard(
+                sr.ReadLine(),
+                DateTime.Parse(sr.ReadLine()),
+                sr.ReadLine(),
+                (PaymentSystem)Enum.Parse(typeof(PaymentSystem), sr.ReadLine()),
+                Convert.ToDouble(sr.ReadLine()),
+                Convert.ToDouble(sr.ReadLine()),
+                LoadDateTime(sr)
+            );
         }
 
         public override bool IsPaymentAvailable(double amount)

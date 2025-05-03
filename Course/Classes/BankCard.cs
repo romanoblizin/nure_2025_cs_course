@@ -1,21 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Transactions;
-using System.Xml.Linq;
-
-namespace Course.Classes
+﻿namespace Course.Classes
 {
-    public enum CardType
-    {
-        Debit,
-        Credit,
-        Payout,
-        Business
-    }
-
     public enum PaymentSystem
     {
         Visa,
@@ -28,27 +12,26 @@ namespace Course.Classes
         public DateTime ExpirationDate { get; set; }
         public string CVV { get; set; }
         public PaymentSystem PaymentSystem { get; set; }
-        public Account Account { get; set; }
+        public Account? Account { get; set; }
 
-        private BankCard(string number, DateTime expirationDate, string cvv, PaymentSystem paymentSystem)
+        protected BankCard(string number, DateTime expirationDate, string cvv, PaymentSystem paymentSystem)
         {
             Number = number;
             ExpirationDate = expirationDate;
             CVV = cvv;
             PaymentSystem = paymentSystem;
         }
-
-        public BankCard(string number, DateTime expirationDate, string cvv, PaymentSystem paymentSystem, string accountNumber) : this(number, expirationDate, cvv, paymentSystem)
+        protected BankCard(string number, DateTime expirationDate, string cvv, PaymentSystem paymentSystem, string accountNumber) : this(number, expirationDate, cvv, paymentSystem)
         {
             Account = new PersonalAccount(accountNumber, this);
         }
-        public BankCard(string number, PaymentSystem paymentSystem, string accountNumber) : this(number, GenerateExpirationDate(), GenerateCVV(), paymentSystem, accountNumber)
+        protected BankCard(string number, PaymentSystem paymentSystem, string accountNumber) : this(number, GenerateExpirationDate(), GenerateCVV(), paymentSystem, accountNumber)
         { }
-        public BankCard(string number, DateTime expirationDate, string cvv, PaymentSystem paymentSystem, Account account) : this (number, expirationDate, cvv, paymentSystem)
+        protected BankCard(string number, DateTime expirationDate, string cvv, PaymentSystem paymentSystem, Account account) : this (number, expirationDate, cvv, paymentSystem)
         {
             Account = account;
         }
-        public BankCard(string number, PaymentSystem paymentSystem, Account account) : this(number, GenerateExpirationDate(), GenerateCVV(), paymentSystem, account)
+        protected BankCard(string number, PaymentSystem paymentSystem, Account account) : this(number, GenerateExpirationDate(), GenerateCVV(), paymentSystem, account)
         { }
 
         public virtual void AddTransaction(string transactionNumber, double amount, string? target, string comment, TransactionType type)
@@ -95,7 +78,7 @@ namespace Course.Classes
             return true;
         }
 
-        public bool Pay(double amount, string comment)
+        public bool Pay(double amount)
         {
             if (!IsPaymentAvailable(amount))
                 return false;
@@ -123,6 +106,14 @@ namespace Course.Classes
         }
 
         public abstract void RenewCard();
+
+        public virtual void SaveToFile(StreamWriter sw)
+        {
+            sw.WriteLine(Number);
+            sw.WriteLine(ExpirationDate.ToString());
+            sw.WriteLine(CVV);
+            sw.WriteLine(PaymentSystem.ToString());
+        }
 
         private static string GenerateCVV()
         {

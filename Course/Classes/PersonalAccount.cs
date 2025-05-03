@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Principal;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Course.Classes
+﻿namespace Course.Classes
 {
     class PersonalAccount : Account
     {
+        private double balance;
         public override double Balance
         {
-            get => Balance;
+            get => balance;
             set
             {
                 if (Card is CreditCard creditCard)
@@ -22,7 +16,7 @@ namespace Course.Classes
 
                         if (creditCard.CreditLeft >= creditCard.CreditLimit)
                         {
-                            Balance = creditCard.CreditLeft - creditCard.CreditLimit;
+                            balance = creditCard.CreditLeft - creditCard.CreditLimit;
                             creditCard.CreditLeft = creditCard.CreditLimit;
                             creditCard.CreditTriggered = null;
                         }
@@ -33,18 +27,40 @@ namespace Course.Classes
                     }
                 }
 
-                Balance = value;
+                balance = value;
             }
         }
         public BankCard Card { get; set; }
 
-        public PersonalAccount(string number, double balance, string? blocked, bool premium, List<Transaction> transactions, BankCard card) : base(number, balance, blocked, premium, transactions)
+        private PersonalAccount(string number, double balance, string? blocked, bool premium, List<Transaction> transactions, BankCard card) : base(number, balance, blocked, premium, transactions)
         {
             Card = card;
         }
         public PersonalAccount(string number, BankCard card) : base(number)
         {
             Card = card;
+        }
+
+        public override void SaveToFile(StreamWriter sw)
+        {
+            base.SaveToFile(sw);
+            sw.WriteLine(Card.GetType().Name);
+            Card.SaveToFile(sw);
+        }
+        public static PersonalAccount LoadFromFile(StreamReader sr)
+        {
+            PersonalAccount personalAccount = new PersonalAccount(
+                sr.ReadLine(),
+                Convert.ToDouble(sr.ReadLine()),
+                sr.ReadLine(),
+                Convert.ToBoolean(sr.ReadLine()),
+                LoadTransactions(sr),
+                LoadCard(sr)
+            );
+
+            personalAccount.Card.Account = personalAccount;
+
+            return personalAccount;
         }
 
         public override bool IsAvailable()

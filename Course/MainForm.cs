@@ -1,3 +1,6 @@
+using Course.Classes;
+using System.Security.Principal;
+
 namespace Course
 {
     public partial class MainForm : Form
@@ -5,6 +8,11 @@ namespace Course
         public MainForm()
         {
             InitializeComponent();
+        }
+
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+            
         }
     }
 }

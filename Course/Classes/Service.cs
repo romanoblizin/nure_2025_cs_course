@@ -20,5 +20,22 @@ namespace Course.Classes
             OwnerFullName = ownerFullName;
             IBAN = iban;
         }
+
+        public void SaveToFile(StreamWriter sw)
+        {
+            sw.Write(CompanyName);
+            sw.Write(CompanyNumber);
+            sw.Write(OwnerFullName);
+            sw.Write(IBAN);
+        }
+        public static Service LoadFromFile(StreamReader sr)
+        {
+            return new Service(
+                sr.ReadLine(),
+                sr.ReadLine(),
+                sr.ReadLine(),
+                sr.ReadLine()
+            );
+        }
     }
 }

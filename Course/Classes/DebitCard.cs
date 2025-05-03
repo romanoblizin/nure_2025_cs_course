@@ -1,19 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace Course.Classes
 {
-    class Deposit
+    class DepositClass
     {
         private double Amount { get; set; }
         private double Rate { get; set; }
         private DateTime OpenDate {  get; set; }
         private int Months { get; set; }
 
-        public Deposit(double amount, double rate, DateTime openDate, int months)
+        public DepositClass(double amount, double rate, DateTime openDate, int months)
         {
             Amount = amount;
             Rate = rate;
@@ -26,6 +21,23 @@ namespace Course.Classes
             return Math.Round(Amount + (Amount * Rate * (Months / 12.0)), 2);
         }
 
+        public void SaveToFile(StreamWriter sw)
+        {
+            sw.WriteLine(Amount.ToString());
+            sw.WriteLine(Rate.ToString());
+            sw.WriteLine(OpenDate.ToString());
+            sw.WriteLine(Months.ToString());
+        }
+        public static DepositClass LoadFromFile(StreamReader sr)
+        {
+            return new DepositClass(
+                Convert.ToDouble(sr.ReadLine()),
+                Convert.ToDouble(sr.ReadLine()),
+                DateTime.Parse(sr.ReadLine()),
+                Convert.ToInt32(sr.ReadLine())
+            );
+        }
+
         public bool IsExpired(DateTime now)
         {
             return now >= OpenDate.AddMonths(Months);
@@ -35,9 +47,9 @@ namespace Course.Classes
     class DebitCard : BankCard
     {
         public double InterestRate { get; set; }
-        public List<Deposit> Deposits { get; set; }
+        public List<DepositClass> Deposits { get; set; }
 
-        public DebitCard(string number, DateTime expirationDate, string cvv, PaymentSystem paymentSystem, string accountNumber, double interestRate, List<Deposit> deposits): base(number, expirationDate, cvv, paymentSystem, accountNumber)
+        private DebitCard(string number, DateTime expirationDate, string cvv, PaymentSystem paymentSystem, double interestRate, List<DepositClass> deposits): base(number, expirationDate, cvv, paymentSystem)
         {
             InterestRate = interestRate;
             Deposits = deposits;
@@ -45,9 +57,9 @@ namespace Course.Classes
         public DebitCard(string number, PaymentSystem paymentSystem, string accountNumber, double interestRate) : base(number, paymentSystem, accountNumber)
         {
             InterestRate = interestRate;
-            Deposits = new List<Deposit>();
+            Deposits = new List<DepositClass>();
         }
-        public DebitCard(string number, PaymentSystem paymentSystem, Account account, double interestRate, List<Deposit> deposits) : base(number, paymentSystem, account)
+        public DebitCard(string number, PaymentSystem paymentSystem, Account account, double interestRate, List<DepositClass> deposits) : base(number, paymentSystem, account)
         {
             InterestRate = interestRate;
             Deposits = deposits;
@@ -78,10 +90,10 @@ namespace Course.Classes
 
             Account.Balance -= amount;
             Account.Transactions.Add(new Transaction(Bank.GenerateTransactionNumber(), -amount, null, "", TransactionType.DepositOpen));
-            Deposits.Add(new Deposit(amount, rate, DateTime.Today, months));
+            Deposits.Add(new DepositClass(amount, rate, DateTime.Today, months));
         }
 
-        public void CloseDeposit(Deposit deposit)
+        public void CloseDeposit(DepositClass deposit)
         {
             double amount = deposit.GetTotalValue();
 
@@ -97,6 +109,40 @@ namespace Course.Classes
             }
 
             ((PersonalAccount)Account).Card = new DebitCard(Bank.GenerateCardNumber(PaymentSystem), PaymentSystem, Account, InterestRate, Deposits);
+        }
+
+        public override void SaveToFile(StreamWriter sw)
+        {
+            base.SaveToFile(sw);
+            sw.WriteLine(InterestRate.ToString());
+
+            sw.WriteLine(Deposits.Count.ToString());
+            foreach (DepositClass deposit in Deposits)
+            {
+                deposit.SaveToFile(sw);
+            }
+        }
+        private static List<DepositClass> LoadDeposits(StreamReader sr)
+        {
+            List<DepositClass> deposits = new List<DepositClass>();
+
+            for (int i = 0; i < Convert.ToInt32(sr.ReadLine()); i++)
+            {
+                deposits.Add(DepositClass.LoadFromFile(sr));
+            }
+
+            return deposits;
+        }
+        public static DebitCard LoadFromFile(StreamReader sr)
+        {
+            return new DebitCard(
+                sr.ReadLine(),
+                DateTime.Parse(sr.ReadLine()),
+                sr.ReadLine(),
+                (PaymentSystem)Enum.Parse(typeof(PaymentSystem), sr.ReadLine()),
+                Convert.ToDouble(sr.ReadLine()),
+                LoadDeposits(sr)
+            );
         }
     }
 }

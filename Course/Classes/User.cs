@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
+﻿using System.Text.RegularExpressions;
 
 namespace Course.Classes
 {
@@ -18,17 +13,18 @@ namespace Course.Classes
         public double Cashback {  get; set; }
         public List<Account> Accounts { get; set; }
 
-        public User(string name, string surname, string phone, string password, string? email, double cashback, List<Account> accounts)
+        public User(string name, string surname, string? patronymic, string phone, string password, string? email, double cashback, List<Account> accounts)
         {
             Name = name;
             Surname = surname;
+            Patronymic = patronymic;
             Phone = phone;
             Password = password;
             Email = email;
             Cashback = cashback;
             Accounts = accounts;
         }
-        public User(string name, string surname, string phone, string password, string? email) : this(name, surname, phone, password, email, 0, new List<Account>())
+        public User(string name, string surname, string? patronymic, string phone, string password, string? email) : this(name, surname, patronymic, phone, password, email, 0, new List<Account>())
         { }
 
         public PersonalAccount? OpenDebitCard(PaymentSystem paymentSystem, double interestRate)
@@ -87,6 +83,53 @@ namespace Course.Classes
             account.Balance += Cashback * 0.8;
             account.Transactions.Add(new Transaction(Bank.GenerateTransactionNumber(), Cashback * 0.8, "", "", TransactionType.Cashback));
             Cashback = 0;
+        }
+
+        public void SaveToFile(StreamWriter sw)
+        {
+            sw.WriteLine(Name);
+            sw.WriteLine(Surname);
+            sw.WriteLine(Patronymic);
+            sw.WriteLine(Email);
+            sw.WriteLine(Phone);
+            sw.WriteLine(Password);
+            sw.WriteLine(Cashback.ToString());
+
+            sw.WriteLine(Accounts.Count.ToString());
+            foreach (Account account in Accounts)
+            {
+                sw.WriteLine(account.GetType().Name);
+                account.SaveToFile(sw);
+            }
+        }
+
+        private static List<Account> LoadAccounts(StreamReader sr)
+        {
+            List<Account> accounts = new List<Account>();
+
+            for (int i = 0; i < Convert.ToInt32(sr.ReadLine()); i++)
+            {
+                if (sr.ReadLine() == "PersonalAccount")
+                    PersonalAccount.LoadFromFile(sr);
+                else
+                    BusinessAccount.LoadFromFile(sr);
+            }
+
+            return accounts;
+        }
+
+        public static User LoadFromFile(StreamReader sr)
+        {
+            return new User(
+                sr.ReadLine(),
+                sr.ReadLine(),
+                sr.ReadLine(),
+                sr.ReadLine(),
+                sr.ReadLine(),
+                sr.ReadLine(),
+                Convert.ToDouble(sr.ReadLine()),
+                LoadAccounts(sr)
+            );
         }
 
         public static bool ValidatePhone(string phone)

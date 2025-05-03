@@ -4,6 +4,7 @@ namespace Course.Classes
 {
     public enum TransactionType
     {
+
         Transfer,
         Deposit,
         Withdraw,
@@ -44,6 +45,28 @@ namespace Course.Classes
             Target = target;
             Description = description;
             Type = type;
+        }
+
+        public virtual void SaveToFile(StreamWriter sw)
+        {
+            sw.WriteLine(Number);
+            sw.WriteLine(Date.ToString());
+            sw.WriteLine(Amount.ToString());
+            sw.WriteLine(Target);
+            sw.WriteLine(Description);
+            sw.WriteLine(Type.ToString());
+        }
+
+        public static Transaction LoadFromFile(StreamReader sr)
+        {
+            return new Transaction(
+                sr.ReadLine(),
+                DateTime.Parse(sr.ReadLine()),
+                Convert.ToDouble(sr.ReadLine()),
+                sr.ReadLine(),
+                sr.ReadLine(),
+                (TransactionType)Enum.Parse(typeof(TransactionType), sr.ReadLine())
+            );
         }
 
         public string GetReceipt(Account account)
@@ -89,6 +112,12 @@ namespace Course.Classes
                     return "Відкриття депозиту";
                 case TransactionType.DepositClose:
                     return "Закриття депозиту";
+                case TransactionType.CreditInterest:
+                    return "Проценти за перевищення кредитного ліміту";
+                case TransactionType.Premium:
+                    return "Щомісячна оплата преміум картки";
+                case TransactionType.Cashback:
+                    return "Зняття кешбеку";
                 default:
                     return "Невідома операція";
             }
