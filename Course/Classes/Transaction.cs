@@ -14,7 +14,8 @@ namespace Course.Classes
         CreditInterest,
         DepositOpen,
         DepositClose,
-        Premium
+        Premium,
+        Cashback
     }
 
     class Transaction

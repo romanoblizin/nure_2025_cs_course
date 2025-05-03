@@ -101,7 +101,13 @@ namespace Course.Classes
                 return false;
 
             Account.Balance -= amount;
-            AddTransaction(Bank.GenerateTransactionNumber(), -amount, null, comment, TransactionType.Transfer);
+            AddTransaction(Bank.GenerateTransactionNumber(), -amount, null, "", TransactionType.Payment);
+
+            User? user = Bank.GetUserByAccount(Account);
+            if (user != null)
+            {
+                user.Cashback += amount * (Account.Premium ? 0.03 : 0.01);
+            }
 
             return true;
         }

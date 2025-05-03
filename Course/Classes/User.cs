@@ -15,34 +15,21 @@ namespace Course.Classes
         public string? Email { get; set; }
         public string Phone { get; set; }
         public string Password { get; set; }
+        public double Cashback {  get; set; }
         public List<Account> Accounts { get; set; }
 
-        public User(string name, string surname, string phone, string password)
-        {
-            Name = name;
-            Surname = surname;
-            Phone = phone;
-            Password = password;
-            Accounts = new List<Account>();
-        }
-        public User(string name, string surname, string phone, string password, string? email)
+        public User(string name, string surname, string phone, string password, string? email, double cashback, List<Account> accounts)
         {
             Name = name;
             Surname = surname;
             Phone = phone;
             Password = password;
             Email = email;
-            Accounts = new List<Account>();
-        }
-        public User(string name, string surname, string phone, string password, string email, List<Account> accounts)
-        {
-            Name = name;
-            Surname = surname;
-            Phone = phone;
-            Password = password;
-            Email = email;
+            Cashback = cashback;
             Accounts = accounts;
         }
+        public User(string name, string surname, string phone, string password, string? email) : this(name, surname, phone, password, email, 0, new List<Account>())
+        { }
 
         public PersonalAccount? OpenDebitCard(PaymentSystem paymentSystem, double interestRate)
         {
@@ -78,6 +65,28 @@ namespace Course.Classes
             Accounts.Add(account);
 
             return account;
+        }
+
+        public void GetCashback(Account account)
+        {
+            if (!Accounts.Contains(account))
+            {
+                return;
+            }
+
+            if (account.IsBlocked())
+            {
+                return;
+            }
+
+            if (Cashback < 100)
+            {
+                return;
+            }
+
+            account.Balance += Cashback * 0.8;
+            account.Transactions.Add(new Transaction(Bank.GenerateTransactionNumber(), Cashback * 0.8, "", "", TransactionType.Cashback));
+            Cashback = 0;
         }
 
         public static bool ValidatePhone(string phone)

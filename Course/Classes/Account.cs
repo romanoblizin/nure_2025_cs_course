@@ -66,5 +66,28 @@ namespace Course.Classes
 
             return true;
         }
+
+        public static bool operator ==(Account? a, Account? b)
+        {
+            if (a is null || b is null) return false;
+            return a.Number == b.Number;
+        }
+        public static bool operator !=(Account? a, Account? b)
+        {
+            return !(a == b);
+        }
+        public override bool Equals(object? obj)
+        {
+            if (obj is not Account)
+            {
+                return false;
+            }
+
+            return Number == ((Account)obj).Number;
+        }
+        public override int GetHashCode()
+        {
+            return Number.GetHashCode();
+        }
     }
 }

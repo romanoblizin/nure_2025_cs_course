@@ -4,8 +4,6 @@
  * поиски по критериям
  * изменение личных данных (профильных)
  * 
- * кешбек
- * 
  * системные часы
 */
 
@@ -23,12 +21,9 @@ namespace Course.Classes
         private static HashSet<string> accountNumbers = new HashSet<string>();
         private static HashSet<string> cardNumbers = new HashSet<string>();
         private static HashSet<string> transactionNumbers = new HashSet<string>();
-        public List<User> Users { get; set; }
+        private static List<User> Users { get; set; } = new List<User>();
 
-        public Bank()
-        {
-            Users = new List<User>();
-        }
+        public Bank() { }
 
         public User? Register(string name, string surname, string phone, string password, string? email)
         {
@@ -340,6 +335,22 @@ namespace Course.Classes
             }
 
             return Cards;
+        }
+
+        public static User? GetUserByAccount(Account account)
+        {
+            foreach (User user in Users)
+            {
+                foreach (Account acc in user.Accounts)
+                {
+                    if (account == acc)
+                    {
+                        return user;
+                    }
+                }
+            }
+
+            return null;
         }
 
         public bool IsPhoneAvailable(string phone)
