@@ -1,6 +1,6 @@
 ﻿namespace Course.Classes
 {
-    class PersonalAccount : Account
+    public class PersonalAccount : Account
     {
         private double balance;
         public override double Balance

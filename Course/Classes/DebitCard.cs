@@ -1,7 +1,6 @@
-﻿
-namespace Course.Classes
+﻿namespace Course.Classes
 {
-    class DepositClass
+    public class DepositClass
     {
         private double Amount { get; set; }
         private double Rate { get; set; }

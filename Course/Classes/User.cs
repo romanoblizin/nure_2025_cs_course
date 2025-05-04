@@ -2,18 +2,18 @@
 
 namespace Course.Classes
 {
-    class User
+    public class User
     {
-        public string Name { get; set; }
         public string Surname { get; set; }
-        public string? Patronymic { get; set; }
-        public string? Email { get; set; }
+        public string Name { get; set; }
+        public string Patronymic { get; set; }
+        public string Email { get; set; }
         public string Phone { get; set; }
         public string Password { get; set; }
         public double Cashback {  get; set; }
         public List<Account> Accounts { get; set; }
 
-        public User(string name, string surname, string? patronymic, string phone, string password, string? email, double cashback, List<Account> accounts)
+        public User(string name, string surname, string patronymic, string phone, string password, string email, double cashback, List<Account> accounts)
         {
             Name = name;
             Surname = surname;
@@ -24,7 +24,7 @@ namespace Course.Classes
             Cashback = cashback;
             Accounts = accounts;
         }
-        public User(string name, string surname, string? patronymic, string phone, string password, string? email) : this(name, surname, patronymic, phone, password, email, 0, new List<Account>())
+        public User(string name, string surname, string patronymic, string phone, string password, string email) : this(name, surname, patronymic, phone, password, email, 0, new List<Account>())
         { }
 
         public PersonalAccount? OpenDebitCard(PaymentSystem paymentSystem, double interestRate)
@@ -90,9 +90,9 @@ namespace Course.Classes
             sw.WriteLine(Name);
             sw.WriteLine(Surname);
             sw.WriteLine(Patronymic);
-            sw.WriteLine(Email);
             sw.WriteLine(Phone);
             sw.WriteLine(Password);
+            sw.WriteLine(Email);
             sw.WriteLine(Cashback.ToString());
 
             sw.WriteLine(Accounts.Count.ToString());

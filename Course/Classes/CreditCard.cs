@@ -1,7 +1,6 @@
-﻿
-namespace Course.Classes
+﻿namespace Course.Classes
 {
-    class CreditCard : BankCard
+    public class CreditCard : BankCard
     {
         public double CreditLimit { get; set; }
         public double CreditLeft { get; set; }

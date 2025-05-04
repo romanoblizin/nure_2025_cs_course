@@ -1,6 +1,6 @@
 ﻿namespace Course.Classes
 {
-    abstract class Account
+    public abstract class Account
     {
         public string Number { get; set; }
         public virtual double Balance { get; set; }

@@ -6,7 +6,7 @@
         Mastercard
     }
 
-    abstract class BankCard
+    public abstract class BankCard
     {
         public string Number { get; set; }
         public DateTime ExpirationDate { get; set; }

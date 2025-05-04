@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Course.Classes
+﻿namespace Course.Classes
 {
-    class Service
+    public class Service
     {
         public string CompanyName { get; set; }
         public string CompanyNumber { get; set; }

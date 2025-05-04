@@ -1,6 +1,6 @@
 ﻿namespace Course.Classes
 {
-    class BusinessTransaction : Transaction
+    public class BusinessTransaction : Transaction
     {
         public string OwnerFullName { get; set; }
 

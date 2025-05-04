@@ -19,7 +19,7 @@ namespace Course.Classes
         Cashback
     }
 
-    class Transaction
+    public class Transaction
     {
         public string Number { get; set; }
         public DateTime Date { get; set; }

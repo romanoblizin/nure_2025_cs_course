@@ -1,7 +1,6 @@
-﻿
-namespace Course.Classes
+﻿namespace Course.Classes
 {
-    class BusinessCard : BankCard
+    public class BusinessCard : BankCard
     {
         public string OwnerFullName { get; set; }
 

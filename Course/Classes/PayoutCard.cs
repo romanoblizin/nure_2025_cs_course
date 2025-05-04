@@ -1,6 +1,6 @@
 ﻿namespace Course.Classes
 {
-    class PayoutCard : BankCard
+    public class PayoutCard : BankCard
     {
         private PayoutCard(string number, DateTime expirationDate, string cvv, PaymentSystem paymentSystem) : base(number, expirationDate, cvv, paymentSystem) { }
         public PayoutCard(string number, PaymentSystem paymentSystem, string accountNumber) : base(number, paymentSystem, accountNumber) { }

@@ -1,6 +1,6 @@
 ﻿namespace Course.Classes
 {
-    class BusinessAccount : Account
+    public class BusinessAccount : Account
     {
         public string CompanyName { get; set; }
         public string CompanyNumber { get; set; }

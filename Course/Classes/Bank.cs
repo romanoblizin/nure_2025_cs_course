@@ -1,13 +1,6 @@
-﻿// todo
-/*
- * поиски по критериям
- * изменение личных данных (профильных)
- * системные часы
-*/
-
-namespace Course.Classes
+﻿namespace Course.Classes
 {
-    class Bank
+    public class Bank
     {
         public const string bankCode = "111111";
         private const double premiumCost = 300;
@@ -31,19 +24,46 @@ namespace Course.Classes
             services.Clear();
         }
 
-        public User? Register(string name, string surname, string? patronymic, string phone, string password, string? email)
+        public User? Register(string name, string surname, string patronymic, string phone, string password, string email)
         {
-            if (name.Length < 2 || surname.Length < 2 || !User.ValidatePhone(phone) || email != null && !User.ValidateEmail(email) || password.Length < 8)
+            if (surname.Length < 2)
             {
+                MessageBox.Show("Невірне прізвище!", "Помилка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return null;
+            }
+            if (name.Length < 2)
+            {
+                MessageBox.Show("Невірне ім'я!", "Помилка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return null;
+            }
+            if (patronymic.Length != 0 && patronymic.Length < 4)
+            {
+                MessageBox.Show("Невірне по-батькові!", "Помилка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return null;
+            }
+            if (!User.ValidatePhone(phone))
+            {
+                MessageBox.Show("Невірний номер телефону!", "Помилка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return null;
+            }
+            if (email.Length != 0 && !User.ValidateEmail(email))
+            {
+                MessageBox.Show("Невірний адрес пошти!", "Помилка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return null;
             }
 
-            if (!IsPhoneAvailable(phone) || email != null && !IsEmailAvailable(email))
+            if (!IsPhoneAvailable(phone))
             {
+                MessageBox.Show("Даний номер телефону зайнятий іншим користувачем!", "Помилка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return null;
+            }
+            if (email.Length != 0 && !IsEmailAvailable(email))
+            {
+                MessageBox.Show("Дана пошта зайнята іншим користувачем!", "Помилка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return null;
             }
 
-            User user = new User(name, surname, patronymic, phone, password, email);
+            User user = new User(name, surname, patronymic, phone.Substring(phone.Length - 10), password, email);
             users.Add(user);
 
             return user;
@@ -56,7 +76,7 @@ namespace Course.Classes
             }
             else if (User.ValidatePhone(login))
             {
-                return users.FirstOrDefault(u => u.Phone == login && u.Password == password);
+                return users.FirstOrDefault(u => u.Phone == login.Substring(login.Length - 10) && u.Password == password);
             }
             else
             {
