@@ -1,11 +1,7 @@
 ﻿// todo
 /*
- * файловая система
  * поиски по критериям
  * изменение личных данных (профильных)
- * 
- * service management
- * 
  * системные часы
 */
 
@@ -23,7 +19,7 @@ namespace Course.Classes
         private static HashSet<string> accountNumbers = new HashSet<string>();
         private static HashSet<string> cardNumbers = new HashSet<string>();
         private static HashSet<string> transactionNumbers = new HashSet<string>();
-        public static List<User> users { get; set; } = new List<User>();
+        private static List<User> users { get; set; } = new List<User>();
         private static List<Service> services { get; set; } = new List<Service>();
 
         public Bank()
@@ -52,7 +48,6 @@ namespace Course.Classes
 
             return user;
         }
-
         public User? LogIn(string login, string password)
         {
             if (User.ValidateEmail(login))
@@ -67,6 +62,24 @@ namespace Course.Classes
             {
                 return null;
             }
+        }
+        
+        public Service AddService(string companyName, string companyNumber, string ownerFullName, string iban)
+        {
+            Service service = new Service(companyName, companyNumber, ownerFullName, iban);
+            services.Add(service);
+            return service;
+        }
+        public void DeleteService(string companyNumber)
+        {
+            Service? service = services.FirstOrDefault(x => x.CompanyNumber == companyNumber);
+
+            if (service == null)
+            {
+                return;
+            }
+
+            services.Remove(service);
         }
 
         public bool TransferToBusinessAccount(Account accountFrom, BusinessAccount accountTo, double amount, string comment)
@@ -93,7 +106,6 @@ namespace Course.Classes
 
             return true;
         }
-
         public bool TransferToCard(Account accountFrom, BankCard cardTo, double amount, string comment)
         {
             if (accountFrom == cardTo.Account)
@@ -127,7 +139,6 @@ namespace Course.Classes
 
             return true;
         }
-
         public bool TransferToCard(Account accountFrom, string cardNumberToStr, double amount, string comment)
         {
             BankCard? cardTo = GetCardByNumber(cardNumberToStr);
@@ -145,7 +156,6 @@ namespace Course.Classes
 
             return true;
         }
-
         public bool TransferToIBAN(Account accountFrom, string iban, double amount, string comment)
         {
             Account? accountTo = GetAccountByIBAN(iban);
@@ -225,7 +235,6 @@ namespace Course.Classes
                 }
             }
         }
-
         public void NewDay()
         {
             NewDay(DateTime.Today);
@@ -249,14 +258,12 @@ namespace Course.Classes
                 service.SaveToFile(sw);
             }
         }
-
         public void SaveToFile(string filepath)
         {
             StreamWriter sw = new StreamWriter(filepath);
             SaveToFile(sw);
             sw.Close();
         }
-
         public static Bank LoadFromFile(StreamReader sr)
         {
             Bank bank = new Bank();
@@ -300,7 +307,6 @@ namespace Course.Classes
 
                 return bank;
         }
-
         public static Bank LoadFromFile(string filepath)
         {
             StreamReader sr = new StreamReader(filepath);
@@ -382,7 +388,6 @@ namespace Course.Classes
 
             return null;
         }
-
         private List<BankCard> GetCardsByType(Type cardType)
         {
             Type accountType;
@@ -424,7 +429,6 @@ namespace Course.Classes
 
             return Cards;
         }
-
         public static User? GetUserByAccount(Account account)
         {
             foreach (User user in users)
@@ -439,6 +443,27 @@ namespace Course.Classes
             }
 
             return null;
+        }
+        public static string GetLuhnDigit(string number)
+        {
+            int sum = 0;
+
+            for (int i = number.Length - 1; i >= 0; i--)
+            {
+                int digit = int.Parse(number[i].ToString());
+
+                if (i % 2 == 0)
+                {
+                    digit *= 2;
+                    if (digit > 9)
+                        digit -= 9;
+                }
+
+                sum += digit;
+            }
+
+            int checkDigit = (10 - (sum % 10)) % 10;
+            return checkDigit.ToString();
         }
 
         public bool IsPhoneAvailable(string phone)
@@ -460,28 +485,6 @@ namespace Course.Classes
             }
 
             return true;
-        }
-
-        public static string GetLuhnDigit(string number)
-        {
-            int sum = 0;
-
-            for (int i = number.Length - 1; i >= 0; i--)
-            {
-                int digit = int.Parse(number[i].ToString());
-
-                if (i % 2 == 0)
-                {
-                    digit *= 2;
-                    if (digit > 9)
-                        digit -= 9;
-                }
-
-                sum += digit;
-            }
-
-            int checkDigit = (10 - (sum % 10)) % 10;
-            return checkDigit.ToString();
         }
     }
 }
