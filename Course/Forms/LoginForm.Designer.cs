@@ -44,9 +44,11 @@
             lblPassword = new Label();
             tbPassword = new TextBox();
             gbLogin = new GroupBox();
+            lblRegister = new Label();
             btnToRegister = new Button();
             btnLogIn = new Button();
             gbRegistration = new GroupBox();
+            label1 = new Label();
             lblEmail = new Label();
             lblPatronymic = new Label();
             btnToLogIn = new Button();
@@ -205,18 +207,28 @@
             // 
             // gbLogin
             // 
+            gbLogin.Controls.Add(lblRegister);
             gbLogin.Controls.Add(btnToRegister);
             gbLogin.Controls.Add(btnLogIn);
             gbLogin.Controls.Add(lblLogin);
             gbLogin.Controls.Add(tbPassword);
             gbLogin.Controls.Add(tbLogin);
             gbLogin.Controls.Add(lblPassword);
-            gbLogin.Location = new Point(138, 62);
+            gbLogin.Location = new Point(138, 89);
             gbLogin.Name = "gbLogin";
             gbLogin.Size = new Size(408, 302);
             gbLogin.TabIndex = 6;
             gbLogin.TabStop = false;
             gbLogin.Text = "Логін";
+            // 
+            // lblRegister
+            // 
+            lblRegister.AutoSize = true;
+            lblRegister.Location = new Point(160, 275);
+            lblRegister.Name = "lblRegister";
+            lblRegister.Size = new Size(118, 15);
+            lblRegister.TabIndex = 5;
+            lblRegister.Text = "Ще немає аккаунту?";
             // 
             // btnToRegister
             // 
@@ -244,6 +256,7 @@
             // 
             // gbRegistration
             // 
+            gbRegistration.Controls.Add(label1);
             gbRegistration.Controls.Add(lblEmail);
             gbRegistration.Controls.Add(lblPatronymic);
             gbRegistration.Controls.Add(btnToLogIn);
@@ -258,13 +271,21 @@
             gbRegistration.Controls.Add(tbPasswordR);
             gbRegistration.Controls.Add(tbName);
             gbRegistration.Controls.Add(lblPasswordR);
-            gbRegistration.Location = new Point(138, 62);
+            gbRegistration.Location = new Point(138, 89);
             gbRegistration.Name = "gbRegistration";
             gbRegistration.Size = new Size(408, 302);
             gbRegistration.TabIndex = 9;
             gbRegistration.TabStop = false;
             gbRegistration.Text = "Реєстрація";
-            gbRegistration.Visible = false;
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Location = new Point(190, 275);
+            label1.Name = "label1";
+            label1.Size = new Size(88, 15);
+            label1.TabIndex = 17;
+            label1.Text = "Вже є аккаунт?";
             // 
             // lblEmail
             // 
@@ -463,5 +484,7 @@
         private Label lblPasswordR;
         private Label lblEmail;
         private Label lblPatronymic;
+        private Label lblRegister;
+        private Label label1;
     }
 }

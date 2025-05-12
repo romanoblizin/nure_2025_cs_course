@@ -92,6 +92,7 @@
             lblTime.Size = new Size(182, 30);
             lblTime.TabIndex = 4;
             lblTime.Text = "01.01.1970 0:00:00";
+            lblTime.DoubleClick += lblTime_DoubleClick;
             // 
             // panelUser
             // 
@@ -185,7 +186,7 @@
             gbPersonalData.Controls.Add(lblSurname);
             gbPersonalData.Location = new Point(12, 66);
             gbPersonalData.Name = "gbPersonalData";
-            gbPersonalData.Size = new Size(286, 286);
+            gbPersonalData.Size = new Size(286, 317);
             gbPersonalData.TabIndex = 2;
             gbPersonalData.TabStop = false;
             gbPersonalData.Text = "Персональні дані";
@@ -194,7 +195,7 @@
             // 
             btnSave.BackColor = SystemColors.ButtonHighlight;
             btnSave.FlatStyle = FlatStyle.Popup;
-            btnSave.Location = new Point(18, 223);
+            btnSave.Location = new Point(18, 260);
             btnSave.Name = "btnSave";
             btnSave.Size = new Size(256, 35);
             btnSave.TabIndex = 12;
@@ -204,7 +205,7 @@
             // 
             // tbPassword
             // 
-            tbPassword.Location = new Point(128, 178);
+            tbPassword.Location = new Point(128, 213);
             tbPassword.Name = "tbPassword";
             tbPassword.PasswordChar = '*';
             tbPassword.Size = new Size(146, 23);
@@ -212,28 +213,28 @@
             // 
             // tbPhone
             // 
-            tbPhone.Location = new Point(128, 149);
+            tbPhone.Location = new Point(128, 177);
             tbPhone.Name = "tbPhone";
             tbPhone.Size = new Size(146, 23);
             tbPhone.TabIndex = 10;
             // 
             // tbName
             // 
-            tbName.Location = new Point(128, 62);
+            tbName.Location = new Point(128, 69);
             tbName.Name = "tbName";
             tbName.Size = new Size(146, 23);
             tbName.TabIndex = 9;
             // 
             // tbEmail
             // 
-            tbEmail.Location = new Point(128, 120);
+            tbEmail.Location = new Point(128, 141);
             tbEmail.Name = "tbEmail";
             tbEmail.Size = new Size(146, 23);
             tbEmail.TabIndex = 8;
             // 
             // tbPatronymic
             // 
-            tbPatronymic.Location = new Point(128, 91);
+            tbPatronymic.Location = new Point(128, 105);
             tbPatronymic.Name = "tbPatronymic";
             tbPatronymic.Size = new Size(146, 23);
             tbPatronymic.TabIndex = 7;
@@ -248,7 +249,7 @@
             // lblPassword
             // 
             lblPassword.AutoSize = true;
-            lblPassword.Location = new Point(70, 181);
+            lblPassword.Location = new Point(70, 216);
             lblPassword.Name = "lblPassword";
             lblPassword.Size = new Size(52, 15);
             lblPassword.TabIndex = 5;
@@ -257,7 +258,7 @@
             // lblPhone
             // 
             lblPhone.AutoSize = true;
-            lblPhone.Location = new Point(18, 152);
+            lblPhone.Location = new Point(18, 180);
             lblPhone.Name = "lblPhone";
             lblPhone.Size = new Size(104, 15);
             lblPhone.TabIndex = 4;
@@ -266,7 +267,7 @@
             // lblEmail
             // 
             lblEmail.AutoSize = true;
-            lblEmail.Location = new Point(9, 123);
+            lblEmail.Location = new Point(9, 144);
             lblEmail.Name = "lblEmail";
             lblEmail.Size = new Size(113, 15);
             lblEmail.TabIndex = 3;
@@ -275,7 +276,7 @@
             // lblPatronymic
             // 
             lblPatronymic.AutoSize = true;
-            lblPatronymic.Location = new Point(45, 94);
+            lblPatronymic.Location = new Point(45, 108);
             lblPatronymic.Name = "lblPatronymic";
             lblPatronymic.Size = new Size(77, 15);
             lblPatronymic.TabIndex = 2;
@@ -284,7 +285,7 @@
             // lblName
             // 
             lblName.AutoSize = true;
-            lblName.Location = new Point(91, 65);
+            lblName.Location = new Point(91, 72);
             lblName.Name = "lblName";
             lblName.Size = new Size(31, 15);
             lblName.TabIndex = 1;
@@ -301,7 +302,7 @@
             // 
             // btnOpenDebitAccount
             // 
-            btnOpenDebitAccount.Location = new Point(55, 39);
+            btnOpenDebitAccount.Location = new Point(55, 37);
             btnOpenDebitAccount.Name = "btnOpenDebitAccount";
             btnOpenDebitAccount.Size = new Size(221, 35);
             btnOpenDebitAccount.TabIndex = 3;
@@ -319,7 +320,7 @@
             gbOpenAccounts.Controls.Add(btnOpenDebitAccount);
             gbOpenAccounts.Location = new Point(348, 66);
             gbOpenAccounts.Name = "gbOpenAccounts";
-            gbOpenAccounts.Size = new Size(330, 286);
+            gbOpenAccounts.Size = new Size(330, 317);
             gbOpenAccounts.TabIndex = 4;
             gbOpenAccounts.TabStop = false;
             gbOpenAccounts.Text = "Операції";
@@ -327,7 +328,7 @@
             // lblCashback
             // 
             lblCashback.AutoSize = true;
-            lblCashback.Location = new Point(147, 256);
+            lblCashback.Location = new Point(147, 284);
             lblCashback.Name = "lblCashback";
             lblCashback.Size = new Size(37, 15);
             lblCashback.TabIndex = 4;
@@ -335,7 +336,7 @@
             // 
             // btnGetCashback
             // 
-            btnGetCashback.Location = new Point(55, 213);
+            btnGetCashback.Location = new Point(55, 241);
             btnGetCashback.Name = "btnGetCashback";
             btnGetCashback.Size = new Size(221, 35);
             btnGetCashback.TabIndex = 3;
@@ -345,7 +346,7 @@
             // 
             // btnOpenBusinessAccount
             // 
-            btnOpenBusinessAccount.Location = new Point(55, 172);
+            btnOpenBusinessAccount.Location = new Point(55, 190);
             btnOpenBusinessAccount.Name = "btnOpenBusinessAccount";
             btnOpenBusinessAccount.Size = new Size(221, 35);
             btnOpenBusinessAccount.TabIndex = 3;
@@ -355,7 +356,7 @@
             // 
             // btnOpenPayoutAccount
             // 
-            btnOpenPayoutAccount.Location = new Point(55, 129);
+            btnOpenPayoutAccount.Location = new Point(55, 139);
             btnOpenPayoutAccount.Name = "btnOpenPayoutAccount";
             btnOpenPayoutAccount.Size = new Size(221, 35);
             btnOpenPayoutAccount.TabIndex = 3;
@@ -365,7 +366,7 @@
             // 
             // btnOpenCreditAccount
             // 
-            btnOpenCreditAccount.Location = new Point(55, 85);
+            btnOpenCreditAccount.Location = new Point(55, 88);
             btnOpenCreditAccount.Name = "btnOpenCreditAccount";
             btnOpenCreditAccount.Size = new Size(221, 35);
             btnOpenCreditAccount.TabIndex = 3;
@@ -377,9 +378,9 @@
             // 
             btnLogOut.BackColor = Color.IndianRed;
             btnLogOut.FlatStyle = FlatStyle.Popup;
-            btnLogOut.Location = new Point(465, 414);
+            btnLogOut.Location = new Point(12, 405);
             btnLogOut.Name = "btnLogOut";
-            btnLogOut.Size = new Size(207, 35);
+            btnLogOut.Size = new Size(666, 35);
             btnLogOut.TabIndex = 5;
             btnLogOut.Text = "Вийти з акаунту";
             btnLogOut.UseVisualStyleBackColor = false;
@@ -404,7 +405,7 @@
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Профіль";
             FormClosing += ProfileForm_FormClosing;
-            Load += ProfileForm_Load;
+            Shown += ProfileForm_Shown;
             panelHeader.ResumeLayout(false);
             panelHeader.PerformLayout();
             panelUser.ResumeLayout(false);

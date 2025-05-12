@@ -5,6 +5,13 @@
         Visa,
         Mastercard
     }
+    public enum BankCardType
+    {
+        DebitCard,
+        CreditCard,
+        PayoutCard,
+        BusinessCard
+    }
 
     public abstract class BankCard
     {

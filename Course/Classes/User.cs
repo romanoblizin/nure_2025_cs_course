@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Course.Classes
 {
@@ -130,6 +131,19 @@ namespace Course.Classes
                 Convert.ToDouble(sr.ReadLine()),
                 LoadAccounts(sr)
             );
+        }
+
+        public List<string> GetAllAccountsText(bool showBlocked)
+        {
+            List<string> accounts = new List<string>();
+
+            foreach (Account account in Accounts)
+            {
+                if (!account.IsBlocked() || showBlocked)
+                    accounts.Add($"{account.Number}: {account.Balance}₴");
+            }
+
+            return accounts;
         }
 
         public static bool ValidatePhone(string phone)

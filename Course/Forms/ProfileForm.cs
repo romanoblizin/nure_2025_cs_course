@@ -16,19 +16,19 @@ namespace Course.Forms
             this.loginForm = loginForm;
         }
 
-        private void ProfileForm_Load(object sender, EventArgs e)
+        private void ProfileForm_Shown(object sender, EventArgs e)
         {
             lblTime.Text = DateTime.Now.ToString();
-            lblUser.Text = $"{menuForm.user.Surname} {menuForm.user.Name[0]}.{(menuForm.user.Patronymic.Length > 0 ? $" {menuForm.user.Patronymic[0]}." : "")}";
+            lblUser.Text = $"{menuForm.User.Surname} {menuForm.User.Name[0]}.{(menuForm.User.Patronymic.Length > 0 ? $" {menuForm.User.Patronymic[0]}." : "")}";
 
-            tbSurname.Text = menuForm.user.Surname;
-            tbName.Text = menuForm.user.Name;
-            tbPatronymic.Text = menuForm.user.Patronymic;
-            tbEmail.Text = menuForm.user.Email;
-            tbPhone.Text = menuForm.user.Phone;
-            tbPassword.Text = menuForm.user.Password;
-            lblCashback.Text = $"{menuForm.user.Cashback}{(menuForm.user.Cashback < 100 ? "/100" : "")} ₴";
-            btnGetCashback.Enabled = menuForm.user.Cashback >= 100;
+            tbSurname.Text = menuForm.User.Surname;
+            tbName.Text = menuForm.User.Name;
+            tbPatronymic.Text = menuForm.User.Patronymic;
+            tbEmail.Text = menuForm.User.Email;
+            tbPhone.Text = menuForm.User.Phone;
+            tbPassword.Text = menuForm.User.Password;
+            lblCashback.Text = $"{menuForm.User.Cashback}{(menuForm.User.Cashback < 100 ? "/100" : "")} ₴";
+            btnGetCashback.Enabled = menuForm.User.Cashback >= 100;
         }
 
         private void panelLogo_MouseHover(object sender, EventArgs e)
@@ -48,8 +48,14 @@ namespace Course.Forms
 
             if (now.Hour == 0 && now.Minute == 0 && now.Second == 0)
             {
-                menuForm.bank.NewDay();
+                menuForm.Bank.NewDay();
             }
+        }
+
+        private void lblTime_DoubleClick(object sender, EventArgs e)
+        {
+            TimeDeltaForm timeDeltaForm = new TimeDeltaForm(menuForm);
+            timeDeltaForm.ShowDialog();
         }
 
         private void panelLogo_Click(object sender, EventArgs e)
@@ -90,12 +96,12 @@ namespace Course.Forms
                 MessageBox.Show("Невірний адрес пошти", "Помилка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-            if (!menuForm.bank.IsPhoneAvailable(tbPhone.Text) && tbPhone.Text.Substring(tbPhone.Text.Length - 10) != menuForm.user.Phone)
+            if (!menuForm.Bank.IsPhoneAvailable(tbPhone.Text) && tbPhone.Text.Substring(tbPhone.Text.Length - 10) != menuForm.User.Phone)
             {
                 MessageBox.Show("Даний номер телефону зайнятий іншим користувачем", "Помилка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-            if (tbEmail.Text.Length != 0 && !menuForm.bank.IsEmailAvailable(tbEmail.Text) && tbEmail.Text != menuForm.user.Email)
+            if (tbEmail.Text.Length != 0 && !menuForm.Bank.IsEmailAvailable(tbEmail.Text) && tbEmail.Text != menuForm.User.Email)
             {
                 MessageBox.Show("Дана пошта зайнята іншим користувачем", "Помилка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
@@ -106,32 +112,36 @@ namespace Course.Forms
                 return;
             }
 
-            menuForm.user.Surname = tbSurname.Text;
-            menuForm.user.Name = tbName.Text;
-            menuForm.user.Patronymic = tbPatronymic.Text;
-            menuForm.user.Phone = tbPhone.Text.Substring(tbPhone.Text.Length - 10);
-            menuForm.user.Email = tbEmail.Text;
-            menuForm.user.Password = tbPassword.Text;
+            menuForm.User.Surname = tbSurname.Text;
+            menuForm.User.Name = tbName.Text;
+            menuForm.User.Patronymic = tbPatronymic.Text;
+            menuForm.User.Phone = tbPhone.Text.Substring(tbPhone.Text.Length - 10);
+            menuForm.User.Email = tbEmail.Text;
+            menuForm.User.Password = tbPassword.Text;
         }
 
         private void btnOpenDebitAccount_Click(object sender, EventArgs e)
         {
-
+            OpenCardForm openCardForm = new OpenCardForm(menuForm, BankCardType.DebitCard);
+            openCardForm.ShowDialog();
         }
 
         private void btnOpenCreditAccount_Click(object sender, EventArgs e)
         {
-
+            OpenCardForm openCardForm = new OpenCardForm(menuForm, BankCardType.CreditCard);
+            openCardForm.ShowDialog();
         }
 
         private void btnOpenPayoutAccount_Click(object sender, EventArgs e)
         {
-
+            OpenCardForm openCardForm = new OpenCardForm(menuForm, BankCardType.PayoutCard);
+            openCardForm.ShowDialog();
         }
 
         private void btnOpenBusinessAccount_Click(object sender, EventArgs e)
         {
-
+            OpenCardForm openCardForm = new OpenCardForm(menuForm, BankCardType.BusinessCard);
+            openCardForm.ShowDialog();
         }
 
         private void btnGetCashback_Click(object sender, EventArgs e)

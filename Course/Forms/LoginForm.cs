@@ -29,7 +29,7 @@ namespace Course.Forms
             if (menuForm == null)
                 menuForm = new MenuForm(this, bank, user, filepath);
             else
-                menuForm.user = user;
+                menuForm.User = user;
 
             this.Hide();
             menuForm.Show();
@@ -94,7 +94,6 @@ namespace Course.Forms
         private void btnToRegister_Click(object sender, EventArgs e)
         {
             gbLogin.Visible = false;
-            gbRegistration.Visible = true;
         }
 
         private void btnRegister_Click(object sender, EventArgs e)
@@ -116,7 +115,6 @@ namespace Course.Forms
         private void btnToLogIn_Click(object sender, EventArgs e)
         {
             gbLogin.Visible = true;
-            gbRegistration.Visible = false;
         }
     }
 }

@@ -1,32 +1,33 @@
 using Course.Classes;
 using Course.Forms;
-using System.Security.Principal;
-using System.Windows.Forms;
 
 namespace Course
 {
     public partial class MenuForm : Form
     {
         public TimeSpan TimeDelta { get; set; } = TimeSpan.Zero;
-        public User user;
-        public Bank bank;
+        public User User;
+        public Bank Bank;
         private string? filepath;
         private LoginForm loginForm;
         private ProfileForm? profileForm;
+        private Account? Account;
 
         public MenuForm(LoginForm loginForm, Bank bank, User user, string? filepath)
         {
             InitializeComponent();
-            this.bank = bank;
-            this.user = user;
+            Bank = bank;
+            User = user;
             this.filepath = filepath;
             this.loginForm = loginForm;
         }
 
-        private void MainForm_Load(object sender, EventArgs e)
+        private void MenuForm_Shown(object sender, EventArgs e)
         {
             lblTime.Text = DateTime.Now.ToString();
-            lblUser.Text = $"{user.Surname} {user.Name[0]}.{(user.Patronymic.Length > 0 ? $" {user.Patronymic[0]}." : "")}";
+            lblUser.Text = $"{User.Surname} {User.Name[0]}.{(User.Patronymic.Length > 0 ? $" {User.Patronymic[0]}." : "")}";
+            cbCard.SelectedIndex = -1;
+            cbCard.DataSource = User.GetAllAccountsText(true);
         }
 
         private void timer_Tick(object sender, EventArgs e)
@@ -36,7 +37,7 @@ namespace Course
 
             if (now.Hour == 0 && now.Minute == 0 && now.Second == 0)
             {
-                bank.NewDay();
+                Bank.NewDay();
             }
         }
 
@@ -72,12 +73,29 @@ namespace Course
                 saveFileDialog.Filter = "Text Files|*.txt|All Files|*.*";
 
                 if (saveFileDialog.ShowDialog() == DialogResult.OK)
-                    bank.SaveToFile(saveFileDialog.FileName);
+                    Bank.SaveToFile(saveFileDialog.FileName);
             }
             else
-                bank.SaveToFile(filepath);
+                Bank.SaveToFile(filepath);
 
             Application.Exit();
+        }
+
+        private void cbCard_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            Account = User.Accounts.First(x => x.Number == cbCard.SelectedText.Split(":")[0]);
+
+            gbAccountControl.Visible = !Account.IsBlocked();
+
+            if (Account.IsBlocked())
+            {
+                lblAccountBlocked.Text = $"Причина: {Account.Blocked}";
+                return;
+            }
+
+            gbPersonalAccountControl.Visible = (Account is PersonalAccount);
+
+
         }
     }
 }
