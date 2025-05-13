@@ -49,8 +49,9 @@
         private static List<BusinessCard> LoadCards(StreamReader sr)
         {
             List<BusinessCard> cards = new List<BusinessCard>();
+            int amount = Convert.ToInt32(sr.ReadLine());
 
-            for (int i = 0; i < Convert.ToInt32(sr.ReadLine()); i++)
+            for (int i = 0; i < amount; i++)
             {
                 cards.Add((BusinessCard)LoadCard(sr));
             }
@@ -69,6 +70,11 @@
                 sr.ReadLine(),
                 LoadCards(sr)
             );
+        }
+
+        public override string GetAccountType()
+        {
+            return "Корпоративний";
         }
 
         public bool IsIPN()

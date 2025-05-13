@@ -50,11 +50,13 @@
         {
             if (amount <= 0)
             {
+                MessageBox.Show("Сума повинна бути більше за 0!", "Помилка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
 
             if (!IsAvailable())
             {
+                MessageBox.Show("Картку заблоковано!", "Помилка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
 
@@ -67,16 +69,19 @@
         {
             if (amount <= 0)
             {
+                MessageBox.Show("Сума повинна бути більше за 0!", "Помилка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
 
             if (!IsAvailable())
             {
+                MessageBox.Show("Картку заблоковано!", "Помилка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
 
             if (Account.Balance < amount)
             {
+                MessageBox.Show("На рахунку не вистачає коштів!", "Помилка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
 
@@ -88,7 +93,10 @@
         public bool Pay(double amount)
         {
             if (!IsPaymentAvailable(amount))
+            {
+                MessageBox.Show("На рахунку не вистачає коштів або картку заблоковано!", "Помилка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
+            }
 
             Account.Balance -= amount;
             AddTransaction(Bank.GenerateTransactionNumber(), -amount, null, "", TransactionType.Payment);
@@ -98,16 +106,6 @@
             {
                 user.Cashback += amount * (Account.Premium ? 0.03 : 0.01);
             }
-
-            return true;
-        }
-        public bool PayService(double amount, Service service, string comment)
-        {
-            if (!IsPaymentAvailable(amount))
-                return false;
-
-            Account.Balance -= amount;
-            Account.AddTransaction(Bank.GenerateTransactionNumber(), -amount, service.CompanyName, comment, TransactionType.ServicePayment);
 
             return true;
         }
@@ -140,14 +138,25 @@
             return new DateTime(today.Year, today.Month, 1).AddMonths(60).AddDays(-1);
         }
 
+        public static PaymentSystem PaymentSystemFromText(string text)
+        {
+            return (PaymentSystem)Enum.Parse(typeof(PaymentSystem), text);
+        }
+
+        public bool IsExpired(DateTime now)
+        {
+            return now > ExpirationDate;
+        }
         public bool IsExpired()
         {
-            return DateTime.Today > ExpirationDate;
+            return IsExpired(DateTime.Today);
         }
+
         public bool IsAvailable()
         {
             return !(Account.IsBlocked() || IsExpired());
         }
+        
         public virtual bool IsPaymentAvailable(double amount)
         {
             if (amount < 0)

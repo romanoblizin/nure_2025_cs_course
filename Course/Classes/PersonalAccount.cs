@@ -63,6 +63,21 @@
             return personalAccount;
         }
 
+        public override string GetAccountType()
+        {
+            switch (Card)
+            {
+                case DebitCard:
+                    return "Дебетовий";
+                case CreditCard:
+                    return "Кредитний";
+                case PayoutCard:
+                    return "Для виплат";
+                default:
+                    return "Невідомий";
+            }
+        }
+
         public override bool IsAvailable()
         {
             return base.IsAvailable() && !Card.IsExpired();

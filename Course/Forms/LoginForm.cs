@@ -59,7 +59,7 @@ namespace Course.Forms
 
             if (now.Hour == 0 && now.Minute == 0 && now.Second == 0)
             {
-                bank.NewDay();
+                bank.NewDay(now);
             }
         }
 

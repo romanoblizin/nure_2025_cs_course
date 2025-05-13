@@ -2,6 +2,8 @@
 {
     public abstract class Account
     {
+        public const double PremiumCost = 300;
+
         public string Number { get; set; }
         public virtual double Balance { get; set; }
         public string? Blocked { get; set; }
@@ -34,6 +36,36 @@
             Transactions.Add(new Transaction(transactionNumber, amount, target, comment, type));
         }
 
+        public bool SubscribePremium()
+        {
+            if (Balance >= PremiumCost)
+            {
+                Balance -= PremiumCost;
+                Premium = true;
+                Transactions.Add(new Transaction(Bank.GenerateTransactionNumber(), -PremiumCost, null, "", TransactionType.Premium));
+                return true;
+            }
+            else
+            {
+                Premium = false;
+                return false;
+            }
+        }
+
+        public bool PayService(double amount, Service service, string comment)
+        {
+            if (!IsPaymentAvailable(amount))
+            {
+                MessageBox.Show("На рахунку не вистачає коштів!", "Помилка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+
+            Balance -= amount;
+            AddTransaction(Bank.GenerateTransactionNumber(), -amount, service.CompanyName, comment, TransactionType.ServicePayment);
+
+            return true;
+        }
+
         public virtual void SaveToFile(StreamWriter sw)
         {
             sw.WriteLine(Number);
@@ -52,13 +84,14 @@
         protected static List<Transaction> LoadTransactions(StreamReader sr)
         {
             List<Transaction> transactions = new List<Transaction>();
+            int amount = Convert.ToInt32(sr.ReadLine());
 
-            for (int i = 0; i < Convert.ToInt32(sr.ReadLine()); i++)
+            for (int i = 0; i < amount; i++)
             {
                 if (sr.ReadLine() == "Transaction")
-                    Transaction.LoadFromFile(sr);
+                    transactions.Add(Transaction.LoadFromFile(sr));
                 else
-                    BusinessTransaction.LoadFromFile(sr);
+                    transactions.Add(BusinessTransaction.LoadFromFile(sr));
             }
 
             return transactions;
@@ -87,7 +120,7 @@
         }
         public bool IsBlocked()
         {
-            return Blocked == null;
+            return !String.IsNullOrEmpty(Blocked);
         }
         public virtual bool IsAvailable()
         {
@@ -107,6 +140,7 @@
 
             return true;
         }
+        public abstract string GetAccountType();
 
         public static bool operator ==(Account? a, Account? b)
         {

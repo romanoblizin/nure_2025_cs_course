@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Security.Principal;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace Course.Classes
@@ -107,13 +108,14 @@ namespace Course.Classes
         private static List<Account> LoadAccounts(StreamReader sr)
         {
             List<Account> accounts = new List<Account>();
+            int amount = Convert.ToInt32(sr.ReadLine());
 
-            for (int i = 0; i < Convert.ToInt32(sr.ReadLine()); i++)
+            for (int i = 0; i < amount; i++)
             {
                 if (sr.ReadLine() == "PersonalAccount")
-                    PersonalAccount.LoadFromFile(sr);
+                    accounts.Add(PersonalAccount.LoadFromFile(sr));
                 else
-                    BusinessAccount.LoadFromFile(sr);
+                    accounts.Add(BusinessAccount.LoadFromFile(sr));
             }
 
             return accounts;
@@ -133,17 +135,13 @@ namespace Course.Classes
             );
         }
 
+        public Account? GetAccountByNumber(string number)
+        {
+            return Accounts.FirstOrDefault(x => x.Number == number);
+        }
         public List<string> GetAllAccountsText(bool showBlocked)
         {
-            List<string> accounts = new List<string>();
-
-            foreach (Account account in Accounts)
-            {
-                if (!account.IsBlocked() || showBlocked)
-                    accounts.Add($"{account.Number}: {account.Balance}₴");
-            }
-
-            return accounts;
+            return Accounts.Where(x => (!x.IsBlocked() || showBlocked)).Select(x => $"({x.GetAccountType()}) {x.Number}: {x.Balance}₴").ToList();
         }
 
         public static bool ValidatePhone(string phone)

@@ -33,18 +33,13 @@
                 sr.ReadLine(),
                 DateTime.Parse(sr.ReadLine()),
                 sr.ReadLine(),
-                (PaymentSystem)Enum.Parse(typeof(PaymentSystem), sr.ReadLine()),
+                PaymentSystemFromText(sr.ReadLine()),
                 sr.ReadLine()
             );
         }
 
         public override void RenewCard()
         {
-            if (!IsExpired())
-            {
-                return;
-            }
-
             ((BusinessAccount)Account).Cards.Remove(this);
             ((BusinessAccount)Account).Cards.Add(new BusinessCard(Bank.GenerateCardNumber(PaymentSystem), PaymentSystem, Account, OwnerFullName));
         }

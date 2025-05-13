@@ -4,7 +4,6 @@ namespace Course.Classes
 {
     public enum TransactionType
     {
-
         Transfer,
         Deposit,
         Withdraw,
@@ -73,10 +72,10 @@ namespace Course.Classes
         {
             StringBuilder sb = new StringBuilder();
 
-            sb.AppendLine($"Квитанція № {Number}");
+            sb.AppendLine($"Квитанція #{Number}");
             sb.AppendLine();
-            sb.AppendLine($"Відправник: {account.IBAN}");
-            sb.AppendLine($"Отримувач: {Target}");
+            sb.AppendLine($"Відправник: {(Amount < 0 ? account.IBAN : (String.IsNullOrEmpty(Target) ? "Банк" : Target))}");
+            sb.AppendLine($"Отримувач: {(Amount > 0 ? account.IBAN : (String.IsNullOrEmpty(Target) ? "Банк" : Target))}");
             sb.AppendLine();
             sb.AppendLine($"Сума (грн): {Math.Abs(Amount)}");
             sb.AppendLine($"Призначення платежу: {GetTranslatedType(Type)}");

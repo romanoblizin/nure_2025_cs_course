@@ -75,6 +75,7 @@
             FormBorderStyle = FormBorderStyle.FixedSingle;
             Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "CashbankForm";
+            StartPosition = FormStartPosition.CenterParent;
             Text = "Отримання кешбеку";
             ResumeLayout(false);
             PerformLayout();

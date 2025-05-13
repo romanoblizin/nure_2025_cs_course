@@ -48,7 +48,7 @@ namespace Course.Forms
                     return;
                 }
 
-                PaymentSystem paymentSystem = (PaymentSystem)Enum.Parse(typeof(PaymentSystem), cbPaymentSystem.SelectedText);
+                PaymentSystem paymentSystem = BankCard.PaymentSystemFromText(cbPaymentSystem.Text);
 
                 switch (bankCardType)
                 {

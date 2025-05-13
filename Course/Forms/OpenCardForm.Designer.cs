@@ -137,6 +137,7 @@
             FormBorderStyle = FormBorderStyle.FixedSingle;
             Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "OpenCardForm";
+            StartPosition = FormStartPosition.CenterParent;
             Text = "Відкриття рахунку";
             gbBusinessAccount.ResumeLayout(false);
             gbBusinessAccount.PerformLayout();

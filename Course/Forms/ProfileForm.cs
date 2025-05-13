@@ -48,7 +48,7 @@ namespace Course.Forms
 
             if (now.Hour == 0 && now.Minute == 0 && now.Second == 0)
             {
-                menuForm.Bank.NewDay();
+                menuForm.Bank.NewDay(now);
             }
         }
 
@@ -146,7 +146,10 @@ namespace Course.Forms
 
         private void btnGetCashback_Click(object sender, EventArgs e)
         {
-
+            CashbankForm cashbankForm = new CashbankForm(menuForm);
+            cashbankForm.ShowDialog();
+            lblCashback.Text = $"{menuForm.User.Cashback}{(menuForm.User.Cashback < 100 ? "/100" : "")} ₴";
+            btnGetCashback.Enabled = menuForm.User.Cashback >= 100;
         }
 
         private void btnLogOut_Click(object sender, EventArgs e)

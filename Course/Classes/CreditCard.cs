@@ -26,11 +26,6 @@
 
         public override void RenewCard()
         {
-            if (!IsExpired())
-            {
-                return;
-            }
-
             ((PersonalAccount)Account).Card = new CreditCard(Bank.GenerateCardNumber(PaymentSystem), PaymentSystem, Account, CreditLimit, CreditLeft, CreditTriggered);
         }
 
@@ -52,7 +47,7 @@
                 sr.ReadLine(),
                 DateTime.Parse(sr.ReadLine()),
                 sr.ReadLine(),
-                (PaymentSystem)Enum.Parse(typeof(PaymentSystem), sr.ReadLine()),
+                PaymentSystemFromText(sr.ReadLine()),
                 Convert.ToDouble(sr.ReadLine()),
                 Convert.ToDouble(sr.ReadLine()),
                 LoadDateTime(sr)

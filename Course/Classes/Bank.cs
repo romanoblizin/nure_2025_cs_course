@@ -84,11 +84,16 @@
             }
         }
         
-        public Service AddService(string companyName, string companyNumber, string ownerFullName, string iban)
+        public void AddService(string companyName, string companyNumber, string ownerFullName, string iban)
         {
+            if (services.Any(x => x.CompanyNumber == companyNumber))
+            {
+                MessageBox.Show("Номер компанії вже існує!", "Помилка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
             Service service = new Service(companyName, companyNumber, ownerFullName, iban);
             services.Add(service);
-            return service;
         }
         public void DeleteService(string companyNumber)
         {
@@ -96,6 +101,7 @@
 
             if (service == null)
             {
+                MessageBox.Show("Сервіс не знайдено!", "Помилка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -106,16 +112,21 @@
         {
             if (accountFrom == accountTo)
             {
+                MessageBox.Show("Перераховувати кошти самому собі неможливо!", "Помилка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
 
             if (!accountTo.IsAvailable())
             {
+                MessageBox.Show("Перераховувати кошти на цю картку неможливо!", "Помилка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
 
             if (!accountFrom.IsPaymentAvailable(amount))
+            {
+                MessageBox.Show("На рахунку недостатньо коштів!", "Помилка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
+            }
 
             accountFrom.Balance -= amount;
             accountTo.Balance += accountFrom.GetTransferAmount(amount);
@@ -130,16 +141,21 @@
         {
             if (accountFrom == cardTo.Account)
             {
+                MessageBox.Show("Перераховувати кошти самому собі неможливо!", "Помилка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
 
             if (!cardTo.IsAvailable() || cardTo is PayoutCard)
             {
+                MessageBox.Show("Перераховувати кошти на цю картку неможливо!", "Помилка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
 
             if (!accountFrom.IsPaymentAvailable(amount))
+            {
+                MessageBox.Show("На рахунку недостатньо коштів!", "Помилка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
+            }
 
             accountFrom.Balance -= amount;
             cardTo.Account.Balance += accountFrom.GetTransferAmount(amount);
@@ -169,7 +185,10 @@
             }
 
             if (!accountFrom.IsPaymentAvailable(amount))
+            {
+                MessageBox.Show("На рахунку недостатньо коштів!", "Помилка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
+            }
 
             accountFrom.Balance -= amount;
             accountFrom.AddTransaction(GenerateTransactionNumber(), -amount, cardNumberToStr, comment, TransactionType.Transfer);
@@ -192,7 +211,10 @@
             }
 
             if (!accountFrom.IsPaymentAvailable(amount))
+            {
+                MessageBox.Show("На рахунку недостатньо коштів!", "Помилка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
+            }
 
             accountFrom.Balance -= amount;
             accountFrom.AddTransaction(GenerateTransactionNumber(), -amount, iban, comment, TransactionType.Transfer);
@@ -260,11 +282,22 @@
             NewDay(DateTime.Today);
         }
 
+        public void DeleteAccount(Account account)
+        {
+            foreach (User user in users)
+            {
+                if (user.Accounts.Contains(account))
+                {
+                    user.Accounts.Remove(account);
+                }
+            }
+        }
+
         public void SaveToFile(StreamWriter sw)
         {
-            sw.WriteLine(string.Join(" ", accountNumbers));
-            sw.WriteLine(string.Join(" ", cardNumbers));
-            sw.WriteLine(string.Join(" ", transactionNumbers));
+            sw.WriteLine(string.Join(" ", accountNumbers).Substring(1));
+            sw.WriteLine(string.Join(" ", cardNumbers).Substring(1));
+            sw.WriteLine(string.Join(" ", transactionNumbers).Substring(1));
 
             sw.WriteLine(users.Count);
             foreach (User user in users)
@@ -291,6 +324,8 @@
             try            
             {
                 string? line = sr.ReadLine();
+                int amount;
+
                 foreach (string number in line.Split(" "))
                 {
                     accountNumbers.Add(number);
@@ -308,24 +343,24 @@
                     transactionNumbers.Add(number);
                 }
 
-                line = sr.ReadLine();
-                for (int i = 0; i < Convert.ToInt32(line); i++)
+                amount = Convert.ToInt32(sr.ReadLine());
+                for (int i = 0; i < amount; i++)
                 {
                     users.Add(User.LoadFromFile(sr));
                 }
 
-                line = sr.ReadLine();
-                for (int i = 0; i < Convert.ToInt32(line); i++)
+                amount = Convert.ToInt32(sr.ReadLine());
+                for (int i = 0; i < amount; i++)
                 {
                     services.Add(Service.LoadFromFile(sr));
                 }
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.ToString(), "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Файл пошкоджено!", "Помилка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
 
-                return bank;
+            return bank;
         }
         public static Bank LoadFromFile(string filepath)
         {
@@ -428,12 +463,12 @@
                 {
                     if (accountType.IsAssignableFrom(account.GetType()))
                     {
-                        if (accountType == typeof(PersonalAccount))
+                        if (accountType.IsAssignableFrom(typeof(PersonalAccount)))
                         {
                             PersonalAccount personalAccount = (PersonalAccount)account;
                             Cards.Add(personalAccount.Card);
                         }
-                        else
+                        else if (accountType.IsAssignableFrom(typeof(BusinessAccount)))
                         {
                             BusinessAccount businessAccount = (BusinessAccount)account;
 
@@ -443,7 +478,6 @@
                             }
                         }
                     }
-
                 }
             }
 
@@ -485,7 +519,30 @@
             int checkDigit = (10 - (sum % 10)) % 10;
             return checkDigit.ToString();
         }
+        public Service? GetServiceByName(string serviceName)
+        {
+            return services.FirstOrDefault(x => x.CompanyName == serviceName);
+        }
+        public List<string> GetAllServicesNameList()
+        {
+            return services.Select(x => x.CompanyName).ToList();
+        }
+        public List<string> GetAllServicesList()
+        {
+            return services.Select(x => $"{x.CompanyName} ({x.CompanyNumber})").ToList();
+        }
+        public List<string> GetAllCardsList()
+        {
+            List<string> result = new List<string>();
 
+            foreach (User user in users)
+            {
+                result.AddRange(user.GetAllAccountsText(true));
+            }
+
+            return GetCardsByType(typeof(BankCard)).Select(x => $"({x.Account.GetAccountType()}) {x.Number}: {x.Account.Balance}").ToList();
+        }
+        
         public bool IsPhoneAvailable(string phone)
         {
             foreach (User user in users)

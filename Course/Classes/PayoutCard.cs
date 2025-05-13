@@ -19,11 +19,6 @@
 
         public override void RenewCard()
         {
-            if (!IsExpired())
-            {
-                return;
-            }
-
             ((PersonalAccount)Account).Card = new PayoutCard(Bank.GenerateCardNumber(PaymentSystem), PaymentSystem, Account);
         }
 
@@ -33,7 +28,7 @@
                 sr.ReadLine(),
                 DateTime.Parse(sr.ReadLine()),
                 sr.ReadLine(),
-                (PaymentSystem)Enum.Parse(typeof(PaymentSystem), sr.ReadLine())
+                PaymentSystemFromText(sr.ReadLine())
             );
         }
     }

@@ -1,4 +1,6 @@
-﻿namespace Course.Classes
+﻿using static System.Runtime.InteropServices.JavaScript.JSType;
+
+namespace Course.Classes
 {
     public class Service
     {
@@ -30,6 +32,29 @@
                 sr.ReadLine(),
                 sr.ReadLine()
             );
+        }
+
+        public static bool operator ==(Service? a, Service? b)
+        {
+            if (a is null || b is null) return false;
+            return a.CompanyNumber == b.CompanyNumber;
+        }
+        public static bool operator !=(Service? a, Service? b)
+        {
+            return !(a == b);
+        }
+        public override bool Equals(object? obj)
+        {
+            if (obj is not Service)
+            {
+                return false;
+            }
+
+            return CompanyNumber == ((Service)obj).CompanyNumber;
+        }
+        public override int GetHashCode()
+        {
+            return CompanyNumber.GetHashCode();
         }
     }
 }

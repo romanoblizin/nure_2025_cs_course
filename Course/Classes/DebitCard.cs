@@ -102,11 +102,6 @@
 
         public override void RenewCard()
         {
-            if (!IsExpired())
-            {
-                return;
-            }
-
             ((PersonalAccount)Account).Card = new DebitCard(Bank.GenerateCardNumber(PaymentSystem), PaymentSystem, Account, InterestRate, Deposits);
         }
 
@@ -124,8 +119,9 @@
         private static List<DepositClass> LoadDeposits(StreamReader sr)
         {
             List<DepositClass> deposits = new List<DepositClass>();
+            int amount = Convert.ToInt32(sr.ReadLine());
 
-            for (int i = 0; i < Convert.ToInt32(sr.ReadLine()); i++)
+            for (int i = 0; i < amount; i++)
             {
                 deposits.Add(DepositClass.LoadFromFile(sr));
             }
@@ -138,7 +134,7 @@
                 sr.ReadLine(),
                 DateTime.Parse(sr.ReadLine()),
                 sr.ReadLine(),
-                (PaymentSystem)Enum.Parse(typeof(PaymentSystem), sr.ReadLine()),
+                PaymentSystemFromText(sr.ReadLine()),
                 Convert.ToDouble(sr.ReadLine()),
                 LoadDeposits(sr)
             );
