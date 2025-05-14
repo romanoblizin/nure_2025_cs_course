@@ -92,7 +92,6 @@
             lblTime.Size = new Size(182, 30);
             lblTime.TabIndex = 4;
             lblTime.Text = "01.01.1970 0:00:00";
-            lblTime.DoubleClick += lblTime_DoubleClick;
             // 
             // panelUser
             // 
@@ -405,7 +404,7 @@
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Профіль";
             FormClosing += ProfileForm_FormClosing;
-            Shown += ProfileForm_Shown;
+            VisibleChanged += ProfileForm_VisibleChanged;
             panelHeader.ResumeLayout(false);
             panelHeader.PerformLayout();
             panelUser.ResumeLayout(false);

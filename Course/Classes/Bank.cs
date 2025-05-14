@@ -170,6 +170,7 @@
             else
             {
                 transaction.Amount = accountFrom.GetTransferAmount(amount);
+                transaction.Target = (accountFrom is PersonalAccount personalAccount ? personalAccount.Card.Number : accountFrom.IBAN);
                 cardTo.Account.Transactions.Add(transaction);
             }
 
@@ -463,12 +464,12 @@
                 {
                     if (accountType.IsAssignableFrom(account.GetType()))
                     {
-                        if (accountType.IsAssignableFrom(typeof(PersonalAccount)))
+                        if (account is PersonalAccount)
                         {
                             PersonalAccount personalAccount = (PersonalAccount)account;
                             Cards.Add(personalAccount.Card);
                         }
-                        else if (accountType.IsAssignableFrom(typeof(BusinessAccount)))
+                        else if (account is BusinessAccount)
                         {
                             BusinessAccount businessAccount = (BusinessAccount)account;
 
@@ -540,7 +541,7 @@
                 result.AddRange(user.GetAllAccountsText(true));
             }
 
-            return GetCardsByType(typeof(BankCard)).Select(x => $"({x.Account.GetAccountType()}) {x.Number}: {x.Account.Balance}").ToList();
+            return GetCardsByType(typeof(BankCard)).Select(x => $"({x.Account.GetAccountType()}) {x.Number}: {x.Account.Balance}₴").ToList();
         }
         
         public bool IsPhoneAvailable(string phone)

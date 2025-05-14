@@ -8,6 +8,7 @@
 
         public override bool Deposit(double amount)
         {
+            MessageBox.Show("На картку для виплат неможливо покласти кошти!", "Помилка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
             return false;
         }
 

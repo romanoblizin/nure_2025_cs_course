@@ -16,19 +16,22 @@ namespace Course.Forms
             this.loginForm = loginForm;
         }
 
-        private void ProfileForm_Shown(object sender, EventArgs e)
+        private void ProfileForm_VisibleChanged(object sender, EventArgs e)
         {
-            lblTime.Text = DateTime.Now.ToString();
-            lblUser.Text = $"{menuForm.User.Surname} {menuForm.User.Name[0]}.{(menuForm.User.Patronymic.Length > 0 ? $" {menuForm.User.Patronymic[0]}." : "")}";
+            if (this.Visible)
+            {
+                lblTime.Text = DateTime.Now.ToString();
+                lblUser.Text = $"{menuForm.User.Surname} {menuForm.User.Name[0]}.{(menuForm.User.Patronymic.Length > 0 ? $" {menuForm.User.Patronymic[0]}." : "")}";
 
-            tbSurname.Text = menuForm.User.Surname;
-            tbName.Text = menuForm.User.Name;
-            tbPatronymic.Text = menuForm.User.Patronymic;
-            tbEmail.Text = menuForm.User.Email;
-            tbPhone.Text = menuForm.User.Phone;
-            tbPassword.Text = menuForm.User.Password;
-            lblCashback.Text = $"{menuForm.User.Cashback}{(menuForm.User.Cashback < 100 ? "/100" : "")} ₴";
-            btnGetCashback.Enabled = menuForm.User.Cashback >= 100;
+                tbSurname.Text = menuForm.User.Surname;
+                tbName.Text = menuForm.User.Name;
+                tbPatronymic.Text = menuForm.User.Patronymic;
+                tbEmail.Text = menuForm.User.Email;
+                tbPhone.Text = menuForm.User.Phone;
+                tbPassword.Text = menuForm.User.Password;
+                lblCashback.Text = $"{menuForm.User.Cashback}{(menuForm.User.Cashback < 100 ? "/100" : "")} ₴";
+                btnGetCashback.Enabled = menuForm.User.Cashback >= 100;
+            }
         }
 
         private void panelLogo_MouseHover(object sender, EventArgs e)
@@ -50,12 +53,6 @@ namespace Course.Forms
             {
                 menuForm.Bank.NewDay(now);
             }
-        }
-
-        private void lblTime_DoubleClick(object sender, EventArgs e)
-        {
-            TimeDeltaForm timeDeltaForm = new TimeDeltaForm(menuForm);
-            timeDeltaForm.ShowDialog();
         }
 
         private void panelLogo_Click(object sender, EventArgs e)
@@ -118,6 +115,7 @@ namespace Course.Forms
             menuForm.User.Phone = tbPhone.Text.Substring(tbPhone.Text.Length - 10);
             menuForm.User.Email = tbEmail.Text;
             menuForm.User.Password = tbPassword.Text;
+            lblUser.Text = $"{menuForm.User.Surname} {menuForm.User.Name[0]}.{(menuForm.User.Patronymic.Length > 0 ? $" {menuForm.User.Patronymic[0]}." : "")}";
         }
 
         private void btnOpenDebitAccount_Click(object sender, EventArgs e)

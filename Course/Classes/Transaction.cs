@@ -74,8 +74,12 @@ namespace Course.Classes
 
             sb.AppendLine($"Квитанція #{Number}");
             sb.AppendLine();
-            sb.AppendLine($"Відправник: {(Amount < 0 ? account.IBAN : (String.IsNullOrEmpty(Target) ? "Банк" : Target))}");
+
+            TransactionType[] sendTypes = { TransactionType.Transfer, TransactionType.Withdraw, TransactionType.Payment, TransactionType.ServicePayment, TransactionType.DepositOpen, TransactionType.CreditInterest, TransactionType.Premium };
+
+            sb.AppendLine($"Відправник: {(Amount < 0 && sendTypes.Contains(Type) ? account.IBAN : (String.IsNullOrEmpty(Target) ? "Банк" : Target))}");
             sb.AppendLine($"Отримувач: {(Amount > 0 ? account.IBAN : (String.IsNullOrEmpty(Target) ? "Банк" : Target))}");
+
             sb.AppendLine();
             sb.AppendLine($"Сума (грн): {Math.Abs(Amount)}");
             sb.AppendLine($"Призначення платежу: {GetTranslatedType(Type)}");

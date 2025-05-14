@@ -157,10 +157,11 @@
             // 
             nudAmount.DecimalPlaces = 2;
             nudAmount.Location = new Point(6, 51);
+            nudAmount.Maximum = new decimal(new int[] { 100000, 0, 0, 0 });
             nudAmount.Minimum = new decimal(new int[] { 1, 0, 0, 131072 });
             nudAmount.Name = "nudAmount";
             nudAmount.Size = new Size(107, 23);
-            nudAmount.TabIndex = 12;
+            nudAmount.TabIndex = 11;
             nudAmount.Value = new decimal(new int[] { 1, 0, 0, 131072 });
             // 
             // btnExpand
@@ -168,7 +169,7 @@
             btnExpand.Location = new Point(327, 133);
             btnExpand.Name = "btnExpand";
             btnExpand.Size = new Size(25, 26);
-            btnExpand.TabIndex = 13;
+            btnExpand.TabIndex = 5;
             btnExpand.Text = ">";
             btnExpand.UseVisualStyleBackColor = true;
             btnExpand.Click += btnExpand_Click;
@@ -179,7 +180,7 @@
             btnDeposit.Location = new Point(119, 51);
             btnDeposit.Name = "btnDeposit";
             btnDeposit.Size = new Size(82, 23);
-            btnDeposit.TabIndex = 14;
+            btnDeposit.TabIndex = 12;
             btnDeposit.Text = "Поповнити";
             btnDeposit.UseVisualStyleBackColor = true;
             btnDeposit.Click += btnDeposit_Click;
@@ -190,7 +191,7 @@
             btnWithdraw.Location = new Point(207, 51);
             btnWithdraw.Name = "btnWithdraw";
             btnWithdraw.Size = new Size(67, 23);
-            btnWithdraw.TabIndex = 15;
+            btnWithdraw.TabIndex = 13;
             btnWithdraw.Text = "Зняти";
             btnWithdraw.UseVisualStyleBackColor = true;
             btnWithdraw.Click += btnWithdraw_Click;
@@ -201,7 +202,7 @@
             btnPayout.Location = new Point(280, 51);
             btnPayout.Name = "btnPayout";
             btnPayout.Size = new Size(75, 23);
-            btnPayout.TabIndex = 16;
+            btnPayout.TabIndex = 14;
             btnPayout.Text = "Виплатити";
             btnPayout.UseVisualStyleBackColor = true;
             btnPayout.Click += btnPayout_Click;
@@ -212,7 +213,7 @@
             tbReason.Name = "tbReason";
             tbReason.PlaceholderText = "Причина";
             tbReason.Size = new Size(154, 23);
-            tbReason.TabIndex = 17;
+            tbReason.TabIndex = 15;
             // 
             // btnBlock
             // 
@@ -220,7 +221,7 @@
             btnBlock.Location = new Point(166, 80);
             btnBlock.Name = "btnBlock";
             btnBlock.Size = new Size(68, 23);
-            btnBlock.TabIndex = 18;
+            btnBlock.TabIndex = 16;
             btnBlock.Text = "(раз)блок";
             btnBlock.UseVisualStyleBackColor = true;
             btnBlock.Click += btnBlock_Click;
@@ -231,7 +232,7 @@
             tbCompanyName.Name = "tbCompanyName";
             tbCompanyName.PlaceholderText = "Назва компанії";
             tbCompanyName.Size = new Size(130, 23);
-            tbCompanyName.TabIndex = 19;
+            tbCompanyName.TabIndex = 20;
             // 
             // tbCompanyNumber
             // 
@@ -239,7 +240,7 @@
             tbCompanyNumber.Name = "tbCompanyNumber";
             tbCompanyNumber.PlaceholderText = "ІПН / ЄДРПОУ";
             tbCompanyNumber.Size = new Size(130, 23);
-            tbCompanyNumber.TabIndex = 20;
+            tbCompanyNumber.TabIndex = 21;
             // 
             // tbCompanyIBAN
             // 
@@ -247,7 +248,7 @@
             tbCompanyIBAN.Name = "tbCompanyIBAN";
             tbCompanyIBAN.PlaceholderText = "IBAN";
             tbCompanyIBAN.Size = new Size(130, 23);
-            tbCompanyIBAN.TabIndex = 21;
+            tbCompanyIBAN.TabIndex = 23;
             // 
             // tbCompanyOwner
             // 
@@ -262,7 +263,7 @@
             btnAddService.Location = new Point(280, 22);
             btnAddService.Name = "btnAddService";
             btnAddService.Size = new Size(75, 52);
-            btnAddService.TabIndex = 23;
+            btnAddService.TabIndex = 24;
             btnAddService.Text = "Додати компанію";
             btnAddService.UseVisualStyleBackColor = true;
             btnAddService.Click += btnAddService_Click;
@@ -273,7 +274,7 @@
             btnDeleteService.Location = new Point(280, 79);
             btnDeleteService.Name = "btnDeleteService";
             btnDeleteService.Size = new Size(75, 23);
-            btnDeleteService.TabIndex = 24;
+            btnDeleteService.TabIndex = 26;
             btnDeleteService.Text = "Видалити";
             btnDeleteService.UseVisualStyleBackColor = true;
             btnDeleteService.Click += btnDeleteService_Click;
@@ -301,7 +302,7 @@
             cbCard.Location = new Point(6, 22);
             cbCard.Name = "cbCard";
             cbCard.Size = new Size(349, 23);
-            cbCard.TabIndex = 19;
+            cbCard.TabIndex = 10;
             cbCard.SelectedIndexChanged += cbCard_SelectedIndexChanged;
             // 
             // btnDeleteAccount
@@ -312,7 +313,7 @@
             btnDeleteAccount.Location = new Point(240, 80);
             btnDeleteAccount.Name = "btnDeleteAccount";
             btnDeleteAccount.Size = new Size(115, 23);
-            btnDeleteAccount.TabIndex = 18;
+            btnDeleteAccount.TabIndex = 17;
             btnDeleteAccount.Text = "Видалити рахунок";
             btnDeleteAccount.UseVisualStyleBackColor = false;
             btnDeleteAccount.Click += btnDeleteAccount_Click;

@@ -1,4 +1,6 @@
-﻿namespace Course.Classes
+﻿using System;
+
+namespace Course.Classes
 {
     public class BusinessAccount : Account
     {
@@ -42,7 +44,7 @@
             sw.WriteLine(Cards.Count.ToString());
             foreach (BusinessCard card in Cards)
             {
-                sw.WriteLine(card.GetType().ToString());
+                sw.WriteLine(card.GetType().Name);
                 card.SaveToFile(sw);
             }
         }
@@ -60,7 +62,7 @@
         }
         public static BusinessAccount LoadFromFile(StreamReader sr)
         {
-            return new BusinessAccount(
+            BusinessAccount businessAccount = new BusinessAccount(
                 sr.ReadLine(),
                 Convert.ToDouble(sr.ReadLine()),
                 sr.ReadLine(),
@@ -70,6 +72,13 @@
                 sr.ReadLine(),
                 LoadCards(sr)
             );
+
+            foreach (BusinessCard card in businessAccount.Cards)
+            {
+                card.Account = businessAccount;
+            }
+
+            return businessAccount;
         }
 
         public override string GetAccountType()

@@ -18,6 +18,13 @@ namespace Course.Forms
             cbServices.SelectedIndex = -1;
         }
 
+        private void updateCheckBox()
+        {
+            int selectedIndex = cbCard.SelectedIndex;
+            cbCard.DataSource = menuForm.Bank.GetAllCardsList();
+            cbCard.SelectedIndex = selectedIndex;
+        }
+
         private void btnSave_Click(object sender, EventArgs e)
         {
             TimeSpan timeSpan = TimeSpan.FromSeconds(Convert.ToInt32(nudSeconds.Value));
@@ -54,11 +61,11 @@ namespace Course.Forms
 
         private void cbCard_SelectedIndexChanged(object sender, EventArgs e)
         {
-            btnDeposit.Enabled = btnWithdraw.Enabled = btnPayout.Enabled = btnBlock.Enabled = (cbCard.SelectedIndex != -1);
+            btnDeposit.Enabled = btnWithdraw.Enabled = btnPayout.Enabled = btnBlock.Enabled = btnDeleteAccount.Enabled = (cbCard.SelectedIndex != -1);
 
             if (cbCard.SelectedIndex != -1)
             {
-                selectedCard = menuForm.Bank.GetCardByNumber(cbCard.Text.Split(" ")[1].Split(":")[0]);
+                selectedCard = menuForm.Bank.GetCardByNumber(cbCard.Text.Split(") ")[1].Split(":")[0]);
                 tbReason.Text = selectedCard.Account.Blocked;
                 tbReason.ReadOnly = false;
             }
@@ -74,16 +81,16 @@ namespace Course.Forms
         {
             if (selectedCard.Deposit((double)nudAmount.Value))
             {
-                cbCard.DataSource = menuForm.Bank.GetAllCardsList();
+                updateCheckBox();
                 MessageBox.Show("Рахунок поповнено!", "Успішно!", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 
         private void btnWithdraw_Click(object sender, EventArgs e)
         {
-            if (selectedCard.Deposit((double)nudAmount.Value))
+            if (selectedCard.Withdraw((double)nudAmount.Value))
             {
-                cbCard.DataSource = menuForm.Bank.GetAllCardsList();
+                updateCheckBox();
                 MessageBox.Show("Кошти зняті!", "Успішно!", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
@@ -92,8 +99,8 @@ namespace Course.Forms
         {
             if (selectedCard is PayoutCard payoutCard)
             {
-                cbCard.DataSource = menuForm.Bank.GetAllCardsList();
                 payoutCard.Payout(Bank.GenerateTransactionNumber(), (double)nudAmount.Value, "Виплата від банку");
+                updateCheckBox();
                 MessageBox.Show("Кошти виплачено!", "Успішно!", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
             }
@@ -113,8 +120,8 @@ namespace Course.Forms
             {
                 menuForm.Bank.DeleteAccount(selectedCard.Account);
 
-                cbCard.DataSource = menuForm.Bank.GetAllCardsList();
                 cbCard.SelectedIndex = -1;
+                updateCheckBox();
 
                 MessageBox.Show("Рахунок видалено!", "Успішно!", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
@@ -133,7 +140,7 @@ namespace Course.Forms
                 return;
             }
 
-            if (!Regex.IsMatch(tbCompanyNumber.Text, @"^(\d{ 8}|\d{ 10})$"))
+            if (!Regex.IsMatch(tbCompanyNumber.Text, @"^(\d{8}|\d{10})$"))
             {
                 MessageBox.Show("Некоректний ІПН/ЄДРПОУ!", "Помилка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
@@ -147,6 +154,7 @@ namespace Course.Forms
 
             menuForm.Bank.AddService(tbCompanyName.Text, tbCompanyNumber.Text, tbCompanyOwner.Text, tbCompanyIBAN.Text);
             cbServices.DataSource = menuForm.Bank.GetAllServicesList();
+            tbCompanyName.Text = tbCompanyIBAN.Text = tbCompanyNumber.Text = tbCompanyOwner.Text = string.Empty;
             MessageBox.Show("Компанію додано!", "Успішно!", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 

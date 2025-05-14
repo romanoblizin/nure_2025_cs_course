@@ -324,7 +324,6 @@
             tbPatronymic.PlaceholderText = "Необов'язково";
             tbPatronymic.Size = new Size(150, 23);
             tbPatronymic.TabIndex = 6;
-            tbPatronymic.Text = "Германович";
             // 
             // tbSurname
             // 
@@ -332,7 +331,6 @@
             tbSurname.Name = "tbSurname";
             tbSurname.Size = new Size(150, 23);
             tbSurname.TabIndex = 4;
-            tbSurname.Text = "Облізін";
             // 
             // tbPhone
             // 
@@ -340,7 +338,6 @@
             tbPhone.Name = "tbPhone";
             tbPhone.Size = new Size(150, 23);
             tbPhone.TabIndex = 8;
-            tbPhone.Text = "+380987654321";
             // 
             // tbEmail
             // 
@@ -349,7 +346,6 @@
             tbEmail.PlaceholderText = "Необов'язково";
             tbEmail.Size = new Size(150, 23);
             tbEmail.TabIndex = 7;
-            tbEmail.Text = "roman.oblizin@nure.ua";
             // 
             // lblName
             // 
@@ -399,7 +395,6 @@
             tbPasswordR.PasswordChar = '*';
             tbPasswordR.Size = new Size(150, 23);
             tbPasswordR.TabIndex = 9;
-            tbPasswordR.Text = "12345678";
             // 
             // tbName
             // 
@@ -407,7 +402,6 @@
             tbName.Name = "tbName";
             tbName.Size = new Size(150, 23);
             tbName.TabIndex = 5;
-            tbName.Text = "Роман";
             // 
             // lblPasswordR
             // 

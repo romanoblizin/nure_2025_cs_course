@@ -6,6 +6,8 @@ namespace Course.Forms
     {
         private MenuForm menuForm;
         private BankCardType bankCardType;
+        private const double debitRate = 12;
+        private const double creditRate = 36;
 
         public OpenCardForm(MenuForm menuForm, BankCardType bankCardType)
         {
@@ -18,6 +20,10 @@ namespace Course.Forms
             if (bankCardType is not BankCardType.BusinessCard)
             {
                 cbPaymentSystem.DataSource = Enum.GetValues(typeof(PaymentSystem));
+
+                lblRate.Visible = tbRate.Visible = !(bankCardType is BankCardType.PayoutCard);
+                if (!tbRate.Visible)
+                    tbRate.Text = (bankCardType is BankCardType.DebitCard) ? debitRate.ToString() : creditRate.ToString();
             }
         }
 
@@ -53,10 +59,10 @@ namespace Course.Forms
                 switch (bankCardType)
                 {
                     case BankCardType.DebitCard:
-                        menuForm.User.OpenDebitCard(paymentSystem, 10);
+                        menuForm.User.OpenDebitCard(paymentSystem, Convert.ToDouble(tbRate.Text));
                         break;
                     case BankCardType.CreditCard:
-                        menuForm.User.OpenCreditCard(paymentSystem, 36);
+                        menuForm.User.OpenCreditCard(paymentSystem, Convert.ToDouble(tbRate.Text));
                         break;
                     case BankCardType.PayoutCard:
                         menuForm.User.OpenPayoutCard(paymentSystem);
@@ -65,6 +71,7 @@ namespace Course.Forms
                         break;
                 }
                 MessageBox.Show("Рахунок відкрито!", "Успішно!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                this.Close();
             }
         }
     }

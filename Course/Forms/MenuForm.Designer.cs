@@ -66,17 +66,6 @@
             lblPaymentSystem = new Label();
             lblBusinessFullName = new Label();
             btnOpenCard = new Button();
-            gbSearchTransactions = new GroupBox();
-            dtpSearchEnd = new DateTimePicker();
-            dtpSearchStart = new DateTimePicker();
-            lblSearch = new Label();
-            tbSearch = new TextBox();
-            cbSearch = new ComboBox();
-            gbSearchBusinessCards = new GroupBox();
-            cbSearchBusinessCardsOnlyExpired = new CheckBox();
-            cbSearchBusinessCardsOnlyUnexpired = new CheckBox();
-            lblHeaderSearchBusinessCards = new Label();
-            tbSearchBusinessCards = new TextBox();
             dgvTransactions = new DataGridView();
             NumberColumn = new DataGridViewTextBoxColumn();
             DateTimeColumn = new DataGridViewTextBoxColumn();
@@ -91,6 +80,17 @@
             CardExpireDateColumn = new DataGridViewTextBoxColumn();
             CVVColumn = new DataGridViewTextBoxColumn();
             RenewCardColumn = new DataGridViewButtonColumn();
+            gbSearchTransactions = new GroupBox();
+            dtpSearchEnd = new DateTimePicker();
+            dtpSearchStart = new DateTimePicker();
+            lblSearch = new Label();
+            tbSearch = new TextBox();
+            cbSearch = new ComboBox();
+            gbSearchBusinessCards = new GroupBox();
+            cbSearchBusinessCardsOnlyExpired = new CheckBox();
+            cbSearchBusinessCardsOnlyUnexpired = new CheckBox();
+            lblHeaderSearchBusinessCards = new Label();
+            tbSearchBusinessCards = new TextBox();
             lblSelectAccount = new Label();
             gbAccountBlocked = new GroupBox();
             lblAccountBlocked = new Label();
@@ -105,10 +105,10 @@
             ((System.ComponentModel.ISupportInitialize)nudTransferAmount).BeginInit();
             gbPersonalAccountControl.SuspendLayout();
             gbBusinessAccountControl.SuspendLayout();
-            gbSearchTransactions.SuspendLayout();
-            gbSearchBusinessCards.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvTransactions).BeginInit();
             ((System.ComponentModel.ISupportInitialize)dgvBusinessCards).BeginInit();
+            gbSearchTransactions.SuspendLayout();
+            gbSearchBusinessCards.SuspendLayout();
             gbAccountBlocked.SuspendLayout();
             SuspendLayout();
             // 
@@ -226,12 +226,12 @@
             gbAccountControl.Controls.Add(lblBalance);
             gbAccountControl.Controls.Add(btnSubscribePremium);
             gbAccountControl.Controls.Add(btnUnsubscribePremium);
-            gbAccountControl.Controls.Add(gbPersonalAccountControl);
-            gbAccountControl.Controls.Add(gbBusinessAccountControl);
             gbAccountControl.Controls.Add(gbSearchTransactions);
             gbAccountControl.Controls.Add(gbSearchBusinessCards);
+            gbAccountControl.Controls.Add(gbPersonalAccountControl);
             gbAccountControl.Controls.Add(dgvTransactions);
             gbAccountControl.Controls.Add(dgvBusinessCards);
+            gbAccountControl.Controls.Add(gbBusinessAccountControl);
             gbAccountControl.Location = new Point(12, 95);
             gbAccountControl.Name = "gbAccountControl";
             gbAccountControl.Size = new Size(660, 354);
@@ -260,7 +260,7 @@
             btnPayment.Location = new Point(5, 144);
             btnPayment.Name = "btnPayment";
             btnPayment.Size = new Size(172, 29);
-            btnPayment.TabIndex = 19;
+            btnPayment.TabIndex = 6;
             btnPayment.Text = "Сплатити послугу";
             btnPayment.UseVisualStyleBackColor = true;
             btnPayment.Click += btnPayment_Click;
@@ -279,7 +279,7 @@
             tbTransferTarget.Name = "tbTransferTarget";
             tbTransferTarget.PlaceholderText = "Номер картки або IBAN";
             tbTransferTarget.Size = new Size(172, 23);
-            tbTransferTarget.TabIndex = 3;
+            tbTransferTarget.TabIndex = 2;
             // 
             // lblTransferAmount
             // 
@@ -298,7 +298,7 @@
             nudTransferAmount.Maximum = new decimal(new int[] { 100000, 0, 0, 0 });
             nudTransferAmount.Name = "nudTransferAmount";
             nudTransferAmount.Size = new Size(127, 23);
-            nudTransferAmount.TabIndex = 12;
+            nudTransferAmount.TabIndex = 3;
             nudTransferAmount.ThousandsSeparator = true;
             // 
             // btnTransfer
@@ -306,7 +306,7 @@
             btnTransfer.Location = new Point(5, 106);
             btnTransfer.Name = "btnTransfer";
             btnTransfer.Size = new Size(172, 29);
-            btnTransfer.TabIndex = 7;
+            btnTransfer.TabIndex = 5;
             btnTransfer.Text = "Переказати кошти";
             btnTransfer.UseVisualStyleBackColor = true;
             btnTransfer.Click += btnTransfer_Click;
@@ -317,7 +317,7 @@
             tbTransferComment.Name = "tbTransferComment";
             tbTransferComment.PlaceholderText = "Коментар (необов'язково)";
             tbTransferComment.Size = new Size(172, 23);
-            tbTransferComment.TabIndex = 13;
+            tbTransferComment.TabIndex = 4;
             // 
             // lblBalance
             // 
@@ -334,7 +334,7 @@
             btnSubscribePremium.Location = new Point(195, 51);
             btnSubscribePremium.Name = "btnSubscribePremium";
             btnSubscribePremium.Size = new Size(303, 29);
-            btnSubscribePremium.TabIndex = 5;
+            btnSubscribePremium.TabIndex = 7;
             btnSubscribePremium.Text = "Підписатися на преміум";
             btnSubscribePremium.UseVisualStyleBackColor = true;
             btnSubscribePremium.Click += btnSubscribePremium_Click;
@@ -411,7 +411,7 @@
             btnRenewCard.Location = new Point(6, 144);
             btnRenewCard.Name = "btnRenewCard";
             btnRenewCard.Size = new Size(144, 29);
-            btnRenewCard.TabIndex = 6;
+            btnRenewCard.TabIndex = 14;
             btnRenewCard.Text = "Перевипустити картку";
             btnRenewCard.UseVisualStyleBackColor = true;
             btnRenewCard.Click += btnRenewCard_Click;
@@ -436,7 +436,7 @@
             btnChangeTable.Location = new Point(6, 147);
             btnChangeTable.Name = "btnChangeTable";
             btnChangeTable.Size = new Size(144, 29);
-            btnChangeTable.TabIndex = 14;
+            btnChangeTable.TabIndex = 15;
             btnChangeTable.Text = "Змінити таблицю";
             btnChangeTable.UseVisualStyleBackColor = true;
             btnChangeTable.Click += btnChangeTable_Click;
@@ -444,6 +444,7 @@
             // cbBusinessPaymentSystem
             // 
             cbBusinessPaymentSystem.FormattingEnabled = true;
+            cbBusinessPaymentSystem.ItemHeight = 15;
             cbBusinessPaymentSystem.Location = new Point(6, 82);
             cbBusinessPaymentSystem.Name = "cbBusinessPaymentSystem";
             cbBusinessPaymentSystem.Size = new Size(144, 23);
@@ -479,126 +480,10 @@
             btnOpenCard.Location = new Point(6, 110);
             btnOpenCard.Name = "btnOpenCard";
             btnOpenCard.Size = new Size(144, 29);
-            btnOpenCard.TabIndex = 4;
+            btnOpenCard.TabIndex = 14;
             btnOpenCard.Text = "Випустити нову картку";
             btnOpenCard.UseVisualStyleBackColor = true;
             btnOpenCard.Click += btnOpenCard_Click;
-            // 
-            // gbSearchTransactions
-            // 
-            gbSearchTransactions.Controls.Add(dtpSearchEnd);
-            gbSearchTransactions.Controls.Add(dtpSearchStart);
-            gbSearchTransactions.Controls.Add(lblSearch);
-            gbSearchTransactions.Controls.Add(tbSearch);
-            gbSearchTransactions.Controls.Add(cbSearch);
-            gbSearchTransactions.Location = new Point(195, 81);
-            gbSearchTransactions.Name = "gbSearchTransactions";
-            gbSearchTransactions.Size = new Size(303, 101);
-            gbSearchTransactions.TabIndex = 18;
-            gbSearchTransactions.TabStop = false;
-            // 
-            // dtpSearchEnd
-            // 
-            dtpSearchEnd.Checked = false;
-            dtpSearchEnd.CustomFormat = "dd.MM.yyyy hh:mm";
-            dtpSearchEnd.Format = DateTimePickerFormat.Custom;
-            dtpSearchEnd.Location = new Point(6, 67);
-            dtpSearchEnd.Name = "dtpSearchEnd";
-            dtpSearchEnd.ShowCheckBox = true;
-            dtpSearchEnd.Size = new Size(146, 23);
-            dtpSearchEnd.TabIndex = 20;
-            dtpSearchEnd.ValueChanged += transactionSearch;
-            // 
-            // dtpSearchStart
-            // 
-            dtpSearchStart.Checked = false;
-            dtpSearchStart.CustomFormat = "dd.MM.yyyy hh:mm";
-            dtpSearchStart.Format = DateTimePickerFormat.Custom;
-            dtpSearchStart.Location = new Point(6, 38);
-            dtpSearchStart.Name = "dtpSearchStart";
-            dtpSearchStart.ShowCheckBox = true;
-            dtpSearchStart.Size = new Size(146, 23);
-            dtpSearchStart.TabIndex = 20;
-            dtpSearchStart.ValueChanged += transactionSearch;
-            // 
-            // lblSearch
-            // 
-            lblSearch.AutoSize = true;
-            lblSearch.Location = new Point(97, 19);
-            lblSearch.Name = "lblSearch";
-            lblSearch.Size = new Size(108, 15);
-            lblSearch.TabIndex = 2;
-            lblSearch.Text = "Пошук по таблиці";
-            // 
-            // tbSearch
-            // 
-            tbSearch.Location = new Point(158, 67);
-            tbSearch.Name = "tbSearch";
-            tbSearch.PlaceholderText = "Контрагент або Опис";
-            tbSearch.Size = new Size(145, 23);
-            tbSearch.TabIndex = 1;
-            tbSearch.TextChanged += transactionSearch;
-            // 
-            // cbSearch
-            // 
-            cbSearch.FormattingEnabled = true;
-            cbSearch.Location = new Point(158, 38);
-            cbSearch.Name = "cbSearch";
-            cbSearch.Size = new Size(145, 23);
-            cbSearch.TabIndex = 0;
-            cbSearch.SelectedIndexChanged += transactionSearch;
-            // 
-            // gbSearchBusinessCards
-            // 
-            gbSearchBusinessCards.Controls.Add(cbSearchBusinessCardsOnlyExpired);
-            gbSearchBusinessCards.Controls.Add(cbSearchBusinessCardsOnlyUnexpired);
-            gbSearchBusinessCards.Controls.Add(lblHeaderSearchBusinessCards);
-            gbSearchBusinessCards.Controls.Add(tbSearchBusinessCards);
-            gbSearchBusinessCards.Location = new Point(195, 81);
-            gbSearchBusinessCards.Name = "gbSearchBusinessCards";
-            gbSearchBusinessCards.Size = new Size(303, 101);
-            gbSearchBusinessCards.TabIndex = 19;
-            gbSearchBusinessCards.TabStop = false;
-            // 
-            // cbSearchBusinessCardsOnlyExpired
-            // 
-            cbSearchBusinessCardsOnlyExpired.AutoSize = true;
-            cbSearchBusinessCardsOnlyExpired.Location = new Point(164, 69);
-            cbSearchBusinessCardsOnlyExpired.Name = "cbSearchBusinessCardsOnlyExpired";
-            cbSearchBusinessCardsOnlyExpired.Size = new Size(133, 19);
-            cbSearchBusinessCardsOnlyExpired.TabIndex = 3;
-            cbSearchBusinessCardsOnlyExpired.Text = "Тільки прострочені";
-            cbSearchBusinessCardsOnlyExpired.UseVisualStyleBackColor = true;
-            cbSearchBusinessCardsOnlyExpired.CheckedChanged += cbSearchBusinessCardsOnlyExpired_CheckedChanged;
-            // 
-            // cbSearchBusinessCardsOnlyUnexpired
-            // 
-            cbSearchBusinessCardsOnlyUnexpired.AutoSize = true;
-            cbSearchBusinessCardsOnlyUnexpired.Location = new Point(6, 69);
-            cbSearchBusinessCardsOnlyUnexpired.Name = "cbSearchBusinessCardsOnlyUnexpired";
-            cbSearchBusinessCardsOnlyUnexpired.Size = new Size(96, 19);
-            cbSearchBusinessCardsOnlyUnexpired.TabIndex = 3;
-            cbSearchBusinessCardsOnlyUnexpired.Text = "Тільки дійсні";
-            cbSearchBusinessCardsOnlyUnexpired.UseVisualStyleBackColor = true;
-            cbSearchBusinessCardsOnlyUnexpired.CheckedChanged += cbSearchBusinessCardsOnlyUnexpired_CheckedChanged;
-            // 
-            // lblHeaderSearchBusinessCards
-            // 
-            lblHeaderSearchBusinessCards.AutoSize = true;
-            lblHeaderSearchBusinessCards.Location = new Point(97, 19);
-            lblHeaderSearchBusinessCards.Name = "lblHeaderSearchBusinessCards";
-            lblHeaderSearchBusinessCards.Size = new Size(108, 15);
-            lblHeaderSearchBusinessCards.TabIndex = 2;
-            lblHeaderSearchBusinessCards.Text = "Пошук по таблиці";
-            // 
-            // tbSearchBusinessCards
-            // 
-            tbSearchBusinessCards.Location = new Point(6, 38);
-            tbSearchBusinessCards.Name = "tbSearchBusinessCards";
-            tbSearchBusinessCards.PlaceholderText = "Номер картки або ФІО власника";
-            tbSearchBusinessCards.Size = new Size(291, 23);
-            tbSearchBusinessCards.TabIndex = 1;
-            tbSearchBusinessCards.TextChanged += businessSearch;
             // 
             // dgvTransactions
             // 
@@ -612,7 +497,7 @@
             dgvTransactions.ReadOnly = true;
             dgvTransactions.RowHeadersVisible = false;
             dgvTransactions.Size = new Size(660, 166);
-            dgvTransactions.TabIndex = 2;
+            dgvTransactions.TabIndex = 16;
             dgvTransactions.CellClick += dgvTransactions_CellClick;
             // 
             // NumberColumn
@@ -677,7 +562,7 @@
             dgvBusinessCards.ReadOnly = true;
             dgvBusinessCards.RowHeadersVisible = false;
             dgvBusinessCards.Size = new Size(660, 166);
-            dgvBusinessCards.TabIndex = 9;
+            dgvBusinessCards.TabIndex = 17;
             dgvBusinessCards.CellClick += dgvBusinessCards_CellClick;
             // 
             // CardNumberColumn
@@ -715,6 +600,123 @@
             RenewCardColumn.Text = "Перевипустити";
             RenewCardColumn.UseColumnTextForButtonValue = true;
             RenewCardColumn.Width = 122;
+            // 
+            // gbSearchTransactions
+            // 
+            gbSearchTransactions.Controls.Add(dtpSearchEnd);
+            gbSearchTransactions.Controls.Add(dtpSearchStart);
+            gbSearchTransactions.Controls.Add(lblSearch);
+            gbSearchTransactions.Controls.Add(tbSearch);
+            gbSearchTransactions.Controls.Add(cbSearch);
+            gbSearchTransactions.Location = new Point(195, 81);
+            gbSearchTransactions.Name = "gbSearchTransactions";
+            gbSearchTransactions.Size = new Size(303, 101);
+            gbSearchTransactions.TabIndex = 18;
+            gbSearchTransactions.TabStop = false;
+            // 
+            // dtpSearchEnd
+            // 
+            dtpSearchEnd.Checked = false;
+            dtpSearchEnd.CustomFormat = "dd.MM.yyyy hh:mm";
+            dtpSearchEnd.Format = DateTimePickerFormat.Custom;
+            dtpSearchEnd.Location = new Point(6, 67);
+            dtpSearchEnd.Name = "dtpSearchEnd";
+            dtpSearchEnd.ShowCheckBox = true;
+            dtpSearchEnd.Size = new Size(146, 23);
+            dtpSearchEnd.TabIndex = 9;
+            dtpSearchEnd.ValueChanged += transactionSearch;
+            // 
+            // dtpSearchStart
+            // 
+            dtpSearchStart.Checked = false;
+            dtpSearchStart.CustomFormat = "dd.MM.yyyy hh:mm";
+            dtpSearchStart.Format = DateTimePickerFormat.Custom;
+            dtpSearchStart.Location = new Point(6, 38);
+            dtpSearchStart.Name = "dtpSearchStart";
+            dtpSearchStart.ShowCheckBox = true;
+            dtpSearchStart.Size = new Size(146, 23);
+            dtpSearchStart.TabIndex = 8;
+            dtpSearchStart.ValueChanged += transactionSearch;
+            // 
+            // lblSearch
+            // 
+            lblSearch.AutoSize = true;
+            lblSearch.Location = new Point(97, 19);
+            lblSearch.Name = "lblSearch";
+            lblSearch.Size = new Size(108, 15);
+            lblSearch.TabIndex = 2;
+            lblSearch.Text = "Пошук по таблиці";
+            // 
+            // tbSearch
+            // 
+            tbSearch.Location = new Point(158, 67);
+            tbSearch.Name = "tbSearch";
+            tbSearch.PlaceholderText = "Контрагент або Опис";
+            tbSearch.Size = new Size(139, 23);
+            tbSearch.TabIndex = 11;
+            tbSearch.TextChanged += transactionSearch;
+            // 
+            // cbSearch
+            // 
+            cbSearch.FormattingEnabled = true;
+            cbSearch.ItemHeight = 15;
+            cbSearch.Location = new Point(158, 38);
+            cbSearch.Name = "cbSearch";
+            cbSearch.Size = new Size(139, 23);
+            cbSearch.TabIndex = 0;
+            cbSearch.SelectedIndexChanged += transactionSearch;
+            // 
+            // gbSearchBusinessCards
+            // 
+            gbSearchBusinessCards.Controls.Add(cbSearchBusinessCardsOnlyExpired);
+            gbSearchBusinessCards.Controls.Add(cbSearchBusinessCardsOnlyUnexpired);
+            gbSearchBusinessCards.Controls.Add(lblHeaderSearchBusinessCards);
+            gbSearchBusinessCards.Controls.Add(tbSearchBusinessCards);
+            gbSearchBusinessCards.Location = new Point(195, 81);
+            gbSearchBusinessCards.Name = "gbSearchBusinessCards";
+            gbSearchBusinessCards.Size = new Size(303, 101);
+            gbSearchBusinessCards.TabIndex = 19;
+            gbSearchBusinessCards.TabStop = false;
+            // 
+            // cbSearchBusinessCardsOnlyExpired
+            // 
+            cbSearchBusinessCardsOnlyExpired.AutoSize = true;
+            cbSearchBusinessCardsOnlyExpired.Location = new Point(164, 69);
+            cbSearchBusinessCardsOnlyExpired.Name = "cbSearchBusinessCardsOnlyExpired";
+            cbSearchBusinessCardsOnlyExpired.Size = new Size(133, 19);
+            cbSearchBusinessCardsOnlyExpired.TabIndex = 10;
+            cbSearchBusinessCardsOnlyExpired.Text = "Тільки прострочені";
+            cbSearchBusinessCardsOnlyExpired.UseVisualStyleBackColor = true;
+            cbSearchBusinessCardsOnlyExpired.CheckedChanged += cbSearchBusinessCardsOnlyExpired_CheckedChanged;
+            // 
+            // cbSearchBusinessCardsOnlyUnexpired
+            // 
+            cbSearchBusinessCardsOnlyUnexpired.AutoSize = true;
+            cbSearchBusinessCardsOnlyUnexpired.Location = new Point(6, 69);
+            cbSearchBusinessCardsOnlyUnexpired.Name = "cbSearchBusinessCardsOnlyUnexpired";
+            cbSearchBusinessCardsOnlyUnexpired.Size = new Size(96, 19);
+            cbSearchBusinessCardsOnlyUnexpired.TabIndex = 9;
+            cbSearchBusinessCardsOnlyUnexpired.Text = "Тільки дійсні";
+            cbSearchBusinessCardsOnlyUnexpired.UseVisualStyleBackColor = true;
+            cbSearchBusinessCardsOnlyUnexpired.CheckedChanged += cbSearchBusinessCardsOnlyUnexpired_CheckedChanged;
+            // 
+            // lblHeaderSearchBusinessCards
+            // 
+            lblHeaderSearchBusinessCards.AutoSize = true;
+            lblHeaderSearchBusinessCards.Location = new Point(97, 19);
+            lblHeaderSearchBusinessCards.Name = "lblHeaderSearchBusinessCards";
+            lblHeaderSearchBusinessCards.Size = new Size(108, 15);
+            lblHeaderSearchBusinessCards.TabIndex = 2;
+            lblHeaderSearchBusinessCards.Text = "Пошук по таблиці";
+            // 
+            // tbSearchBusinessCards
+            // 
+            tbSearchBusinessCards.Location = new Point(6, 38);
+            tbSearchBusinessCards.Name = "tbSearchBusinessCards";
+            tbSearchBusinessCards.PlaceholderText = "Номер картки або ФІО власника";
+            tbSearchBusinessCards.Size = new Size(291, 23);
+            tbSearchBusinessCards.TabIndex = 8;
+            tbSearchBusinessCards.TextChanged += businessSearch;
             // 
             // lblSelectAccount
             // 
@@ -775,7 +777,7 @@
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Банк";
             FormClosing += MenuForm_FormClosing;
-            Shown += MenuForm_Shown;
+            VisibleChanged += MenuForm_VisibleChanged;
             panelHeader.ResumeLayout(false);
             panelHeader.PerformLayout();
             panelUser.ResumeLayout(false);
@@ -791,12 +793,12 @@
             gbPersonalAccountControl.PerformLayout();
             gbBusinessAccountControl.ResumeLayout(false);
             gbBusinessAccountControl.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)dgvTransactions).EndInit();
+            ((System.ComponentModel.ISupportInitialize)dgvBusinessCards).EndInit();
             gbSearchTransactions.ResumeLayout(false);
             gbSearchTransactions.PerformLayout();
             gbSearchBusinessCards.ResumeLayout(false);
             gbSearchBusinessCards.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)dgvTransactions).EndInit();
-            ((System.ComponentModel.ISupportInitialize)dgvBusinessCards).EndInit();
             gbAccountBlocked.ResumeLayout(false);
             gbAccountBlocked.PerformLayout();
             ResumeLayout(false);

@@ -24,26 +24,48 @@ namespace Course
             this.loginForm = loginForm;
         }
 
+        private void updateBalance()
+        {
+            int selectedIndex = cbAccount.SelectedIndex;
+            cbAccount.DataSource = User.GetAllAccountsText(true);
+            cbAccount.SelectedIndex = selectedIndex;
+            lblBalance.Text = $"Баланс: {Account.Balance}₴";
+        }
+
         private DateTime timeNow()
         {
             return DateTime.Now + TimeDelta;
         }
 
-        private void MenuForm_Shown(object sender, EventArgs e)
+        private void MenuForm_VisibleChanged(object sender, EventArgs e)
         {
-            lblTime.Text = DateTime.Now.ToString();
-            lblUser.Text = $"{User.Surname} {User.Name[0]}.{(User.Patronymic.Length > 0 ? $" {User.Patronymic[0]}." : "")}";
-            cbAccount.DataSource = User.GetAllAccountsText(true);
-            cbAccount.SelectedIndex = -1;
-
-            List<string> transactionTypes = new List<string>();
-
-            foreach (TransactionType type in Enum.GetValues(typeof(TransactionType)))
+            if (this.Visible)
             {
-                transactionTypes.Add(Transaction.GetTranslatedType(type));
-            }
+                lblTime.Text = DateTime.Now.ToString();
+                lblUser.Text = $"{User.Surname} {User.Name[0]}.{(User.Patronymic.Length > 0 ? $" {User.Patronymic[0]}." : "")}";
 
-            cbSearch.DataSource = transactionTypes;
+                cbAccount.DataSource = User.GetAllAccountsText(true);
+                if (cbAccount.SelectedIndex == -1)
+                {
+                    cbAccount.Text = string.Empty;
+                    Account = null;
+                    gbAccountControl.Visible = false;
+                    gbAccountBlocked.Visible = false;
+                }
+                else
+                    cbAccount.SelectedIndex = -1;
+
+                cbBusinessPaymentSystem.DataSource = Enum.GetValues(typeof(PaymentSystem));
+
+                List<string> transactionTypes = new List<string>() { "-" };
+
+                foreach (TransactionType type in Enum.GetValues(typeof(TransactionType)))
+                {
+                    transactionTypes.Add(Transaction.GetTranslatedType(type));
+                }
+
+                cbSearch.DataSource = transactionTypes;
+            }
         }
 
         private void timer_Tick(object sender, EventArgs e)
@@ -61,7 +83,7 @@ namespace Course
         {
             TimeDeltaForm timeDeltaForm = new TimeDeltaForm(this);
             timeDeltaForm.ShowDialog();
-            MenuForm_Shown(sender, e);
+            MenuForm_VisibleChanged(sender, e);
         }
 
         private void panelLogo_MouseHover(object sender, EventArgs e)
@@ -108,7 +130,7 @@ namespace Course
                 return;
             }
 
-            Account = User.Accounts.First(x => x.Number == cbAccount.Text.Split(" ")[1].Split(":")[0]);
+            Account = User.Accounts.First(x => x.Number == cbAccount.Text.Split(") ")[1].Split(":")[0]);
 
             gbAccountControl.Visible = !Account.IsBlocked();
             gbAccountBlocked.Visible = Account.IsBlocked();
@@ -138,6 +160,7 @@ namespace Course
 
             if (Account is PersonalAccount personalAccount)
             {
+                dgvTransactions.Visible = gbSearchTransactions.Visible =  true;
                 tbCardNumber.Text = personalAccount.Card.Number.Insert(4, " ").Insert(9, " ").Insert(14, " ");
                 lblExpireDate.Text = personalAccount.Card.ExpirationDate.ToString("MM\\/yyyy");
                 lblCVV.Text = personalAccount.Card.CVV;
@@ -165,6 +188,8 @@ namespace Course
             if (Account.SubscribePremium())
             {
                 transactionSearch(null, null);
+                updateBalance();
+                btnSubscribePremium.Visible = !(Account.Premium);
                 MessageBox.Show("Преміум-підписка активна!", "Успішно!", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             else
@@ -176,6 +201,8 @@ namespace Course
             if (MessageBox.Show($"Підписка буде скасована, кошти за залишившийся час не будуть повернені\nВи впевнені, що хочете відмінити підписку?", "Преміум-підписка", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
                 return;
 
+            Account.Premium = false;
+            btnSubscribePremium.Visible = !(Account.Premium);
             MessageBox.Show("Преміум підписка скасована!", "Успішно!", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
@@ -192,6 +219,8 @@ namespace Course
                 MessageBox.Show("Сума повинна бути більше за 0!", "Помилка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
+
+            tbTransferTarget.Text = tbTransferTarget.Text.Replace(" ", "");
 
             if (Regex.IsMatch(tbTransferTarget.Text, @"^\d{16}$"))
             {
@@ -216,6 +245,7 @@ namespace Course
             tbTransferTarget.Text = string.Empty;
             nudTransferAmount.Value = 0;
             tbTransferComment.Text = string.Empty;
+            updateBalance();
             MessageBox.Show("Переказ здійснено!", "Успішно!", MessageBoxButtons.OK, MessageBoxIcon.Information);
             transactionSearch(null, null);
         }
@@ -224,6 +254,7 @@ namespace Course
         {
             PaymentForm paymentForm = new PaymentForm(this);
             paymentForm.ShowDialog();
+            updateBalance();
             transactionSearch(null, null);
         }
 
@@ -240,8 +271,10 @@ namespace Course
 
             List<Transaction> transactions = Account.Transactions.ToList();
 
-            if (cbSearch.SelectedIndex != -1)
-                transactions = transactions.Where(x => string.Equals(x.Type.ToString(), cbSearch.Text, StringComparison.OrdinalIgnoreCase)).ToList();
+            if (cbSearch.SelectedIndex > 0)
+            {
+                transactions = transactions.Where(x => string.Equals(Transaction.GetTranslatedType(x.Type), cbSearch.Text, StringComparison.OrdinalIgnoreCase)).ToList();
+            }
             if (tbSearch.Text.Length > 0)
                 transactions = transactions.Where(x => (string.IsNullOrEmpty(x.Target) ? "Банк" : x.Target).Contains(tbSearch.Text, StringComparison.OrdinalIgnoreCase) || x.Description != null && x.Description.Contains(tbSearch.Text, StringComparison.OrdinalIgnoreCase)).ToList();
 
@@ -274,7 +307,7 @@ namespace Course
 
             foreach (BusinessCard card in cards)
             {
-                dgvBusinessCards.Rows.Add(card.Number, card.OwnerFullName, card.ExpirationDate.ToString(), card.CVV);
+                dgvBusinessCards.Rows.Add(card.Number, card.OwnerFullName, card.ExpirationDate.ToString("MM\\/yyyy"), card.CVV);
             }
         }
 
@@ -294,6 +327,9 @@ namespace Course
 
             ((BusinessAccount)Account).OpenBusinessCard(BankCard.PaymentSystemFromText(cbBusinessPaymentSystem.Text), tbBusinessFullName.Text);
             businessSearch(null, null);
+            cbBusinessPaymentSystem.SelectedIndex = -1;
+            tbBusinessFullName.Text = string.Empty;
+            MessageBox.Show("Нову картку створено!", "Успішно!", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void btnChangeTable_Click(object sender, EventArgs e)
@@ -328,8 +364,7 @@ namespace Course
             if (e.ColumnIndex == 4 && e.RowIndex != -1)
             {
                 BusinessCard card = ((BusinessAccount)Account).Cards.First(x => x.Number == dgvBusinessCards.Rows[e.RowIndex].Cells["CardNumberColumn"].Value.ToString());
-
-                if (card.IsExpired())
+                if (!card.IsExpired())
                 {
                     MessageBox.Show("Картка не прострочена!", "Помилка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
