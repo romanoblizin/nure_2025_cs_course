@@ -185,7 +185,6 @@
             tbLogin.Name = "tbLogin";
             tbLogin.Size = new Size(150, 23);
             tbLogin.TabIndex = 0;
-            tbLogin.Text = "0987654321";
             // 
             // lblPassword
             // 
@@ -203,7 +202,6 @@
             tbPassword.PasswordChar = '*';
             tbPassword.Size = new Size(150, 23);
             tbPassword.TabIndex = 1;
-            tbPassword.Text = "12345678";
             // 
             // gbLogin
             // 
