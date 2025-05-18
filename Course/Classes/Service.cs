@@ -19,10 +19,10 @@ namespace Course.Classes
 
         public void SaveToFile(StreamWriter sw)
         {
-            sw.Write(CompanyName);
-            sw.Write(CompanyNumber);
-            sw.Write(OwnerFullName);
-            sw.Write(IBAN);
+            sw.WriteLine(CompanyName);
+            sw.WriteLine(CompanyNumber);
+            sw.WriteLine(OwnerFullName);
+            sw.WriteLine(IBAN);
         }
         public static Service LoadFromFile(StreamReader sr)
         {
