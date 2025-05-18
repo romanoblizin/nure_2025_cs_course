@@ -1,14 +1,4 @@
 ﻿using Course.Classes;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Course.Forms
 {
@@ -47,7 +37,7 @@ namespace Course.Forms
                 return;
             }
 
-            menuForm.Account.PayService((double)nudAmount.Value, (Service)Enum.Parse(typeof(Service), cbService.Text), tbComment.Text);
+            menuForm.Account.PayService((double)nudAmount.Value, menuForm.Bank.GetServiceByName(cbService.Text), tbComment.Text);
             cbService.SelectedIndex = -1;
             nudAmount.Value = 0;
             tbComment.Text = string.Empty;
