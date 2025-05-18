@@ -254,7 +254,7 @@
             // 
             tbCompanyOwner.Location = new Point(6, 51);
             tbCompanyOwner.Name = "tbCompanyOwner";
-            tbCompanyOwner.PlaceholderText = "ФІО власника";
+            tbCompanyOwner.PlaceholderText = "ПІБ власника";
             tbCompanyOwner.Size = new Size(130, 23);
             tbCompanyOwner.TabIndex = 22;
             // 
