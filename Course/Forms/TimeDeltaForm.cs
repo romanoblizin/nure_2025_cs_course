@@ -129,7 +129,7 @@ namespace Course.Forms
 
         private void cbServices_SelectedIndexChanged(object sender, EventArgs e)
         {
-            btnDeleteAccount.Enabled = (cbServices.SelectedIndex == -1);
+            btnDeleteAccount.Enabled = !(cbServices.SelectedIndex == -1);
         }
 
         private void btnAddService_Click(object sender, EventArgs e)
@@ -152,7 +152,9 @@ namespace Course.Forms
                 return;
             }
 
-            menuForm.Bank.AddService(tbCompanyName.Text, tbCompanyNumber.Text, tbCompanyOwner.Text, tbCompanyIBAN.Text);
+            if (!menuForm.Bank.AddService(tbCompanyName.Text, tbCompanyNumber.Text, tbCompanyOwner.Text, tbCompanyIBAN.Text))
+                return;
+
             cbServices.DataSource = menuForm.Bank.GetAllServicesList();
             tbCompanyName.Text = tbCompanyIBAN.Text = tbCompanyNumber.Text = tbCompanyOwner.Text = string.Empty;
             MessageBox.Show("Компанію додано!", "Успішно!", MessageBoxButtons.OK, MessageBoxIcon.Information);

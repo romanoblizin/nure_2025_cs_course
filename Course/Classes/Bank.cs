@@ -84,16 +84,17 @@
             }
         }
         
-        public void AddService(string companyName, string companyNumber, string ownerFullName, string iban)
+        public bool AddService(string companyName, string companyNumber, string ownerFullName, string iban)
         {
             if (services.Any(x => x.CompanyNumber == companyNumber))
             {
                 MessageBox.Show("Номер компанії вже існує!", "Помилка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
+                return false;
             }
 
             Service service = new Service(companyName, companyNumber, ownerFullName, iban);
             services.Add(service);
+            return true;
         }
         public void DeleteService(string companyNumber)
         {
@@ -296,9 +297,9 @@
 
         public void SaveToFile(StreamWriter sw)
         {
-            sw.WriteLine(string.Join(" ", accountNumbers).Substring(1));
-            sw.WriteLine(string.Join(" ", cardNumbers).Substring(1));
-            sw.WriteLine(string.Join(" ", transactionNumbers).Substring(1));
+            sw.WriteLine(string.Join(" ", accountNumbers));
+            sw.WriteLine(string.Join(" ", cardNumbers));
+            sw.WriteLine(string.Join(" ", transactionNumbers));
 
             sw.WriteLine(users.Count);
             foreach (User user in users)
@@ -327,19 +328,19 @@
                 string? line = sr.ReadLine();
                 int amount;
 
-                foreach (string number in line.Split(" "))
+                foreach (string number in line.Split(" ").Skip(1))
                 {
                     accountNumbers.Add(number);
                 }
 
                 line = sr.ReadLine();
-                foreach (string number in line.Split(" "))
+                foreach (string number in line.Split(" ").Skip(1))
                 {
                     cardNumbers.Add(number);
                 }
 
                 line = sr.ReadLine();
-                foreach (string number in line.Split(" "))
+                foreach (string number in line.Split(" ").Skip(1))
                 {
                     transactionNumbers.Add(number);
                 }

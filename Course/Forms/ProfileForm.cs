@@ -1,6 +1,4 @@
 ﻿using Course.Classes;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.ListView;
-using System.Xml.Linq;
 
 namespace Course.Forms
 {

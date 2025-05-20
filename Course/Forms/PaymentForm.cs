@@ -1,6 +1,4 @@
-﻿using Course.Classes;
-
-namespace Course.Forms
+﻿namespace Course.Forms
 {
     public partial class PaymentForm : Form
     {

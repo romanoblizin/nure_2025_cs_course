@@ -1,6 +1,4 @@
-﻿using static System.Runtime.InteropServices.JavaScript.JSType;
-
-namespace Course.Classes
+﻿namespace Course.Classes
 {
     public class Service
     {

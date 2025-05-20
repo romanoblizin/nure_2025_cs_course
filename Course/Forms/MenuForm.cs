@@ -1,7 +1,6 @@
 ﻿using Course.Classes;
 using Course.Forms;
 using System.Text.RegularExpressions;
-using System.Windows.Forms;
 
 namespace Course
 {
@@ -14,6 +13,7 @@ namespace Course
         private string? filepath;
         private LoginForm loginForm;
         private ProfileForm? profileForm;
+        private bool isSaved = false;
 
         public MenuForm(LoginForm loginForm, Bank bank, User user, string? filepath)
         {
@@ -106,6 +106,11 @@ namespace Course
 
         private void MenuForm_FormClosing(object sender, FormClosingEventArgs e)
         {
+            if (isSaved)
+                return;
+
+            isSaved = true;
+
             if (filepath == null)
             {
                 SaveFileDialog saveFileDialog = new SaveFileDialog();
