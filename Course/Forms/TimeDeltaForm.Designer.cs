@@ -58,6 +58,7 @@
             gbService = new GroupBox();
             cbServices = new ComboBox();
             lblSmile = new Label();
+            btnPay = new Button();
             ((System.ComponentModel.ISupportInitialize)nudSeconds).BeginInit();
             ((System.ComponentModel.ISupportInitialize)nudMinutes).BeginInit();
             ((System.ComponentModel.ISupportInitialize)nudHours).BeginInit();
@@ -160,7 +161,7 @@
             nudAmount.Maximum = new decimal(new int[] { 100000, 0, 0, 0 });
             nudAmount.Minimum = new decimal(new int[] { 1, 0, 0, 131072 });
             nudAmount.Name = "nudAmount";
-            nudAmount.Size = new Size(107, 23);
+            nudAmount.Size = new Size(70, 23);
             nudAmount.TabIndex = 11;
             nudAmount.Value = new decimal(new int[] { 1, 0, 0, 131072 });
             // 
@@ -177,9 +178,9 @@
             // btnDeposit
             // 
             btnDeposit.Enabled = false;
-            btnDeposit.Location = new Point(119, 51);
+            btnDeposit.Location = new Point(152, 51);
             btnDeposit.Name = "btnDeposit";
-            btnDeposit.Size = new Size(82, 23);
+            btnDeposit.Size = new Size(77, 23);
             btnDeposit.TabIndex = 12;
             btnDeposit.Text = "Поповнити";
             btnDeposit.UseVisualStyleBackColor = true;
@@ -188,9 +189,9 @@
             // btnWithdraw
             // 
             btnWithdraw.Enabled = false;
-            btnWithdraw.Location = new Point(207, 51);
+            btnWithdraw.Location = new Point(231, 51);
             btnWithdraw.Name = "btnWithdraw";
-            btnWithdraw.Size = new Size(67, 23);
+            btnWithdraw.Size = new Size(47, 23);
             btnWithdraw.TabIndex = 13;
             btnWithdraw.Text = "Зняти";
             btnWithdraw.UseVisualStyleBackColor = true;
@@ -281,6 +282,7 @@
             // 
             // gbAccount
             // 
+            gbAccount.Controls.Add(btnPay);
             gbAccount.Controls.Add(cbCard);
             gbAccount.Controls.Add(nudAmount);
             gbAccount.Controls.Add(btnDeposit);
@@ -353,6 +355,17 @@
             lblSmile.TabIndex = 28;
             lblSmile.Text = "=)";
             // 
+            // btnPay
+            // 
+            btnPay.Enabled = false;
+            btnPay.Location = new Point(82, 51);
+            btnPay.Name = "btnPay";
+            btnPay.Size = new Size(68, 23);
+            btnPay.TabIndex = 18;
+            btnPay.Text = "Оплатити";
+            btnPay.UseVisualStyleBackColor = true;
+            btnPay.Click += btnPay_Click;
+            // 
             // TimeDeltaForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -423,5 +436,6 @@
         private ComboBox cbServices;
         private Label lblSmile;
         private Button btnDeleteAccount;
+        private Button btnPay;
     }
 }

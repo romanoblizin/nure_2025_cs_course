@@ -77,6 +77,15 @@ namespace Course.Forms
             }
         }
 
+        private void btnPay_Click(object sender, EventArgs e)
+        {
+            if (selectedCard.Pay((double)nudAmount.Value))
+            {
+                updateCheckBox();
+                MessageBox.Show("Оплата здійснена!", "Успішно!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
         private void btnDeposit_Click(object sender, EventArgs e)
         {
             if (selectedCard.Deposit((double)nudAmount.Value))
@@ -171,7 +180,7 @@ namespace Course.Forms
 
                 MessageBox.Show("Компанію видалено!", "Успішно!", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
-            
+
         }
     }
 }
