@@ -61,7 +61,7 @@ namespace Course.Forms
 
         private void cbCard_SelectedIndexChanged(object sender, EventArgs e)
         {
-            btnDeposit.Enabled = btnWithdraw.Enabled = btnPayout.Enabled = btnBlock.Enabled = btnDeleteAccount.Enabled = (cbCard.SelectedIndex != -1);
+            btnDeposit.Enabled = btnPay.Enabled = btnWithdraw.Enabled = btnPayout.Enabled = btnBlock.Enabled = btnDeleteAccount.Enabled = (cbCard.SelectedIndex != -1);
 
             if (cbCard.SelectedIndex != -1)
             {
@@ -138,7 +138,7 @@ namespace Course.Forms
 
         private void cbServices_SelectedIndexChanged(object sender, EventArgs e)
         {
-            btnDeleteAccount.Enabled = !(cbServices.SelectedIndex == -1);
+            btnDeleteService.Enabled = !(cbServices.SelectedIndex == -1);
         }
 
         private void btnAddService_Click(object sender, EventArgs e)

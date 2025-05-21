@@ -228,10 +228,10 @@
             gbAccountControl.Controls.Add(btnUnsubscribePremium);
             gbAccountControl.Controls.Add(gbSearchTransactions);
             gbAccountControl.Controls.Add(gbSearchBusinessCards);
-            gbAccountControl.Controls.Add(gbPersonalAccountControl);
             gbAccountControl.Controls.Add(dgvTransactions);
             gbAccountControl.Controls.Add(dgvBusinessCards);
             gbAccountControl.Controls.Add(gbBusinessAccountControl);
+            gbAccountControl.Controls.Add(gbPersonalAccountControl);
             gbAccountControl.Location = new Point(12, 95);
             gbAccountControl.Name = "gbAccountControl";
             gbAccountControl.Size = new Size(660, 354);
@@ -705,9 +705,9 @@
             lblBusinessFullName.AutoSize = true;
             lblBusinessFullName.Location = new Point(36, 19);
             lblBusinessFullName.Name = "lblBusinessFullName";
-            lblBusinessFullName.Size = new Size(85, 15);
+            lblBusinessFullName.Size = new Size(83, 15);
             lblBusinessFullName.TabIndex = 10;
-            lblBusinessFullName.Text = "ФІО власника:";
+            lblBusinessFullName.Text = "ПІБ власника:";
             // 
             // btnOpenCard
             // 
