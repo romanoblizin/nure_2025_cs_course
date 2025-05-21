@@ -230,8 +230,8 @@
             gbAccountControl.Controls.Add(gbSearchBusinessCards);
             gbAccountControl.Controls.Add(dgvTransactions);
             gbAccountControl.Controls.Add(dgvBusinessCards);
-            gbAccountControl.Controls.Add(gbBusinessAccountControl);
             gbAccountControl.Controls.Add(gbPersonalAccountControl);
+            gbAccountControl.Controls.Add(gbBusinessAccountControl);
             gbAccountControl.Location = new Point(12, 95);
             gbAccountControl.Name = "gbAccountControl";
             gbAccountControl.Size = new Size(660, 354);
