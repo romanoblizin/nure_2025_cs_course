@@ -165,12 +165,14 @@ namespace Course
 
             if (Account is PersonalAccount personalAccount)
             {
-                dgvTransactions.Visible = gbSearchTransactions.Visible =  true;
+                dgvTransactions.Visible = gbSearchTransactions.Visible = true;
                 tbCardNumber.Text = personalAccount.Card.Number.Insert(4, " ").Insert(9, " ").Insert(14, " ");
                 lblExpireDate.Text = personalAccount.Card.ExpirationDate.ToString("MM\\/yyyy");
                 lblCVV.Text = personalAccount.Card.CVV;
                 tbIBAN.Text = personalAccount.IBAN;
                 btnRenewCard.Enabled = (personalAccount.Card.IsExpired(timeNow()));
+                btnSubscribePremium.Width = btnUnsubscribePremium.Width = personalAccount.Card is DebitCard ? 175 : 303;
+
             }
             else if (Account is BusinessAccount businessAccount)
             {
@@ -180,6 +182,8 @@ namespace Course
 
                 tbBusinessFullName.Text = string.Empty;
                 cbBusinessPaymentSystem.SelectedIndex = -1;
+
+                btnSubscribePremium.Width = btnUnsubscribePremium.Width = 303;
 
                 businessSearch(null, null);
             }
@@ -395,6 +399,14 @@ namespace Course
                 cbSearchBusinessCardsOnlyUnexpired.Checked = false;
 
             businessSearch(null, null);
+        }
+
+        private void btnOpenCredit_Click(object sender, EventArgs e)
+        {
+            CreditForm creditForm = new CreditForm(this);
+            creditForm.ShowDialog();
+            updateBalance();
+            transactionSearch(null, null);
         }
     }
 }

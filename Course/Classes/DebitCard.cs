@@ -75,21 +75,17 @@
             return interest;
         }
 
-        public void OpenDeposit(double amount, double rate, int months)
+        public bool OpenDeposit(double amount, double rate, int months)
         {
-            if (amount <= 0)
+            if (!IsPaymentAvailable(amount))
             {
-                return;
-            }
-
-            if (amount > Account.Balance)
-            {
-                return;
+                return false;
             }
 
             Account.Balance -= amount;
             Account.Transactions.Add(new Transaction(Bank.GenerateTransactionNumber(), -amount, null, "", TransactionType.DepositOpen));
             Deposits.Add(new DepositClass(amount, rate, DateTime.Today, months));
+            return true;
         }
 
         public void CloseDeposit(DepositClass deposit)

@@ -41,6 +41,7 @@
             timer = new System.Windows.Forms.Timer(components);
             cbAccount = new ComboBox();
             gbAccountControl = new GroupBox();
+            btnOpenCredit = new Button();
             gbTransfer = new GroupBox();
             btnPayment = new Button();
             lblTransferTarget = new Label();
@@ -50,8 +51,6 @@
             btnTransfer = new Button();
             tbTransferComment = new TextBox();
             lblBalance = new Label();
-            btnSubscribePremium = new Button();
-            btnUnsubscribePremium = new Button();
             gbSearchTransactions = new GroupBox();
             dtpSearchEnd = new DateTimePicker();
             dtpSearchStart = new DateTimePicker();
@@ -63,13 +62,6 @@
             cbSearchBusinessCardsOnlyUnexpired = new CheckBox();
             lblHeaderSearchBusinessCards = new Label();
             tbSearchBusinessCards = new TextBox();
-            gbPersonalAccountControl = new GroupBox();
-            lblIBAN = new Label();
-            tbIBAN = new TextBox();
-            tbCardNumber = new TextBox();
-            lblCVV = new Label();
-            lblExpireDate = new Label();
-            btnRenewCard = new Button();
             dgvTransactions = new DataGridView();
             NumberColumn = new DataGridViewTextBoxColumn();
             DateTimeColumn = new DataGridViewTextBoxColumn();
@@ -84,6 +76,13 @@
             CardExpireDateColumn = new DataGridViewTextBoxColumn();
             CVVColumn = new DataGridViewTextBoxColumn();
             RenewCardColumn = new DataGridViewButtonColumn();
+            gbPersonalAccountControl = new GroupBox();
+            lblIBAN = new Label();
+            tbIBAN = new TextBox();
+            tbCardNumber = new TextBox();
+            lblCVV = new Label();
+            lblExpireDate = new Label();
+            btnRenewCard = new Button();
             gbBusinessAccountControl = new GroupBox();
             btnChangeTable = new Button();
             cbBusinessPaymentSystem = new ComboBox();
@@ -91,6 +90,8 @@
             lblPaymentSystem = new Label();
             lblBusinessFullName = new Label();
             btnOpenCard = new Button();
+            btnSubscribePremium = new Button();
+            btnUnsubscribePremium = new Button();
             lblSelectAccount = new Label();
             gbAccountBlocked = new GroupBox();
             lblAccountBlocked = new Label();
@@ -105,9 +106,9 @@
             ((System.ComponentModel.ISupportInitialize)nudTransferAmount).BeginInit();
             gbSearchTransactions.SuspendLayout();
             gbSearchBusinessCards.SuspendLayout();
-            gbPersonalAccountControl.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvTransactions).BeginInit();
             ((System.ComponentModel.ISupportInitialize)dgvBusinessCards).BeginInit();
+            gbPersonalAccountControl.SuspendLayout();
             gbBusinessAccountControl.SuspendLayout();
             gbAccountBlocked.SuspendLayout();
             SuspendLayout();
@@ -224,20 +225,31 @@
             // 
             gbAccountControl.Controls.Add(gbTransfer);
             gbAccountControl.Controls.Add(lblBalance);
-            gbAccountControl.Controls.Add(btnSubscribePremium);
-            gbAccountControl.Controls.Add(btnUnsubscribePremium);
             gbAccountControl.Controls.Add(gbSearchTransactions);
             gbAccountControl.Controls.Add(gbSearchBusinessCards);
             gbAccountControl.Controls.Add(dgvTransactions);
             gbAccountControl.Controls.Add(dgvBusinessCards);
             gbAccountControl.Controls.Add(gbPersonalAccountControl);
             gbAccountControl.Controls.Add(gbBusinessAccountControl);
+            gbAccountControl.Controls.Add(btnSubscribePremium);
+            gbAccountControl.Controls.Add(btnUnsubscribePremium);
+            gbAccountControl.Controls.Add(btnOpenCredit);
             gbAccountControl.Location = new Point(12, 95);
             gbAccountControl.Name = "gbAccountControl";
             gbAccountControl.Size = new Size(660, 354);
             gbAccountControl.TabIndex = 2;
             gbAccountControl.TabStop = false;
             gbAccountControl.Visible = false;
+            // 
+            // btnOpenCredit
+            // 
+            btnOpenCredit.Location = new Point(376, 51);
+            btnOpenCredit.Name = "btnOpenCredit";
+            btnOpenCredit.Size = new Size(122, 29);
+            btnOpenCredit.TabIndex = 20;
+            btnOpenCredit.Text = "Відкрити кредит";
+            btnOpenCredit.UseVisualStyleBackColor = true;
+            btnOpenCredit.Click += btnOpenCredit_Click;
             // 
             // gbTransfer
             // 
@@ -328,26 +340,6 @@
             lblBalance.TabIndex = 4;
             lblBalance.Text = "Баланс: 0₴";
             lblBalance.TextAlign = ContentAlignment.TopCenter;
-            // 
-            // btnSubscribePremium
-            // 
-            btnSubscribePremium.Location = new Point(195, 51);
-            btnSubscribePremium.Name = "btnSubscribePremium";
-            btnSubscribePremium.Size = new Size(303, 29);
-            btnSubscribePremium.TabIndex = 7;
-            btnSubscribePremium.Text = "Підписатися на преміум";
-            btnSubscribePremium.UseVisualStyleBackColor = true;
-            btnSubscribePremium.Click += btnSubscribePremium_Click;
-            // 
-            // btnUnsubscribePremium
-            // 
-            btnUnsubscribePremium.Location = new Point(195, 51);
-            btnUnsubscribePremium.Name = "btnUnsubscribePremium";
-            btnUnsubscribePremium.Size = new Size(303, 29);
-            btnUnsubscribePremium.TabIndex = 19;
-            btnUnsubscribePremium.Text = "Відписатися від преміуму";
-            btnUnsubscribePremium.UseVisualStyleBackColor = true;
-            btnUnsubscribePremium.Click += btnUnsubscribePremium_Click;
             // 
             // gbSearchTransactions
             // 
@@ -467,73 +459,6 @@
             tbSearchBusinessCards.TabIndex = 8;
             tbSearchBusinessCards.TextChanged += businessSearch;
             // 
-            // gbPersonalAccountControl
-            // 
-            gbPersonalAccountControl.Controls.Add(lblIBAN);
-            gbPersonalAccountControl.Controls.Add(tbIBAN);
-            gbPersonalAccountControl.Controls.Add(tbCardNumber);
-            gbPersonalAccountControl.Controls.Add(lblCVV);
-            gbPersonalAccountControl.Controls.Add(lblExpireDate);
-            gbPersonalAccountControl.Controls.Add(btnRenewCard);
-            gbPersonalAccountControl.Location = new Point(504, 0);
-            gbPersonalAccountControl.Name = "gbPersonalAccountControl";
-            gbPersonalAccountControl.Size = new Size(156, 183);
-            gbPersonalAccountControl.TabIndex = 1;
-            gbPersonalAccountControl.TabStop = false;
-            // 
-            // lblIBAN
-            // 
-            lblIBAN.AutoSize = true;
-            lblIBAN.Location = new Point(60, 86);
-            lblIBAN.Name = "lblIBAN";
-            lblIBAN.Size = new Size(37, 15);
-            lblIBAN.TabIndex = 14;
-            lblIBAN.Text = "IBAN:";
-            // 
-            // tbIBAN
-            // 
-            tbIBAN.Location = new Point(6, 111);
-            tbIBAN.Name = "tbIBAN";
-            tbIBAN.ReadOnly = true;
-            tbIBAN.Size = new Size(144, 23);
-            tbIBAN.TabIndex = 13;
-            // 
-            // tbCardNumber
-            // 
-            tbCardNumber.Location = new Point(6, 27);
-            tbCardNumber.Name = "tbCardNumber";
-            tbCardNumber.ReadOnly = true;
-            tbCardNumber.Size = new Size(144, 23);
-            tbCardNumber.TabIndex = 12;
-            // 
-            // lblCVV
-            // 
-            lblCVV.AutoSize = true;
-            lblCVV.Location = new Point(125, 63);
-            lblCVV.Name = "lblCVV";
-            lblCVV.Size = new Size(25, 15);
-            lblCVV.TabIndex = 10;
-            lblCVV.Text = "000";
-            // 
-            // lblExpireDate
-            // 
-            lblExpireDate.AutoSize = true;
-            lblExpireDate.Location = new Point(6, 63);
-            lblExpireDate.Name = "lblExpireDate";
-            lblExpireDate.Size = new Size(36, 15);
-            lblExpireDate.TabIndex = 11;
-            lblExpireDate.Text = "00/00";
-            // 
-            // btnRenewCard
-            // 
-            btnRenewCard.Location = new Point(6, 144);
-            btnRenewCard.Name = "btnRenewCard";
-            btnRenewCard.Size = new Size(144, 29);
-            btnRenewCard.TabIndex = 14;
-            btnRenewCard.Text = "Перевипустити картку";
-            btnRenewCard.UseVisualStyleBackColor = true;
-            btnRenewCard.Click += btnRenewCard_Click;
-            // 
             // dgvTransactions
             // 
             dgvTransactions.AllowUserToAddRows = false;
@@ -650,6 +575,73 @@
             RenewCardColumn.UseColumnTextForButtonValue = true;
             RenewCardColumn.Width = 122;
             // 
+            // gbPersonalAccountControl
+            // 
+            gbPersonalAccountControl.Controls.Add(lblIBAN);
+            gbPersonalAccountControl.Controls.Add(tbIBAN);
+            gbPersonalAccountControl.Controls.Add(tbCardNumber);
+            gbPersonalAccountControl.Controls.Add(lblCVV);
+            gbPersonalAccountControl.Controls.Add(lblExpireDate);
+            gbPersonalAccountControl.Controls.Add(btnRenewCard);
+            gbPersonalAccountControl.Location = new Point(504, 0);
+            gbPersonalAccountControl.Name = "gbPersonalAccountControl";
+            gbPersonalAccountControl.Size = new Size(156, 183);
+            gbPersonalAccountControl.TabIndex = 1;
+            gbPersonalAccountControl.TabStop = false;
+            // 
+            // lblIBAN
+            // 
+            lblIBAN.AutoSize = true;
+            lblIBAN.Location = new Point(60, 86);
+            lblIBAN.Name = "lblIBAN";
+            lblIBAN.Size = new Size(37, 15);
+            lblIBAN.TabIndex = 14;
+            lblIBAN.Text = "IBAN:";
+            // 
+            // tbIBAN
+            // 
+            tbIBAN.Location = new Point(6, 111);
+            tbIBAN.Name = "tbIBAN";
+            tbIBAN.ReadOnly = true;
+            tbIBAN.Size = new Size(144, 23);
+            tbIBAN.TabIndex = 13;
+            // 
+            // tbCardNumber
+            // 
+            tbCardNumber.Location = new Point(6, 27);
+            tbCardNumber.Name = "tbCardNumber";
+            tbCardNumber.ReadOnly = true;
+            tbCardNumber.Size = new Size(144, 23);
+            tbCardNumber.TabIndex = 12;
+            // 
+            // lblCVV
+            // 
+            lblCVV.AutoSize = true;
+            lblCVV.Location = new Point(125, 63);
+            lblCVV.Name = "lblCVV";
+            lblCVV.Size = new Size(25, 15);
+            lblCVV.TabIndex = 10;
+            lblCVV.Text = "000";
+            // 
+            // lblExpireDate
+            // 
+            lblExpireDate.AutoSize = true;
+            lblExpireDate.Location = new Point(6, 63);
+            lblExpireDate.Name = "lblExpireDate";
+            lblExpireDate.Size = new Size(36, 15);
+            lblExpireDate.TabIndex = 11;
+            lblExpireDate.Text = "00/00";
+            // 
+            // btnRenewCard
+            // 
+            btnRenewCard.Location = new Point(6, 144);
+            btnRenewCard.Name = "btnRenewCard";
+            btnRenewCard.Size = new Size(144, 29);
+            btnRenewCard.TabIndex = 14;
+            btnRenewCard.Text = "Перевипустити картку";
+            btnRenewCard.UseVisualStyleBackColor = true;
+            btnRenewCard.Click += btnRenewCard_Click;
+            // 
             // gbBusinessAccountControl
             // 
             gbBusinessAccountControl.Controls.Add(btnChangeTable);
@@ -718,6 +710,26 @@
             btnOpenCard.Text = "Випустити нову картку";
             btnOpenCard.UseVisualStyleBackColor = true;
             btnOpenCard.Click += btnOpenCard_Click;
+            // 
+            // btnSubscribePremium
+            // 
+            btnSubscribePremium.Location = new Point(195, 51);
+            btnSubscribePremium.Name = "btnSubscribePremium";
+            btnSubscribePremium.Size = new Size(175, 29);
+            btnSubscribePremium.TabIndex = 7;
+            btnSubscribePremium.Text = "Підписатися на преміум";
+            btnSubscribePremium.UseVisualStyleBackColor = true;
+            btnSubscribePremium.Click += btnSubscribePremium_Click;
+            // 
+            // btnUnsubscribePremium
+            // 
+            btnUnsubscribePremium.Location = new Point(195, 51);
+            btnUnsubscribePremium.Name = "btnUnsubscribePremium";
+            btnUnsubscribePremium.Size = new Size(175, 29);
+            btnUnsubscribePremium.TabIndex = 19;
+            btnUnsubscribePremium.Text = "Відписатися від преміуму";
+            btnUnsubscribePremium.UseVisualStyleBackColor = true;
+            btnUnsubscribePremium.Click += btnUnsubscribePremium_Click;
             // 
             // lblSelectAccount
             // 
@@ -794,10 +806,10 @@
             gbSearchTransactions.PerformLayout();
             gbSearchBusinessCards.ResumeLayout(false);
             gbSearchBusinessCards.PerformLayout();
-            gbPersonalAccountControl.ResumeLayout(false);
-            gbPersonalAccountControl.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)dgvTransactions).EndInit();
             ((System.ComponentModel.ISupportInitialize)dgvBusinessCards).EndInit();
+            gbPersonalAccountControl.ResumeLayout(false);
+            gbPersonalAccountControl.PerformLayout();
             gbBusinessAccountControl.ResumeLayout(false);
             gbBusinessAccountControl.PerformLayout();
             gbAccountBlocked.ResumeLayout(false);
@@ -873,5 +885,6 @@
         private DataGridViewTextBoxColumn TargetColumn;
         private DataGridViewTextBoxColumn DescriptionColumn;
         private DataGridViewButtonColumn ReceiptColumn;
+        private Button btnOpenCredit;
     }
 }

@@ -32,10 +32,10 @@
             cbService = new ComboBox();
             nudAmount = new NumericUpDown();
             btnPay = new Button();
-            tbComment = new TextBox();
             lblService = new Label();
             lblAmount = new Label();
             lblComment = new Label();
+            tbComment = new TextBox();
             ((System.ComponentModel.ISupportInitialize)nudAmount).BeginInit();
             SuspendLayout();
             // 
@@ -66,13 +66,6 @@
             btnPay.UseVisualStyleBackColor = true;
             btnPay.Click += btnPay_Click;
             // 
-            // tbComment
-            // 
-            tbComment.Location = new Point(142, 75);
-            tbComment.Name = "tbComment";
-            tbComment.Size = new Size(210, 23);
-            tbComment.TabIndex = 3;
-            // 
             // lblService
             // 
             lblService.AutoSize = true;
@@ -100,6 +93,13 @@
             lblComment.TabIndex = 6;
             lblComment.Text = "Коментар\r\n(номер рахунку і т. д.)";
             lblComment.TextAlign = ContentAlignment.TopRight;
+            // 
+            // tbComment
+            // 
+            tbComment.Location = new Point(142, 75);
+            tbComment.Name = "tbComment";
+            tbComment.Size = new Size(210, 23);
+            tbComment.TabIndex = 3;
             // 
             // PaymentForm
             // 
@@ -130,9 +130,9 @@
         private ComboBox cbService;
         private NumericUpDown nudAmount;
         private Button btnPay;
-        private TextBox tbComment;
         private Label lblService;
         private Label lblAmount;
         private Label lblComment;
+        private TextBox tbComment;
     }
 }

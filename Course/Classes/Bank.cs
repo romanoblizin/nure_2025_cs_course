@@ -170,8 +170,7 @@
             }
             else
             {
-                transaction.Amount = accountFrom.GetTransferAmount(amount);
-                transaction.Target = (accountFrom is PersonalAccount personalAccount ? personalAccount.Card.Number : accountFrom.IBAN);
+                transaction = new Transaction(transaction.Number, accountFrom.GetTransferAmount(amount), (accountFrom is PersonalAccount personalAccount ? personalAccount.Card.Number : accountFrom.IBAN), comment, TransactionType.Transfer);
                 cardTo.Account.Transactions.Add(transaction);
             }
 
@@ -222,6 +221,17 @@
             accountFrom.AddTransaction(GenerateTransactionNumber(), -amount, iban, comment, TransactionType.Transfer);
 
             return true;
+        }
+
+        public bool OpenDeposit(Account accountFrom, double amount, double rate, int months)
+        {
+            if (accountFrom is not PersonalAccount personalAccountFrom)
+                return false;
+
+            if (personalAccountFrom.Card is not DebitCard card)
+                return false;
+
+            return card.OpenDeposit(amount, rate, months);
         }
 
         public void NewDay(DateTime now)
