@@ -1,11 +1,11 @@
 ﻿namespace Course.Forms
 {
-    public partial class CreditForm : Form
+    public partial class DepositForm : Form
     {
         private MenuForm menuForm;
         private const double creditRate = 24;
 
-        public CreditForm(MenuForm menuForm)
+        public DepositForm(MenuForm menuForm)
         {
             InitializeComponent();
             this.menuForm = menuForm;

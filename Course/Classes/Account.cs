@@ -80,7 +80,6 @@
                 transaction.SaveToFile(sw);
             }
         }
-
         protected static List<Transaction> LoadTransactions(StreamReader sr)
         {
             List<Transaction> transactions = new List<Transaction>();

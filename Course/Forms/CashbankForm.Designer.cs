@@ -32,6 +32,7 @@
             lblHeader = new Label();
             cbCard = new ComboBox();
             btnConfirm = new Button();
+            label1 = new Label();
             SuspendLayout();
             // 
             // lblHeader
@@ -55,7 +56,7 @@
             // btnConfirm
             // 
             btnConfirm.Enabled = false;
-            btnConfirm.Location = new Point(129, 103);
+            btnConfirm.Location = new Point(129, 104);
             btnConfirm.Name = "btnConfirm";
             btnConfirm.Size = new Size(106, 25);
             btnConfirm.TabIndex = 2;
@@ -63,12 +64,22 @@
             btnConfirm.UseVisualStyleBackColor = true;
             btnConfirm.Click += btnConfirm_Click;
             // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Location = new Point(112, 137);
+            label1.Name = "label1";
+            label1.Size = new Size(141, 15);
+            label1.TabIndex = 3;
+            label1.Text = "(Податок на дохід - 20%)";
+            // 
             // CashbankForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.ControlDark;
             ClientSize = new Size(364, 176);
+            Controls.Add(label1);
             Controls.Add(btnConfirm);
             Controls.Add(cbCard);
             Controls.Add(lblHeader);
@@ -86,5 +97,6 @@
         private Label lblHeader;
         private ComboBox cbCard;
         private Button btnConfirm;
+        private Label label1;
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace Course.Forms
 {
-    partial class CreditForm
+    partial class DepositForm
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CreditForm));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DepositForm));
             lblMonths = new Label();
             lblAmount = new Label();
             lblRate = new Label();
@@ -64,9 +64,9 @@
             lblRate.AutoSize = true;
             lblRate.Location = new Point(27, 50);
             lblRate.Name = "lblRate";
-            lblRate.Size = new Size(109, 15);
+            lblRate.Size = new Size(107, 15);
             lblRate.TabIndex = 11;
-            lblRate.Text = "Процентна ставка:";
+            lblRate.Text = "Відсоткова ставка:";
             // 
             // btnOpen
             // 
@@ -74,7 +74,7 @@
             btnOpen.Name = "btnOpen";
             btnOpen.Size = new Size(340, 41);
             btnOpen.TabIndex = 9;
-            btnOpen.Text = "Відкрити кредит";
+            btnOpen.Text = "Відкрити депозит";
             btnOpen.UseVisualStyleBackColor = true;
             btnOpen.Click += btnOpen_Click;
             // 
@@ -103,7 +103,7 @@
             nudMonths.Size = new Size(210, 23);
             nudMonths.TabIndex = 15;
             // 
-            // CreditForm
+            // DepositForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
@@ -118,7 +118,7 @@
             Controls.Add(nudAmount);
             FormBorderStyle = FormBorderStyle.FixedSingle;
             Icon = (Icon)resources.GetObject("$this.Icon");
-            Name = "CreditForm";
+            Name = "DepositForm";
             StartPosition = FormStartPosition.CenterParent;
             Text = "Відкриття кредиту";
             ((System.ComponentModel.ISupportInitialize)nudAmount).EndInit();

@@ -64,7 +64,6 @@
             AddTransaction(Bank.GenerateTransactionNumber(), amount, null, "", TransactionType.Deposit);
             return true;
         }
-
         public virtual bool Withdraw(double amount)
         {
             if (amount <= 0)
@@ -142,7 +141,6 @@
         {
             return (PaymentSystem)Enum.Parse(typeof(PaymentSystem), text);
         }
-
         public bool IsExpired(DateTime now)
         {
             return now > ExpirationDate;
@@ -151,12 +149,10 @@
         {
             return IsExpired(DateTime.Today);
         }
-
         public bool IsAvailable()
         {
             return !(Account.IsBlocked() || IsExpired());
         }
-        
         public virtual bool IsPaymentAvailable(double amount)
         {
             if (amount < 0)
@@ -186,7 +182,6 @@
 
             return false;
         }
-
         public override int GetHashCode()
         {
             return Number.GetHashCode();

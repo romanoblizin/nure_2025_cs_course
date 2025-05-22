@@ -143,9 +143,9 @@
             lblRate.AutoSize = true;
             lblRate.Location = new Point(35, 70);
             lblRate.Name = "lblRate";
-            lblRate.Size = new Size(109, 15);
+            lblRate.Size = new Size(107, 15);
             lblRate.TabIndex = 3;
-            lblRate.Text = "Процентна ставка:";
+            lblRate.Text = "Відсоткова ставка:";
             lblRate.Visible = false;
             // 
             // OpenCardForm

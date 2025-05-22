@@ -41,7 +41,6 @@
             timer = new System.Windows.Forms.Timer(components);
             cbAccount = new ComboBox();
             gbAccountControl = new GroupBox();
-            btnOpenCredit = new Button();
             gbTransfer = new GroupBox();
             btnPayment = new Button();
             lblTransferTarget = new Label();
@@ -92,6 +91,7 @@
             btnOpenCard = new Button();
             btnSubscribePremium = new Button();
             btnUnsubscribePremium = new Button();
+            btnOpenCredit = new Button();
             lblSelectAccount = new Label();
             gbAccountBlocked = new GroupBox();
             lblAccountBlocked = new Label();
@@ -240,16 +240,6 @@
             gbAccountControl.TabIndex = 2;
             gbAccountControl.TabStop = false;
             gbAccountControl.Visible = false;
-            // 
-            // btnOpenCredit
-            // 
-            btnOpenCredit.Location = new Point(376, 51);
-            btnOpenCredit.Name = "btnOpenCredit";
-            btnOpenCredit.Size = new Size(122, 29);
-            btnOpenCredit.TabIndex = 20;
-            btnOpenCredit.Text = "Відкрити кредит";
-            btnOpenCredit.UseVisualStyleBackColor = true;
-            btnOpenCredit.Click += btnOpenCredit_Click;
             // 
             // gbTransfer
             // 
@@ -731,6 +721,16 @@
             btnUnsubscribePremium.UseVisualStyleBackColor = true;
             btnUnsubscribePremium.Click += btnUnsubscribePremium_Click;
             // 
+            // btnOpenCredit
+            // 
+            btnOpenCredit.Location = new Point(376, 51);
+            btnOpenCredit.Name = "btnOpenCredit";
+            btnOpenCredit.Size = new Size(122, 29);
+            btnOpenCredit.TabIndex = 20;
+            btnOpenCredit.Text = "Відкрити кредит";
+            btnOpenCredit.UseVisualStyleBackColor = true;
+            btnOpenCredit.Click += btnOpenCredit_Click;
+            // 
             // lblSelectAccount
             // 
             lblSelectAccount.AutoSize = true;
@@ -788,7 +788,7 @@
             MinimumSize = new Size(700, 500);
             Name = "MenuForm";
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "Банк";
+            Text = "Кабінет";
             FormClosing += MenuForm_FormClosing;
             VisibleChanged += MenuForm_VisibleChanged;
             panelHeader.ResumeLayout(false);
