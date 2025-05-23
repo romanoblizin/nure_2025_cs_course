@@ -31,7 +31,7 @@
 
             if (tbComment.Text.Length == 0)
             {
-                MessageBox.Show("Вкажіть коментар (номер рахунку і т. д.)!", "Помилка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Вкажіть коментар (номер рахунку і т. п.)!", "Помилка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 

@@ -89,9 +89,9 @@
             lblComment.AutoSize = true;
             lblComment.Location = new Point(12, 70);
             lblComment.Name = "lblComment";
-            lblComment.Size = new Size(127, 30);
+            lblComment.Size = new Size(128, 30);
             lblComment.TabIndex = 6;
-            lblComment.Text = "Коментар\r\n(номер рахунку і т. д.)";
+            lblComment.Text = "Коментар\r\n(номер рахунку і т. п.)";
             lblComment.TextAlign = ContentAlignment.TopRight;
             // 
             // tbComment

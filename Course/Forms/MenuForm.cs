@@ -239,11 +239,13 @@ namespace Course
                     return;
                 }
 
-                Bank.TransferToCard(Account, tbTransferTarget.Text, (double)nudTransferAmount.Value, tbTransferComment.Text);
+                if (!Bank.TransferToCard(Account, tbTransferTarget.Text, (double)nudTransferAmount.Value, tbTransferComment.Text))
+                    return;
             }
             else if (Regex.IsMatch(tbTransferTarget.Text, @"^[a-zA-Z]{2}\d{24}$"))
             {
-                Bank.TransferToIBAN(Account, tbTransferTarget.Text, (double)nudTransferAmount.Value, tbTransferComment.Text);
+                if (!Bank.TransferToIBAN(Account, tbTransferTarget.Text, (double)nudTransferAmount.Value, tbTransferComment.Text))
+                    return;
             }
             else
             {

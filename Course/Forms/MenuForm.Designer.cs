@@ -61,20 +61,6 @@
             cbSearchBusinessCardsOnlyUnexpired = new CheckBox();
             lblHeaderSearchBusinessCards = new Label();
             tbSearchBusinessCards = new TextBox();
-            dgvTransactions = new DataGridView();
-            NumberColumn = new DataGridViewTextBoxColumn();
-            DateTimeColumn = new DataGridViewTextBoxColumn();
-            TypeColumn = new DataGridViewTextBoxColumn();
-            AmountColumn = new DataGridViewTextBoxColumn();
-            TargetColumn = new DataGridViewTextBoxColumn();
-            DescriptionColumn = new DataGridViewTextBoxColumn();
-            ReceiptColumn = new DataGridViewButtonColumn();
-            dgvBusinessCards = new DataGridView();
-            CardNumberColumn = new DataGridViewTextBoxColumn();
-            OwnerFullNameColumn = new DataGridViewTextBoxColumn();
-            CardExpireDateColumn = new DataGridViewTextBoxColumn();
-            CVVColumn = new DataGridViewTextBoxColumn();
-            RenewCardColumn = new DataGridViewButtonColumn();
             gbPersonalAccountControl = new GroupBox();
             lblIBAN = new Label();
             tbIBAN = new TextBox();
@@ -92,6 +78,20 @@
             btnSubscribePremium = new Button();
             btnUnsubscribePremium = new Button();
             btnOpenDeposit = new Button();
+            dgvBusinessCards = new DataGridView();
+            CardNumberColumn = new DataGridViewTextBoxColumn();
+            OwnerFullNameColumn = new DataGridViewTextBoxColumn();
+            CardExpireDateColumn = new DataGridViewTextBoxColumn();
+            CVVColumn = new DataGridViewTextBoxColumn();
+            RenewCardColumn = new DataGridViewButtonColumn();
+            dgvTransactions = new DataGridView();
+            NumberColumn = new DataGridViewTextBoxColumn();
+            DateTimeColumn = new DataGridViewTextBoxColumn();
+            TypeColumn = new DataGridViewTextBoxColumn();
+            AmountColumn = new DataGridViewTextBoxColumn();
+            TargetColumn = new DataGridViewTextBoxColumn();
+            DescriptionColumn = new DataGridViewTextBoxColumn();
+            ReceiptColumn = new DataGridViewButtonColumn();
             lblSelectAccount = new Label();
             gbAccountBlocked = new GroupBox();
             lblAccountBlocked = new Label();
@@ -106,10 +106,10 @@
             ((System.ComponentModel.ISupportInitialize)nudTransferAmount).BeginInit();
             gbSearchTransactions.SuspendLayout();
             gbSearchBusinessCards.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)dgvTransactions).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)dgvBusinessCards).BeginInit();
             gbPersonalAccountControl.SuspendLayout();
             gbBusinessAccountControl.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)dgvBusinessCards).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)dgvTransactions).BeginInit();
             gbAccountBlocked.SuspendLayout();
             SuspendLayout();
             // 
@@ -227,13 +227,13 @@
             gbAccountControl.Controls.Add(lblBalance);
             gbAccountControl.Controls.Add(gbSearchTransactions);
             gbAccountControl.Controls.Add(gbSearchBusinessCards);
-            gbAccountControl.Controls.Add(dgvTransactions);
-            gbAccountControl.Controls.Add(dgvBusinessCards);
             gbAccountControl.Controls.Add(gbPersonalAccountControl);
             gbAccountControl.Controls.Add(gbBusinessAccountControl);
             gbAccountControl.Controls.Add(btnSubscribePremium);
             gbAccountControl.Controls.Add(btnUnsubscribePremium);
             gbAccountControl.Controls.Add(btnOpenDeposit);
+            gbAccountControl.Controls.Add(dgvTransactions);
+            gbAccountControl.Controls.Add(dgvBusinessCards);
             gbAccountControl.Location = new Point(12, 95);
             gbAccountControl.Name = "gbAccountControl";
             gbAccountControl.Size = new Size(660, 354);
@@ -449,122 +449,6 @@
             tbSearchBusinessCards.TabIndex = 8;
             tbSearchBusinessCards.TextChanged += businessSearch;
             // 
-            // dgvTransactions
-            // 
-            dgvTransactions.AllowUserToAddRows = false;
-            dgvTransactions.AllowUserToDeleteRows = false;
-            dgvTransactions.AllowUserToResizeRows = false;
-            dgvTransactions.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgvTransactions.Columns.AddRange(new DataGridViewColumn[] { NumberColumn, DateTimeColumn, TypeColumn, AmountColumn, TargetColumn, DescriptionColumn, ReceiptColumn });
-            dgvTransactions.Location = new Point(0, 188);
-            dgvTransactions.Name = "dgvTransactions";
-            dgvTransactions.ReadOnly = true;
-            dgvTransactions.RowHeadersVisible = false;
-            dgvTransactions.Size = new Size(660, 166);
-            dgvTransactions.TabIndex = 16;
-            dgvTransactions.CellClick += dgvTransactions_CellClick;
-            // 
-            // NumberColumn
-            // 
-            NumberColumn.HeaderText = "Номер";
-            NumberColumn.Name = "NumberColumn";
-            NumberColumn.ReadOnly = true;
-            NumberColumn.Visible = false;
-            // 
-            // DateTimeColumn
-            // 
-            DateTimeColumn.HeaderText = "Дата";
-            DateTimeColumn.Name = "DateTimeColumn";
-            DateTimeColumn.ReadOnly = true;
-            // 
-            // TypeColumn
-            // 
-            TypeColumn.HeaderText = "Тип";
-            TypeColumn.Name = "TypeColumn";
-            TypeColumn.ReadOnly = true;
-            TypeColumn.Width = 140;
-            // 
-            // AmountColumn
-            // 
-            AmountColumn.HeaderText = "Сума";
-            AmountColumn.Name = "AmountColumn";
-            AmountColumn.ReadOnly = true;
-            AmountColumn.Width = 60;
-            // 
-            // TargetColumn
-            // 
-            TargetColumn.HeaderText = "Контрагент";
-            TargetColumn.Name = "TargetColumn";
-            TargetColumn.ReadOnly = true;
-            TargetColumn.Width = 135;
-            // 
-            // DescriptionColumn
-            // 
-            DescriptionColumn.HeaderText = "Опис";
-            DescriptionColumn.Name = "DescriptionColumn";
-            DescriptionColumn.ReadOnly = true;
-            DescriptionColumn.Width = 147;
-            // 
-            // ReceiptColumn
-            // 
-            ReceiptColumn.HeaderText = "Квітанція";
-            ReceiptColumn.Name = "ReceiptColumn";
-            ReceiptColumn.ReadOnly = true;
-            ReceiptColumn.Text = "Зберегти";
-            ReceiptColumn.UseColumnTextForButtonValue = true;
-            ReceiptColumn.Width = 75;
-            // 
-            // dgvBusinessCards
-            // 
-            dgvBusinessCards.AllowUserToAddRows = false;
-            dgvBusinessCards.AllowUserToDeleteRows = false;
-            dgvBusinessCards.AllowUserToResizeRows = false;
-            dgvBusinessCards.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgvBusinessCards.Columns.AddRange(new DataGridViewColumn[] { CardNumberColumn, OwnerFullNameColumn, CardExpireDateColumn, CVVColumn, RenewCardColumn });
-            dgvBusinessCards.Location = new Point(0, 188);
-            dgvBusinessCards.Name = "dgvBusinessCards";
-            dgvBusinessCards.ReadOnly = true;
-            dgvBusinessCards.RowHeadersVisible = false;
-            dgvBusinessCards.Size = new Size(660, 166);
-            dgvBusinessCards.TabIndex = 17;
-            dgvBusinessCards.CellClick += dgvBusinessCards_CellClick;
-            // 
-            // CardNumberColumn
-            // 
-            CardNumberColumn.HeaderText = "Номер картки";
-            CardNumberColumn.Name = "CardNumberColumn";
-            CardNumberColumn.ReadOnly = true;
-            CardNumberColumn.Width = 150;
-            // 
-            // OwnerFullNameColumn
-            // 
-            OwnerFullNameColumn.HeaderText = "ФІО власника";
-            OwnerFullNameColumn.Name = "OwnerFullNameColumn";
-            OwnerFullNameColumn.ReadOnly = true;
-            OwnerFullNameColumn.Width = 220;
-            // 
-            // CardExpireDateColumn
-            // 
-            CardExpireDateColumn.HeaderText = "Термін дії";
-            CardExpireDateColumn.Name = "CardExpireDateColumn";
-            CardExpireDateColumn.ReadOnly = true;
-            // 
-            // CVVColumn
-            // 
-            CVVColumn.HeaderText = "CVV";
-            CVVColumn.Name = "CVVColumn";
-            CVVColumn.ReadOnly = true;
-            CVVColumn.Width = 65;
-            // 
-            // RenewCardColumn
-            // 
-            RenewCardColumn.HeaderText = "Перевипуск картки";
-            RenewCardColumn.Name = "RenewCardColumn";
-            RenewCardColumn.ReadOnly = true;
-            RenewCardColumn.Text = "Перевипустити";
-            RenewCardColumn.UseColumnTextForButtonValue = true;
-            RenewCardColumn.Width = 122;
-            // 
             // gbPersonalAccountControl
             // 
             gbPersonalAccountControl.Controls.Add(lblIBAN);
@@ -731,6 +615,122 @@
             btnOpenDeposit.UseVisualStyleBackColor = true;
             btnOpenDeposit.Click += btnOpenDeposit_Click;
             // 
+            // dgvBusinessCards
+            // 
+            dgvBusinessCards.AllowUserToAddRows = false;
+            dgvBusinessCards.AllowUserToDeleteRows = false;
+            dgvBusinessCards.AllowUserToResizeRows = false;
+            dgvBusinessCards.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dgvBusinessCards.Columns.AddRange(new DataGridViewColumn[] { CardNumberColumn, OwnerFullNameColumn, CardExpireDateColumn, CVVColumn, RenewCardColumn });
+            dgvBusinessCards.Location = new Point(0, 188);
+            dgvBusinessCards.Name = "dgvBusinessCards";
+            dgvBusinessCards.ReadOnly = true;
+            dgvBusinessCards.RowHeadersVisible = false;
+            dgvBusinessCards.Size = new Size(660, 166);
+            dgvBusinessCards.TabIndex = 17;
+            dgvBusinessCards.CellClick += dgvBusinessCards_CellClick;
+            // 
+            // CardNumberColumn
+            // 
+            CardNumberColumn.HeaderText = "Номер картки";
+            CardNumberColumn.Name = "CardNumberColumn";
+            CardNumberColumn.ReadOnly = true;
+            CardNumberColumn.Width = 150;
+            // 
+            // OwnerFullNameColumn
+            // 
+            OwnerFullNameColumn.HeaderText = "ФІО власника";
+            OwnerFullNameColumn.Name = "OwnerFullNameColumn";
+            OwnerFullNameColumn.ReadOnly = true;
+            OwnerFullNameColumn.Width = 220;
+            // 
+            // CardExpireDateColumn
+            // 
+            CardExpireDateColumn.HeaderText = "Термін дії";
+            CardExpireDateColumn.Name = "CardExpireDateColumn";
+            CardExpireDateColumn.ReadOnly = true;
+            // 
+            // CVVColumn
+            // 
+            CVVColumn.HeaderText = "CVV";
+            CVVColumn.Name = "CVVColumn";
+            CVVColumn.ReadOnly = true;
+            CVVColumn.Width = 50;
+            // 
+            // RenewCardColumn
+            // 
+            RenewCardColumn.HeaderText = "Перевипуск картки";
+            RenewCardColumn.Name = "RenewCardColumn";
+            RenewCardColumn.ReadOnly = true;
+            RenewCardColumn.Text = "Перевипустити";
+            RenewCardColumn.UseColumnTextForButtonValue = true;
+            RenewCardColumn.Width = 120;
+            // 
+            // dgvTransactions
+            // 
+            dgvTransactions.AllowUserToAddRows = false;
+            dgvTransactions.AllowUserToDeleteRows = false;
+            dgvTransactions.AllowUserToResizeRows = false;
+            dgvTransactions.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dgvTransactions.Columns.AddRange(new DataGridViewColumn[] { NumberColumn, DateTimeColumn, TypeColumn, AmountColumn, TargetColumn, DescriptionColumn, ReceiptColumn });
+            dgvTransactions.Location = new Point(0, 188);
+            dgvTransactions.Name = "dgvTransactions";
+            dgvTransactions.ReadOnly = true;
+            dgvTransactions.RowHeadersVisible = false;
+            dgvTransactions.Size = new Size(660, 166);
+            dgvTransactions.TabIndex = 16;
+            dgvTransactions.CellClick += dgvTransactions_CellClick;
+            // 
+            // NumberColumn
+            // 
+            NumberColumn.HeaderText = "Номер";
+            NumberColumn.Name = "NumberColumn";
+            NumberColumn.ReadOnly = true;
+            NumberColumn.Visible = false;
+            // 
+            // DateTimeColumn
+            // 
+            DateTimeColumn.HeaderText = "Дата";
+            DateTimeColumn.Name = "DateTimeColumn";
+            DateTimeColumn.ReadOnly = true;
+            // 
+            // TypeColumn
+            // 
+            TypeColumn.HeaderText = "Тип";
+            TypeColumn.Name = "TypeColumn";
+            TypeColumn.ReadOnly = true;
+            TypeColumn.Width = 140;
+            // 
+            // AmountColumn
+            // 
+            AmountColumn.HeaderText = "Сума";
+            AmountColumn.Name = "AmountColumn";
+            AmountColumn.ReadOnly = true;
+            AmountColumn.Width = 60;
+            // 
+            // TargetColumn
+            // 
+            TargetColumn.HeaderText = "Контрагент";
+            TargetColumn.Name = "TargetColumn";
+            TargetColumn.ReadOnly = true;
+            TargetColumn.Width = 120;
+            // 
+            // DescriptionColumn
+            // 
+            DescriptionColumn.HeaderText = "Опис";
+            DescriptionColumn.Name = "DescriptionColumn";
+            DescriptionColumn.ReadOnly = true;
+            DescriptionColumn.Width = 145;
+            // 
+            // ReceiptColumn
+            // 
+            ReceiptColumn.HeaderText = "Квітанція";
+            ReceiptColumn.Name = "ReceiptColumn";
+            ReceiptColumn.ReadOnly = true;
+            ReceiptColumn.Text = "Зберегти";
+            ReceiptColumn.UseColumnTextForButtonValue = true;
+            ReceiptColumn.Width = 75;
+            // 
             // lblSelectAccount
             // 
             lblSelectAccount.AutoSize = true;
@@ -806,12 +806,12 @@
             gbSearchTransactions.PerformLayout();
             gbSearchBusinessCards.ResumeLayout(false);
             gbSearchBusinessCards.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)dgvTransactions).EndInit();
-            ((System.ComponentModel.ISupportInitialize)dgvBusinessCards).EndInit();
             gbPersonalAccountControl.ResumeLayout(false);
             gbPersonalAccountControl.PerformLayout();
             gbBusinessAccountControl.ResumeLayout(false);
             gbBusinessAccountControl.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)dgvBusinessCards).EndInit();
+            ((System.ComponentModel.ISupportInitialize)dgvTransactions).EndInit();
             gbAccountBlocked.ResumeLayout(false);
             gbAccountBlocked.PerformLayout();
             ResumeLayout(false);
@@ -869,15 +869,11 @@
         private GroupBox gbSearchBusinessCards;
         private Label lblHeaderSearchBusinessCards;
         private TextBox tbSearchBusinessCards;
-        private DataGridViewTextBoxColumn CardNumberColumn;
-        private DataGridViewTextBoxColumn OwnerFullNameColumn;
-        private DataGridViewTextBoxColumn CardExpireDateColumn;
-        private DataGridViewTextBoxColumn CVVColumn;
-        private DataGridViewButtonColumn RenewCardColumn;
         private DateTimePicker dtpSearchStart;
         private DateTimePicker dtpSearchEnd;
         private CheckBox cbSearchBusinessCardsOnlyExpired;
         private CheckBox cbSearchBusinessCardsOnlyUnexpired;
+        private Button btnOpenDeposit;
         private DataGridViewTextBoxColumn NumberColumn;
         private DataGridViewTextBoxColumn DateTimeColumn;
         private DataGridViewTextBoxColumn TypeColumn;
@@ -885,6 +881,10 @@
         private DataGridViewTextBoxColumn TargetColumn;
         private DataGridViewTextBoxColumn DescriptionColumn;
         private DataGridViewButtonColumn ReceiptColumn;
-        private Button btnOpenDeposit;
+        private DataGridViewTextBoxColumn CardNumberColumn;
+        private DataGridViewTextBoxColumn OwnerFullNameColumn;
+        private DataGridViewTextBoxColumn CardExpireDateColumn;
+        private DataGridViewTextBoxColumn CVVColumn;
+        private DataGridViewButtonColumn RenewCardColumn;
     }
 }
