@@ -19,6 +19,8 @@
         private void btnConfirm_Click(object sender, EventArgs e)
         {
             menuForm.User.GetCashback(menuForm.User.Accounts.First(x => x.Number == cbCard.Text.Split(" ")[1].Split(":")[0]));
+            MessageBox.Show("Кешбек отримано!", "Успішно!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            this.Close();
         }
     }
 }

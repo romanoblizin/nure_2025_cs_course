@@ -122,7 +122,7 @@ namespace Course.Classes
             }
 
             account.Balance += Cashback * 0.8;
-            account.Transactions.Add(new Transaction(Bank.GenerateTransactionNumber(), Cashback * 0.8, "", "", TransactionType.Cashback));
+            account.Transactions.Add(new Transaction(Bank.GenerateTransactionNumber(), Cashback * 0.8, "", "Кешбек", TransactionType.Cashback));
             Cashback = 0;
         }
 
