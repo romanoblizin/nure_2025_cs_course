@@ -2,6 +2,9 @@
 
 namespace Course.Classes
 {
+    /// <summary>
+    /// Перелік типів транзакцій, які можуть бути виконані в банківській системі.
+    /// </summary>
     public enum TransactionType
     {
         Transfer,
@@ -18,15 +21,35 @@ namespace Course.Classes
         Cashback
     }
 
+
+    /// <summary>
+    /// Клас Transaction представляє банківську операцію з основними параметрами:
+    /// номером, датою, сумою, контрагентом, описом і типом.
+    /// </summary>
     public class Transaction
     {
+        /// <summary>Унікальний номер транзакції.</summary>
         public string Number { get; set; }
+
+        /// <summary>Дата та час виконання транзакції.</summary>
         public DateTime Date { get; set; }
+
+        /// <summary>Сума транзакції. Може бути від’ємною для витрат.</summary>
         public double Amount { get; set; }
+
+        /// <summary>Цільова адреса (рахунок, картка, компанія), якщо є.</summary>
         public string? Target { get; set; }
+
+        /// <summary>Опис або коментар до транзакції.</summary>
         public string Description { get; set; }
+
+        /// <summary>Тип транзакції (переказ, поповнення тощо).</summary>
         public TransactionType Type { get; set; }
 
+
+        /// <summary>
+        /// Конструктор для повної транзакції з вказаною датою.
+        /// </summary>
         public Transaction(string number, DateTime date, double amount, string? target, string description, TransactionType type)
         {
             Number = number;
@@ -36,6 +59,10 @@ namespace Course.Classes
             Description = description;
             Type = type;
         }
+
+        /// <summary>
+        /// Конструктор для нової транзакції з поточною датою.
+        /// </summary>
         public Transaction(string number, double amount, string? target, string description, TransactionType type)
         {
             Number = number;
@@ -46,6 +73,10 @@ namespace Course.Classes
             Type = type;
         }
 
+
+        /// <summary>
+        /// Зберігає інформацію про транзакцію до файлу.
+        /// </summary>
         public virtual void SaveToFile(StreamWriter sw)
         {
             sw.WriteLine(Number);
@@ -55,6 +86,10 @@ namespace Course.Classes
             sw.WriteLine(Description);
             sw.WriteLine(Type.ToString());
         }
+
+        /// <summary>
+        /// Завантажує транзакцію з файла.
+        /// </summary>
 
         public static Transaction LoadFromFile(StreamReader sr)
         {
@@ -68,6 +103,10 @@ namespace Course.Classes
             );
         }
 
+
+        /// <summary>
+        /// Формує текст квитанції для виводу або друку.
+        /// </summary>
         public string GetReceipt(Account account)
         {
             StringBuilder sb = new StringBuilder();
@@ -93,6 +132,9 @@ namespace Course.Classes
             return sb.ToString();
         }
 
+        /// <summary>
+        /// Повертає текстовий опис типу транзакції.
+        /// </summary>
         public static string GetTranslatedType(TransactionType type)
         {
             switch (type)

@@ -1,12 +1,20 @@
-﻿using System;
-
-namespace Course.Classes
+﻿namespace Course.Classes
 {
+    /// <summary>
+    /// Клас BusinessAccount представляє корпоративний рахунок компанії.
+    /// Дозволяє відкривати бізнес-картки, обробляти транзакції та зберігати інформацію про компанію.
+    /// </summary>
     public class BusinessAccount : Account
     {
+        /// <summary>Назва компанії, якій належить рахунок.</summary>
         public string CompanyName { get; set; }
+
+        /// <summary>Ідентифікаційний номер компанії (ІПН або ЄДРПОУ).</summary>
         public string CompanyNumber { get; set; }
+
+        /// <summary>Список бізнес-карток, прив’язаних до рахунку.</summary>
         public List<BusinessCard> Cards { get; set; }
+
 
         private BusinessAccount(string number, double balance, string? blocked, bool premium, List<Transaction> transactions, string companyName, string companyNumber, List<BusinessCard> cards) : base(number, balance, blocked, premium, transactions)
         {
@@ -14,6 +22,10 @@ namespace Course.Classes
             CompanyNumber = companyNumber;
             Cards = cards;
         }
+
+        /// <summary>
+        /// Створює новий корпоративний рахунок з початковим номером, назвою компанії та її номером.
+        /// </summary>
         public BusinessAccount(string number, string companyName, string companyNumber) : base(number)
         {
             CompanyName = companyName;
@@ -21,6 +33,10 @@ namespace Course.Classes
             Cards = new List<BusinessCard>();
         }
 
+
+        /// <summary>
+        /// Відкриває нову бізнес-картку для власника з іменем ownerFullName.
+        /// </summary>
         public BusinessCard OpenBusinessCard(PaymentSystem paymentSystem, string ownerFullName)
         {
             BusinessCard card = new BusinessCard(Bank.GenerateCardNumber(paymentSystem), paymentSystem, this, ownerFullName);
@@ -30,11 +46,19 @@ namespace Course.Classes
             return card;
         }
 
+
+        /// <summary>
+        /// Додає бізнес-транзакцію до історії транзакцій цього рахунку.
+        /// </summary>
         public override void AddTransaction(string transactionNumber, double amount, string? target, string comment, TransactionType type)
         {
             Transactions.Add(new BusinessTransaction(transactionNumber, amount, target, comment, type, CompanyName));
         }
 
+
+        /// <summary>
+        /// Зберігає інформацію про рахунок та всі картки у файл.
+        /// </summary>
         public override void SaveToFile(StreamWriter sw)
         {
             base.SaveToFile(sw);
@@ -48,6 +72,7 @@ namespace Course.Classes
                 card.SaveToFile(sw);
             }
         }
+        
         private static List<BusinessCard> LoadCards(StreamReader sr)
         {
             List<BusinessCard> cards = new List<BusinessCard>();
@@ -60,6 +85,10 @@ namespace Course.Classes
 
             return cards;
         }
+
+        /// <summary>
+        /// Завантажує корпоративний рахунок з файла.
+        /// </summary>
         public static BusinessAccount LoadFromFile(StreamReader sr)
         {
             BusinessAccount businessAccount = new BusinessAccount(
@@ -81,18 +110,10 @@ namespace Course.Classes
             return businessAccount;
         }
 
-        public override string GetAccountType()
-        {
-            return "Корпоративний";
-        }
 
-        public bool IsIPN()
-        {
-            return CompanyNumber.Length == 8;
-        }
-        public bool IsEDRPOU()
-        {
-            return CompanyNumber.Length == 10;
-        }
+        /// <summary>
+        /// Повертає рядок "Корпоративний".
+        /// </summary>
+        public override string GetAccountType() => "Корпоративний";
     }
 }

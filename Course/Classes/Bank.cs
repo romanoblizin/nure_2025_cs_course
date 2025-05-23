@@ -1,8 +1,17 @@
 ﻿namespace Course.Classes
 {
+    /// <summary>
+    /// Клас Bank реалізує основну логіку банківської системи. 
+    /// Він відповідає за збереження та завантаження з файлу, а також
+    /// управління платіжними системами, генерацією номерів, користувачами та сервісами.
+    /// </summary>
     public class Bank
     {
+        /// <summary>
+        /// Унікальний код банку, який використовується у формуванні IBAN.
+        /// </summary>
         public const string bankCode = "111111";
+
         private const double premiumCost = 300;
         private static Dictionary<PaymentSystem, (int MinValue, int MaxValue)> paymentSystemRanges = new()
         {
@@ -15,6 +24,9 @@
         private static List<User> users { get; set; } = new List<User>();
         private static List<Service> services { get; set; } = new List<Service>();
 
+        /// <summary>
+        /// Створює новий екземпляр банку та очищує всі попередні дані.
+        /// </summary>
         public Bank()
         {
             accountNumbers.Clear();
@@ -24,6 +36,9 @@
             services.Clear();
         }
 
+        /// <summary>
+        /// Реєстрація нового користувача з перевіркою валідності введених даних.
+        /// </summary>
         public User? Register(string name, string surname, string patronymic, string phone, string password, string email)
         {
             if (surname.Length < 2)
@@ -68,6 +83,10 @@
 
             return user;
         }
+        
+        /// <summary>
+        /// Вхід користувача за email або номером телефону та паролем.
+        /// </summary>
         public User? LogIn(string login, string password)
         {
             if (User.ValidateEmail(login))
@@ -83,7 +102,11 @@
                 return null;
             }
         }
-        
+
+
+        /// <summary>
+        /// Додає новий сервіс (компанію) для можливості оплати її послуг.
+        /// </summary>
         public bool AddService(string companyName, string companyNumber, string ownerFullName, string iban)
         {
             if (services.Any(x => x.CompanyNumber == companyNumber))
@@ -96,6 +119,10 @@
             services.Add(service);
             return true;
         }
+
+        /// <summary>
+        /// Видаляє сервіс за його унікальним номером.
+        /// </summary>
         public void DeleteService(string companyNumber)
         {
             Service? service = services.FirstOrDefault(x => x.CompanyNumber == companyNumber);
@@ -109,7 +136,8 @@
             services.Remove(service);
         }
 
-        public bool TransferToBusinessAccount(Account accountFrom, BusinessAccount accountTo, double amount, string comment)
+
+        private bool TransferToBusinessAccount(Account accountFrom, BusinessAccount accountTo, double amount, string comment)
         {
             if (accountFrom == accountTo)
             {
@@ -138,7 +166,7 @@
 
             return true;
         }
-        public bool TransferToCard(Account accountFrom, BankCard cardTo, double amount, string comment)
+        private bool TransferToCard(Account accountFrom, BankCard cardTo, double amount, string comment)
         {
             if (accountFrom == cardTo.Account)
             {
@@ -176,6 +204,10 @@
 
             return true;
         }
+
+        /// <summary>
+        /// Переказ коштів з рахунку на картку за її номером.
+        /// </summary>
         public bool TransferToCard(Account accountFrom, string cardNumberToStr, double amount, string comment)
         {
             BankCard? cardTo = GetCardByNumber(cardNumberToStr);
@@ -196,6 +228,10 @@
 
             return true;
         }
+
+        /// <summary>
+        /// Переказ коштів з рахунку на IBAN.
+        /// </summary>
         public bool TransferToIBAN(Account accountFrom, string iban, double amount, string comment)
         {
             Account? accountTo = GetAccountByIBAN(iban);
@@ -223,6 +259,10 @@
             return true;
         }
 
+
+        /// <summary>
+        /// Відкриває депозит за заданими параметрами.
+        /// </summary>
         public bool OpenDeposit(Account accountFrom, double amount, double rate, int months)
         {
             if (accountFrom is not PersonalAccount personalAccountFrom)
@@ -234,6 +274,10 @@
             return card.OpenDeposit(amount, rate, months);
         }
 
+
+        /// <summary>
+        /// Щоденне оновлення банку: обробка депозитів, відсотків за місяць, кредитних лімітів, оплата преміум-підписок.
+        /// </summary>
         public void NewDay(DateTime now)
         {
 
@@ -289,11 +333,10 @@
                 }
             }
         }
-        public void NewDay()
-        {
-            NewDay(DateTime.Today);
-        }
 
+        /// <summary>
+        /// Видаляє рахунок з системи.
+        /// </summary>
         public void DeleteAccount(Account account)
         {
             foreach (User user in users)
@@ -305,7 +348,8 @@
             }
         }
 
-        public void SaveToFile(StreamWriter sw)
+
+        private void SaveToFile(StreamWriter sw)
         {
             sw.WriteLine(string.Join(" ", accountNumbers));
             sw.WriteLine(string.Join(" ", cardNumbers));
@@ -323,13 +367,18 @@
                 service.SaveToFile(sw);
             }
         }
+
+        /// <summary>
+        /// Зберігає стан банку у файл за шляхом.
+        /// </summary>
         public void SaveToFile(string filepath)
         {
             StreamWriter sw = new StreamWriter(filepath);
             SaveToFile(sw);
             sw.Close();
         }
-        public static Bank LoadFromFile(StreamReader sr)
+        
+        private static Bank LoadFromFile(StreamReader sr)
         {
             Bank bank = new Bank();
 
@@ -374,6 +423,10 @@
 
             return bank;
         }
+
+        /// <summary>
+        /// Завантажує банк із файлу за шляхом.
+        /// </summary>
         public static Bank LoadFromFile(string filepath)
         {
             StreamReader sr = new StreamReader(filepath);
@@ -382,6 +435,10 @@
             return bank;
         }
 
+
+        /// <summary>
+        /// Генерує унікальний номер рахунку.
+        /// </summary>
         public static string GenerateAccountNumber()
         {
             string result;
@@ -397,6 +454,10 @@
             accountNumbers.Add(result);
             return result;
         }
+
+        /// <summary>
+        /// Генерує унікальний номер картки з урахуванням платіжної системи.
+        /// </summary>
         public static string GenerateCardNumber(PaymentSystem paymentSystem)
         {
             string result;
@@ -419,6 +480,10 @@
             cardNumbers.Add(result);
             return result;
         }
+
+        /// <summary>
+        /// Генерує унікальний номер транзакції.
+        /// </summary>
         public static string GenerateTransactionNumber()
         {
             string result;
@@ -436,12 +501,20 @@
             return result;
         }
 
+
+        /// <summary>
+        /// Повертає картку за номером.
+        /// </summary>
         public BankCard? GetCardByNumber(string number)
         {
             List<BankCard> Cards = GetCardsByType(typeof(BankCard));
 
             return Cards.FirstOrDefault(x => x.Number == number);
         }
+
+        /// <summary>
+        /// Повертає рахунок за IBAN.
+        /// </summary>
         public Account? GetAccountByIBAN(string iban)
         {
             foreach (User user in users)
@@ -455,6 +528,8 @@
 
             return null;
         }
+
+        
         private List<BankCard> GetCardsByType(Type cardType)
         {
             Type accountType;
@@ -495,6 +570,10 @@
 
             return Cards;
         }
+
+        /// <summary>
+        /// Повертає користувача, який володіє вказаним рахунком.
+        /// </summary>
         public static User? GetUserByAccount(Account account)
         {
             foreach (User user in users)
@@ -510,6 +589,10 @@
 
             return null;
         }
+
+        /// <summary>
+        /// Обчислює контрольну цифру за алгоритмом Луна для номера картки.
+        /// </summary>
         public static string GetLuhnDigit(string number)
         {
             int sum = 0;
@@ -531,18 +614,34 @@
             int checkDigit = (10 - (sum % 10)) % 10;
             return checkDigit.ToString();
         }
+
+        /// <summary>
+        /// Повертає сервіс за його назвою.
+        /// </summary>
         public Service? GetServiceByName(string serviceName)
         {
             return services.FirstOrDefault(x => x.CompanyName == serviceName);
         }
+
+        /// <summary>
+        /// Повертає список усіх назв сервісів.
+        /// </summary>
         public List<string> GetAllServicesNameList()
         {
             return services.Select(x => x.CompanyName).ToList();
         }
+
+        /// <summary>
+        /// Повертає список усіх сервісів у форматі "Назва (Номер)".
+        /// </summary>
         public List<string> GetAllServicesList()
         {
             return services.Select(x => $"{x.CompanyName} ({x.CompanyNumber})").ToList();
         }
+
+        /// <summary>
+        /// Повертає список усіх банківських карток у форматі "(Тип) Номер: Баланс".
+        /// </summary>
         public List<string> GetAllCardsList()
         {
             List<string> result = new List<string>();
@@ -554,7 +653,11 @@
 
             return GetCardsByType(typeof(BankCard)).Select(x => $"({x.Account.GetAccountType()}) {x.Number}: {x.Account.Balance}₴").ToList();
         }
-        
+
+
+        /// <summary>
+        /// Перевіряє, чи доступний номер телефону для реєстрації.
+        /// </summary>
         public bool IsPhoneAvailable(string phone)
         {
             foreach (User user in users)
@@ -565,6 +668,10 @@
 
             return true;
         }
+
+        /// <summary>
+        /// Перевіряє, чи доступна електронна адреса для реєстрації.
+        /// </summary>
         public bool IsEmailAvailable(string email)
         {
             foreach (User user in users)

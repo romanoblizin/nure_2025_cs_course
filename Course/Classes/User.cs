@@ -2,18 +2,37 @@
 
 namespace Course.Classes
 {
+    /// <summary>
+    /// Клас User представляє користувача банківської системи.
+    /// Містить особисті дані користувача, облікові записи та логіку взаємодії з картками і кешбеком.
+    /// </summary>
     public class User
     {
+        /// <summary>Прізвище користувача.</summary>
         public string Surname { get; set; }
+        
+        /// <summary>Ім’я користувача.</summary>
         public string Name { get; set; }
+
+        /// <summary>По батькові користувача.</summary>
         public string Patronymic { get; set; }
+
+        /// <summary>Адреса електронної пошти користувача.</summary>
         public string Email { get; set; }
+
+        /// <summary>Номер телефону користувача.</summary>
         public string Phone { get; set; }
+
+        /// <summary>Пароль для входу в систему.</summary>
         public string Password { get; set; }
+
+        /// <summary>Накопичений кешбек користувача.</summary>
         public double Cashback {  get; set; }
+
+        /// <summary>Список рахунків користувача.</summary>
         public List<Account> Accounts { get; set; }
 
-        public User(string name, string surname, string patronymic, string phone, string password, string email, double cashback, List<Account> accounts)
+        private User(string name, string surname, string patronymic, string phone, string password, string email, double cashback, List<Account> accounts)
         {
             Name = name;
             Surname = surname;
@@ -24,9 +43,18 @@ namespace Course.Classes
             Cashback = cashback;
             Accounts = accounts;
         }
+
+        /// <summary>
+        /// Створює нового користувача з базовими персональними даними. 
+        /// Початково кешбек дорівнює нулю, а список рахунків — порожній.
+        /// </summary>
         public User(string name, string surname, string patronymic, string phone, string password, string email) : this(name, surname, patronymic, phone, password, email, 0, new List<Account>())
         { }
 
+
+        /// <summary>
+        /// Відкриває дебетову картку для користувача.
+        /// </summary>
         public PersonalAccount? OpenDebitCard(PaymentSystem paymentSystem, double interestRate)
         {
             BankCard card = new DebitCard(Bank.GenerateCardNumber(paymentSystem), paymentSystem, Bank.GenerateAccountNumber(), interestRate);
@@ -36,6 +64,9 @@ namespace Course.Classes
             return (PersonalAccount)card.Account;
         }
 
+        /// <summary>
+        /// Відкриває дебетову картку для користувача.
+        /// </summary>
         public PersonalAccount? OpenCreditCard(PaymentSystem paymentSystem, double creditLimit)
         {
             BankCard card = new CreditCard(Bank.GenerateCardNumber(paymentSystem), paymentSystem, Bank.GenerateAccountNumber(), creditLimit);
@@ -45,6 +76,9 @@ namespace Course.Classes
             return (PersonalAccount)card.Account;
         }
 
+        /// <summary>
+        /// Відкриває картку для виплат для користувача.
+        /// </summary>
         public PersonalAccount? OpenPayoutCard(PaymentSystem paymentSystem)
         {
             BankCard card = new PayoutCard(Bank.GenerateCardNumber(paymentSystem), paymentSystem, Bank.GenerateAccountNumber());
@@ -54,6 +88,9 @@ namespace Course.Classes
             return (PersonalAccount)card.Account;
         }
 
+        /// <summary>
+        /// Відкриває корпоративний рахунок для користувача.
+        /// </summary>
         public BusinessAccount? OpenBusinessAccount(string companyName, string companyNumber)
         {
             BusinessAccount account = new BusinessAccount(Bank.GenerateAccountNumber(), companyName, companyNumber);
@@ -63,6 +100,10 @@ namespace Course.Classes
             return account;
         }
 
+
+        /// <summary>
+        /// Перераховує кешбек на рахунок користувача.
+        /// </summary>
         public void GetCashback(Account account)
         {
             if (!Accounts.Contains(account))
@@ -85,6 +126,10 @@ namespace Course.Classes
             Cashback = 0;
         }
 
+
+        /// <summary>
+        /// Зберігає дані користувача у файл.
+        /// </summary>
         public void SaveToFile(StreamWriter sw)
         {
             sw.WriteLine(Name);
@@ -119,6 +164,9 @@ namespace Course.Classes
             return accounts;
         }
 
+        /// <summary>
+        /// Завантажує користувача з файлу.
+        /// </summary>
         public static User LoadFromFile(StreamReader sr)
         {
             return new User(
@@ -133,19 +181,26 @@ namespace Course.Classes
             );
         }
 
-        public Account? GetAccountByNumber(string number)
-        {
-            return Accounts.FirstOrDefault(x => x.Number == number);
-        }
+
+        /// <summary>
+        /// Повертає список усіх рахунків у вигляді рядків, з можливістю показувати або не показувати заблоковані.
+        /// </summary>
         public List<string> GetAllAccountsText(bool showBlocked)
         {
             return Accounts.Where(x => (!x.IsBlocked() || showBlocked)).Select(x => $"({x.GetAccountType()}) {x.Number}: {x.Balance}₴").ToList();
         }
 
+        /// <summary>
+        /// Перевіряє правильність формату номера телефону.
+        /// </summary>
         public static bool ValidatePhone(string phone)
         {
             return Regex.IsMatch(phone, @"^(\+380\d{9}|0\d{9})$");
         }
+
+        /// <summary>
+        /// Перевіряє правильність формату електронної пошти.
+        /// </summary>
         public static bool ValidateEmail(string email)
         {
             return Regex.IsMatch(email, @"^[\w\.]+@\w+\.+\w{2,4}$");

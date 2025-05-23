@@ -1,19 +1,39 @@
 ﻿namespace Course.Classes
 {
+    /// <summary>
+    /// Абстрактний клас Account представляє банківський рахунок користувача або компанії.
+    /// Містить основні властивості та методи для роботи з балансом, транзакціями та статусом рахунку.
+    /// </summary>
     public abstract class Account
     {
+        /// <summary>Вартість підписки на преміум обслуговування.</summary>
         public const double PremiumCost = 300;
 
+        /// <summary>Унікальний номер рахунку.</summary>
         public string Number { get; set; }
+
+        /// <summary>Баланс рахунку в гривнях.</summary>
         public virtual double Balance { get; set; }
+
+        /// <summary>Дата блокування рахунку або null, якщо рахунок активний.</summary>
         public string? Blocked { get; set; }
+
+        /// <summary>Чи має рахунок преміум-статус.</summary>
         public bool Premium { get; set; }
+
+        /// <summary>Список транзакцій, пов’язаних із рахунком.</summary>
         public List<Transaction> Transactions { get; set; }
+
+        /// <summary>IBAN, сформований на основі коду банку та номеру рахунку.</summary>
         public string IBAN
         {
             get => $"UA00{Bank.bankCode}{Number}";
         }
 
+
+        /// <summary>
+        /// Конструктор для завантаження рахунку з файла з усіма властивостями.
+        /// </summary>
         protected Account(string number, double balance, string? blocked, bool premium, List<Transaction> transactions)
         {
             Number = number;
@@ -22,6 +42,10 @@
             Premium = premium;
             Transactions = transactions;
         }
+
+        /// <summary>
+        /// Базовий конструктор для створення нового рахунку з нульовим балансом.
+        /// </summary>
         public Account(string number)
         {
             Number = number;
@@ -31,11 +55,17 @@
             Transactions = new List<Transaction>();
         }
 
+        /// <summary>
+        /// Додає транзакцію до списку транзакцій рахунку.
+        /// </summary>
         public virtual void AddTransaction(string transactionNumber, double amount, string? target, string comment, TransactionType type)
         {
             Transactions.Add(new Transaction(transactionNumber, amount, target, comment, type));
         }
 
+        /// <summary>
+        /// Активує преміум-підписку, якщо на рахунку достатньо коштів.
+        /// </summary>
         public bool SubscribePremium()
         {
             if (Balance >= PremiumCost)
@@ -52,6 +82,10 @@
             }
         }
 
+
+        /// <summary>
+        /// Виконує оплату сервісу з рахунку.
+        /// </summary>
         public bool PayService(double amount, Service service, string comment)
         {
             if (!IsPaymentAvailable(amount))
@@ -66,6 +100,10 @@
             return true;
         }
 
+
+        /// <summary>
+        /// Зберігає інформацію про рахунок до файлу.
+        /// </summary>
         public virtual void SaveToFile(StreamWriter sw)
         {
             sw.WriteLine(Number);
@@ -80,6 +118,10 @@
                 transaction.SaveToFile(sw);
             }
         }
+
+        /// <summary>
+        /// Завантажує список транзакцій з файлу.
+        /// </summary>
         protected static List<Transaction> LoadTransactions(StreamReader sr)
         {
             List<Transaction> transactions = new List<Transaction>();
@@ -95,6 +137,10 @@
 
             return transactions;
         }
+
+        /// <summary>
+        /// Завантажує банківську картку відповідного типу з файлу.
+        /// </summary>
         protected static BankCard LoadCard(StreamReader sr)
         {
             var line = sr.ReadLine();
@@ -113,18 +159,33 @@
             }
         }
 
+        /// <summary>
+        /// Повертає суму, яка буде зарахована при переказі, після віднімання комісії.
+        /// </summary>
         public double GetTransferAmount(double amount)
         {
             return Math.Round(amount * (Premium ? 1 : 0.95), 2);
         }
+
+        /// <summary>
+        /// Перевіряє, чи рахунок активний і доступний для операцій.
+        /// </summary>
         public bool IsBlocked()
         {
             return !String.IsNullOrEmpty(Blocked);
         }
+
+        /// <summary>
+        /// Перевіряє, чи рахунок активний і доступний для операцій.
+        /// </summary>
         public virtual bool IsAvailable()
         {
             return !IsBlocked();
         }
+
+        /// <summary>
+        /// Перевіряє, чи достатньо коштів для оплати з рахунку.
+        /// </summary>
         public virtual bool IsPaymentAvailable(double amount)
         {
             if (IsBlocked())
@@ -139,17 +200,32 @@
 
             return true;
         }
+
+        /// <summary>
+        /// Повертає тип рахунку як текст.
+        /// </summary>
         public abstract string GetAccountType();
 
+        /// <summary>
+        /// Перевантаження оператора порівняння "==", порівнює рахунки за номером.
+        /// </summary>
         public static bool operator ==(Account? a, Account? b)
         {
             if (a is null || b is null) return false;
             return a.Number == b.Number;
         }
+
+        /// <summary>
+        /// Перевантаження оператора порівняння "!=", порівнює рахунки за номером.
+        /// </summary>
         public static bool operator !=(Account? a, Account? b)
         {
             return !(a == b);
         }
+
+        /// <summary>
+        /// Перевизначення методу Equals, порівнює рахунки за номером.
+        /// </summary>
         public override bool Equals(object? obj)
         {
             if (obj is not Account)
@@ -159,6 +235,10 @@
 
             return Number == ((Account)obj).Number;
         }
+
+        /// <summary>
+        /// Повертає хеш-код рахунку, на основі номера.
+        /// </summary>
         public override int GetHashCode()
         {
             return Number.GetHashCode();
