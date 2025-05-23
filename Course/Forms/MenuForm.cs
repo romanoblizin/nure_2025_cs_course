@@ -401,10 +401,10 @@ namespace Course
             businessSearch(null, null);
         }
 
-        private void btnOpenCredit_Click(object sender, EventArgs e)
+        private void btnOpenDeposit_Click(object sender, EventArgs e)
         {
-            CreditForm creditForm = new CreditForm(this);
-            creditForm.ShowDialog();
+            DepositForm depositForm = new DepositForm(this);
+            depositForm.ShowDialog();
             updateBalance();
             transactionSearch(null, null);
         }

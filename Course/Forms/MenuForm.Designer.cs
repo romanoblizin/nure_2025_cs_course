@@ -91,7 +91,7 @@
             btnOpenCard = new Button();
             btnSubscribePremium = new Button();
             btnUnsubscribePremium = new Button();
-            btnOpenCredit = new Button();
+            btnOpenDeposit = new Button();
             lblSelectAccount = new Label();
             gbAccountBlocked = new GroupBox();
             lblAccountBlocked = new Label();
@@ -233,7 +233,7 @@
             gbAccountControl.Controls.Add(gbBusinessAccountControl);
             gbAccountControl.Controls.Add(btnSubscribePremium);
             gbAccountControl.Controls.Add(btnUnsubscribePremium);
-            gbAccountControl.Controls.Add(btnOpenCredit);
+            gbAccountControl.Controls.Add(btnOpenDeposit);
             gbAccountControl.Location = new Point(12, 95);
             gbAccountControl.Name = "gbAccountControl";
             gbAccountControl.Size = new Size(660, 354);
@@ -721,15 +721,15 @@
             btnUnsubscribePremium.UseVisualStyleBackColor = true;
             btnUnsubscribePremium.Click += btnUnsubscribePremium_Click;
             // 
-            // btnOpenCredit
+            // btnOpenDeposit
             // 
-            btnOpenCredit.Location = new Point(376, 51);
-            btnOpenCredit.Name = "btnOpenCredit";
-            btnOpenCredit.Size = new Size(122, 29);
-            btnOpenCredit.TabIndex = 20;
-            btnOpenCredit.Text = "Відкрити кредит";
-            btnOpenCredit.UseVisualStyleBackColor = true;
-            btnOpenCredit.Click += btnOpenCredit_Click;
+            btnOpenDeposit.Location = new Point(376, 51);
+            btnOpenDeposit.Name = "btnOpenDeposit";
+            btnOpenDeposit.Size = new Size(122, 29);
+            btnOpenDeposit.TabIndex = 20;
+            btnOpenDeposit.Text = "Відкрити депозит";
+            btnOpenDeposit.UseVisualStyleBackColor = true;
+            btnOpenDeposit.Click += btnOpenDeposit_Click;
             // 
             // lblSelectAccount
             // 
@@ -885,6 +885,6 @@
         private DataGridViewTextBoxColumn TargetColumn;
         private DataGridViewTextBoxColumn DescriptionColumn;
         private DataGridViewButtonColumn ReceiptColumn;
-        private Button btnOpenCredit;
+        private Button btnOpenDeposit;
     }
 }
