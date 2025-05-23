@@ -45,6 +45,7 @@ namespace Course.Forms
 
                 menuForm.User.OpenBusinessAccount(tbCompanyName.Text, tbCompanyNumber.Text);
                 MessageBox.Show("Рахунок відкрито!", "Успішно!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                this.Close();
             }
             else
             {
